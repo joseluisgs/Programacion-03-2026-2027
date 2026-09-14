@@ -240,6 +240,26 @@ copia[0, 0] = 999;
 Console.WriteLine(original[0, 0]);  // 999 — ¡También cambió!
 ```
 
+### El problema de `==` con matrices
+
+```csharp
+// ❌ == NO compara matrices por contenido
+int[,] a = { { 1, 2 }, { 3, 4 } };
+int[,] b = { { 1, 2 }, { 3, 4 } };
+Console.WriteLine(a == b);  // ¡False! Son matrices diferentes
+
+// ✅ Para comparar contenido, usa un bucle
+bool SonIguales(int[,] x, int[,] y)
+{
+    if (x.GetLength(0) != y.GetLength(0) || x.GetLength(1) != y.GetLength(1))
+        return false;
+    for (int i = 0; i < x.GetLength(0); i++)
+        for (int j = 0; j < x.GetLength(1); j++)
+            if (x[i, j] != y[i, j]) return false;
+    return true;
+}
+```
+
 > 🔧 **Truco mnemotecico:** Piensa en las matrices como un edificio de apartamentos. `matrizB = matrizA` es como darle a alguien la llave del **mismo** apartamento. Si mueve los muebles, tú también lo ves.
 
 ## 3.5. Paso por Referencia y Devolución de Matrices

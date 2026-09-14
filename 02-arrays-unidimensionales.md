@@ -418,6 +418,45 @@ Console.WriteLine(c[0]);  // 888 — c es independiente
 
 📌 **Ejemplo real:** En un juego como Fortnite, si dos variables apuntan al mismo array de inventario y un jugador usa un objeto, el otro jugador también lo ve. Para evitarlo, el juego crea una **copia profunda** del inventario antes de modificarlo.
 
+### El problema de `==` con arrays
+
+Los arrays son **tipos por referencia**. Esto significa que `==` no compara el contenido, sino si ambas variables apuntan al **mismo objeto en memoria**.
+
+```csharp
+// ❌ == NO compara arrays por contenido
+int[] a = { 1, 2, 3 };
+int[] b = { 1, 2, 3 };
+Console.WriteLine(a == b);  // ¡False! Son arrays diferentes
+
+// ✅ Para comparar contenido, usa SequenceEqual()
+Console.WriteLine(a.SequenceEqual(b));  // True
+
+// ✅ O un bucle manual
+bool iguales = a.Length == b.Length;
+for (int i = 0; i < a.Length && iguales; i++)
+    if (a[i] != b[i]) iguales = false;
+```
+
+> ⚠️ **Advertencia:** Este es uno de los errores más comunes. Si comparas dos arrays con `==`, siempre dará `False` aunque tengan los mismos valores, porque son objetos distintos en memoria.
+
+### El problema de `null` con arrays
+
+Los arrays pueden ser `null`. Si intentas acceder a `.Length` o a un índice de un array `null`, obtienes `NullReferenceException`.
+
+```csharp
+int[] numeros = null;
+
+// ❌ Esto falla
+Console.WriteLine(numeros.Length);  // NullReferenceException
+
+// ✅ Comprobar antes de usar
+if (numeros != null)
+    Console.WriteLine(numeros.Length);
+
+// ✅ Con operador ternario
+int total = numeros?.Length ?? 0;
+```
+
 ### Arrays de Tipos Compuestos
 
 Los arrays no solo almacenan `int`, `string` o `bool`. También puedes guardar **tuplas**, **enums** y **structs** en un array.
