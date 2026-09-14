@@ -52,6 +52,8 @@ string[] frutas = { "Manzana", "Pera", "Naranja" };
 double[] precios = new double[] { 9.99, 19.99, 29.99 };
 ```
 
+![array](./images/arrays.jpg)
+
 ### 2.1.2. Valores por Defecto y Gestión de la Nulidad
 
 Cuando creas un array solo con su tamaño, C# lo rellena automáticamente:
@@ -62,6 +64,8 @@ Cuando creas un array solo con su tamaño, C# lo rellena automáticamente:
 | **Booleano** (`bool[]`) | `false` | `new bool[2]` → `{ false, false }` |
 | **Cadena** (`string[]`) | `null` | `new string[2]` → `{ null, null }` |
 | **Anulable** (`int?[]`) | `null` | `new int?[2]` → `{ null, null }` |
+
+> 📝 **Nota:** Un tipo anulable (`int?`) permite guardar `null` además de números. Lo verás en detalle en la UD04 sobre POO.
 
 > ⚠️ **Advertencia:** `string[]` se inicializa a `null`, **no** a `""`. Si intentas acceder a un método de un elemento sin verificar, obtendrás `NullReferenceException`.
 
@@ -180,7 +184,7 @@ foreach (string? nombre in nombres)
 
 ### 2.3.1. Arrays y el Paso por Referencia
 
-Los arrays en C# son **tipos de referencia**. La variable no contiene los datos, sino la **dirección de memoria** donde están.
+Los arrays en C# son **tipos de referencia**: la variable no contiene los datos, sino una **dirección de memoria** donde están. Esto significa que, al pasar un array a un método, se pasa la dirección (no se copian los elementos). Por eso puedes modificar los elementos dentro del método y se reflejan fuera. Pero cuidado: esto es diferente de usar `ref` (que verás más abajo).
 
 **Al pasar un array a una función:** se pasa una **copia de la dirección** (referencia). Como dos variables apuntan al mismo sitio, modificar los elementos dentro de la función **afecta al original**.
 
@@ -307,8 +311,8 @@ Console.WriteLine(SumarElementos(in datos));  // 60
 
 | Modificador | Modificable | Rendimiento | Cuándo usarlo |
 | :--- | :--- | :--- | :--- |
-| *(ninguno)* | Sí | Copia la referencia | Uso general |
-| `ref` | Sí | Referencia directa | Cuando necesitas modificar el array |
+| *(ninguno)* | Elementos sí, reasignar **no** | Copia la dirección (referencia) | Uso general — puedes modificar elementos |
+| `ref` | Elementos sí, reasignar **sí** | Referencia directa | Cuando el método debe poder reemplazar el array completo |
 | `in` | **No** | Referencia (solo lectura) | Arrays grandes, solo lectura |
 
 ## 2.5. Identidad vs. Igualdad (Referencia vs. Contenido)

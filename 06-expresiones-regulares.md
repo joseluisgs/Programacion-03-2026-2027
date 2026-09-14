@@ -58,7 +58,8 @@ graph LR
 | `$` | Fin de cadena | `mundo$` → "Hola mundo" ✅ |
 | `[abc]` | Cualquier carácter del conjunto | `[aeiou]` → vocal |
 | `[^abc]` | Cualquier carácter NO del conjunto | `[^0-9]` → no dígito |
-| `(abc)` | Grupo de captura | `(http\|https)` |
+| `(abc)` | Grupo de captura | `(http\|https)` captura "http" o "https" |
+| `\|` | Alternancia (OR) | `cat\|dog` → "cat" o "dog" |
 
 ```csharp
 using System.Text.RegularExpressions;
@@ -70,7 +71,7 @@ Console.WriteLine(Regex.IsMatch("12", patron));    // false
 Console.WriteLine(Regex.IsMatch("1234", patron));  // false
 ```
 
-> ⚠️ **Advertencia:** Usa `@""` (verbatim string) para las regex. Sin ella, `\d` se interpreta como `\` + `d` (carácter literal). Con `@""`, se interpreta como el metacaracter `\d`.
+> ⚠️ **Advertencia:** Usa `@""` (verbatim string) para las regex. Sin ella, `\d` causa un **error de compilación** ("Unrecognized escape sequence"). Con `@""`, se interpreta como el metacaracter `\d`.
 
 ## 6.3. Uso de Regex en C#
 
@@ -79,8 +80,8 @@ Console.WriteLine(Regex.IsMatch("1234", patron));  // false
 ```csharp
 using System.Text.RegularExpressions;
 
-// ✅ Validar email básico
-string patronEmail = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
+// ✅ Validar email básico (versión simplificada)
+string patronEmail = @"^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$";
 string email = "usuario@ejemplo.com";
 
 bool esValido = Regex.IsMatch(email, patronEmail);
@@ -103,10 +104,14 @@ foreach (Match m in todas)
     Console.WriteLine($"Encontrado: {m.Value}");
 ```
 
-### 6.3.3. Extracción de Datos
+### 6.3.3. Extracción de Datos (Grupos de Captura)
+
+Los **paréntesis** `()` en una regex definen **grupos de captura**. Cada paréntesis captura una parte del texto y se accede a ella con `Groups[1]`, `Groups[2]`, etc. (el grupo 0 es la coincidencia completa).
 
 ```csharp
 string log = "ERROR 2024-01-15: Archivo no encontrado";
+//                    ───────── 
+//                    Grupo 1: año, Grupo 2: mes, Grupo 3: día
 Match coincidencia = Regex.Match(log, @"(\d{4})-(\d{2})-(\d{2})");
 
 if (coincidencia.Success)
@@ -119,6 +124,8 @@ if (coincidencia.Success)
 
 ### 6.3.4. Sustitución (`Replace`)
 
+En el segundo argumento de `Replace`, `$1` se sustituye por el contenido del primer grupo de captura, `$2` por el segundo, etc.
+
 ```csharp
 string texto = "La fruta (manzana) y la verdura (lechuga) son sanas.";
 
@@ -126,7 +133,7 @@ string texto = "La fruta (manzana) y la verdura (lechuga) son sanas.";
 string limpio = Regex.Replace(texto, @"\s*\(.*?\)", "");
 Console.WriteLine(limpio);  // "La fruta y la verdura son sanas."
 
-// ✅ Enmascarar números de teléfono
+// ✅ Enmascarar números de teléfono: $1 = primer grupo, $2 = segundo, $3 = tercero
 string conMascara = Regex.Replace("612345678", @"(\d{3})(\d{3})(\d{3})", "$1-$2-$3");
 Console.WriteLine(conMascara);  // "612-345-678"
 ```
@@ -137,10 +144,10 @@ Console.WriteLine(conMascara);  // "612-345-678"
 | :--- | :--- | :--- |
 | **Solo dígitos** | `@"^\d+$"` | Una o más cifras |
 | **Teléfono (9 dígitos)** | `@"^\d{9}$"` | Exactamente 9 cifras |
-| **DNI (8 números + letra)** | `@"^\d{8}[A-Z]$"` | 8 dígitos + mayúscula |
-| **Email básico** | `@"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"` | Local + @ + dominio + TLD |
+| **DNI (8 números + letra)** | `@"^\d{8}[A-Za-z]$"` | 8 dígitos + letra (mayúscula o minúscula) |
+| **Email básico** | `@"^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"` | local@dominio.tld |
 | **Fecha (DD/MM/AAAA)** | `@"^\d{2}/\d{2}/\d{4}$"` | 2d / 2d / 4d |
-| **URL (HTTP/HTTPS)** | `@"^(http\|https)://\w+\.\w+"` | protocolo://dominio |
+| **URL (HTTP/HTTPS)** | `@"^(http|https)://\w+\.\w+"` | protocolo://dominio |
 | **Tarjeta de crédito** | `@"^\d{4} \d{4} \d{4} \d{4}$"` | 4 bloques de 4 dígitos |
 | **Código postal (5 cifras)** | `@"^\d{5}$"` | 5 dígitos |
 

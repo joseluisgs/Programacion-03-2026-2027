@@ -94,7 +94,9 @@ Console.WriteLine(escalonada[1][2]);  // 5 (fila 1, columna 2)
 
 > 💡 **Consejo:** Usa matrices rectangulares cuando todas las filas tengan el mismo tamaño (tableros, imágenes). Usa escalonadas cuando las filas tengan tamaños diferentes (listas de usuarios con distintos números de amigos).
 
-📌 **Ejemplo real:** Un tablero de Battleship es una matriz rectangular `char[10,10]` donde cada posición contiene `'Agua'`, `'Barco'` o `'Disparo'`. El juego necesita acceder rápidamente a cualquier casilla por sus coordenadas.
+![Arrays multidimensionales](./images/matrix.jpg)
+
+📌 **Ejemplo real:** Un tablero de Battleship es una matriz rectangular `char[10,10]` donde cada posición contiene un carácter como `'A'` (Agua), `'B'` (Barco) o `'D'` (Disparo). El juego necesita acceder rápidamente a cualquier casilla por sus coordenadas.
 
 ## 3.3. Recorrido con `for` y `foreach`
 
@@ -203,14 +205,13 @@ Console.WriteLine($"{nueva.GetLength(0)}x{nueva.GetLength(1)}");  // 3x4
 | **Profunda** | Clonar exterior **Y** cada fila | Total independencia |
 
 ```csharp
-// ❌ COPIA SUPERFICIAL: peligrosa
-int[,] original = { { 1, 2 }, { 3, 4 } };
-int[,] superficial = (int[,])original.Clone();  // Clona el bloque contiguo
-
-// ✅ Para matrices rectangulares, Clone() SÍ es profunda
+// Para matrices rectangulares, Clone() SÍ crea una copia profunda
 // (porque es un bloque contiguo en memoria)
-superficial[0, 0] = 999;
-Console.WriteLine(original[0, 0]);  // 1 — NO cambia (rectangular es segura)
+int[,] original = { { 1, 2 }, { 3, 4 } };
+int[,] clonada = (int[,])original.Clone();
+
+clonada[0, 0] = 999;
+Console.WriteLine(original[0, 0]);  // 1 — NO cambia (el bloque es independiente)
 ```
 
 > ⚠️ **Advertencia:** Con matrices **escalonadas** (`int[][]`), `Clone()` solo clona el array exterior. Las filas internas se comparten. Debes clonar cada fila manualmente.

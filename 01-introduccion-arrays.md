@@ -28,7 +28,7 @@ Un **array** es una estructura de datos estática que almacena una colección or
 2. **Tamaño Fijo:** El tamaño se establece al crear el array y **no puede cambiarse**. Si necesitas más espacio, debes crear uno nuevo y copiar.
 3. **Contigüidad en Memoria:** Los elementos se almacenan en posiciones de memoria **contiguas** (uno al lado del otro).
 4. **Acceso por Índice:** Cada elemento se accede mediante su posición (índice), que es un número entero.
-5. **Eficiencia:** El acceso es $O(1)$ — tiempo constante, sin importar la posición.
+5. **Eficiencia:** El acceso es constante — tiempo $O(1)$, sin importar la posición (ver Punto 7).
 
 > 💡 **Analogía:** Un array es como una hilera de casas en una calle. Cada casa tiene un número (índice) y están pegadas unas a otras. Si sabes el número de tu casa, llegas directamente sin preguntar a nadie.
 
@@ -44,7 +44,9 @@ graph LR
     style D fill:#4CAF50,color:#fff
 ```
 
-📌 **Ejemplo real:** Spotify almacena tu lista de reproducción como un array de canciones. Cada canción tiene un índice (posición 0, 1, 2...) y todas son del mismo tipo (objeto `Cancion`). Cuando pulsas "siguiente", simplemente accede al siguiente índice.
+![array](./images/arrays.png)
+
+📌 **Ejemplo real:** Spotify almacena tu lista de reproducción como un array de canciones. Cada canción tiene un índice (posición 0, 1, 2...) y todas son del mismo tipo. Cuando pulsas "siguiente", simplemente accede al siguiente índice.
 
 ## 1.2. El Problema de la Indexación (Índice Cero vs. Índice Uno)
 
@@ -140,7 +142,7 @@ for (int i = 0; i < args.Length; i++)
 `args` es un **`string[]`** — un array unidimensional de cadenas. El sistema operativo te pasa los argumentos de línea de comandos como un array. Por ejemplo, si ejecutas:
 
 ```bash
-dotnet run --framework net10.0 -- "Hola" "Mundo"
+dotnet run -- "Hola" "Mundo"
 ```
 
 Entonces `args` contiene `{ "Hola", "Mundo" }` y `args.Length` es `2`.
@@ -151,18 +153,18 @@ Entonces `args` contiene `{ "Hola", "Mundo" }` y `args.Length` es `2`.
 
 ## 1.4. El Secreto de la Velocidad: Localidad de Referencia
 
-¿Por qué usamos arrays si son tan rígidos? Por el **hardware**. Al estar los datos contiguos en memoria, cuando el procesador lee `[0]`, el sistema carga también los siguientes en la **Memoria Caché**. Esto hace que recorrer un array sea órdenes de magnitud más rápido que acceder a memoria dispersa.
+¿Por qué usamos arrays si son tan rígidos? Por el **hardware**. Al estar los datos contiguos en memoria, cuando el procesador lee `[0]`, el sistema carga también los siguientes en la **Memoria Caché**. El procesador carga datos en bloques: si accedes a datos cercanos, ya están en caché. Si saltas a posiciones lejanas, ese bloque ya no sirve y hay que volver a cargarlo desde la RAM, que es más lenta.
 
 ```csharp
 int[] numeros = { 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 };
 
-// ✅ Acceso SECUENCIAL (rápido — cache-friendly)
+// ✅ Acceso SECUENCIAL (rápido — el procesador carga todo el bloque junto)
 for (int i = 0; i < numeros.Length; i++)
 {
     Console.WriteLine(numeros[i]);
 }
 
-// ❌ Acceso ALEATORIO (más lento — cache misses)
+// ❌ Acceso ALEATORIO (más lento — el procesador tiene que cargar bloques diferentes)
 Console.WriteLine(numeros[0]);
 Console.WriteLine(numeros[9]);
 Console.WriteLine(numeros[5]);

@@ -54,7 +54,7 @@ graph LR
 
 ## 4.3. Mecanismo de Intercambio (Swap)
 
-El Swap **no copia datos** — solo intercambia las **referencias** (punteros) de los dos búferes. Por eso es $O(1)$: tiempo constante, sin importar el tamaño del array.
+El Swap **no copia datos** — solo intercambia las **referencias** de los dos búferes. Por eso es constante — tiempo $O(1)$, sin importar el tamaño del array (ver Punto 7).
 
 ```mermaid
 graph TD
@@ -109,7 +109,7 @@ Con Doble Búfer:
 2. Cuando está listo, hace Swap
 3. El usuario ve un frame **completo**, nunca uno a medio pintar
 
-> 📝 **Nota:** En desarrollo web, el navegador gestiona el Doble Búfer automáticamente a través de la **GPU**. Pero entender el concepto te ayuda a escribir código que aproveche esta técnica (por ejemplo, usando `requestAnimationFrame` en JavaScript o `CompositionTarget.Rendering` en WPF).
+> 📝 **Nota:** En desarrollo web, el navegador gestiona el Doble Búfer automáticamente a través de la **GPU**. Los navegadores preparan el siguiente frame en un buffer oculto mientras tú ves el actual; por eso el scroll y las animaciones se ven fluidas.
 
 ## 4.6. Código en C#
 
@@ -128,6 +128,7 @@ for (int frame = 0; frame < 5; frame++)
     // Calcular siguiente estado
     for (int i = 1; i < front.Length - 1; i++)
     {
+        // División entera: el resultado se trunca (4/3 = 1, no 1.33)
         int promedio = (front[i - 1] + front[i] + front[i + 1]) / 3;
         back[i] = promedio;
     }

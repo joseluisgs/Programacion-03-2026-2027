@@ -28,7 +28,8 @@ Una **cadena** (`string`) en C# es una secuencia de caracteres. Es un **tipo de 
 
 ```csharp
 string saludo = "Hola";
-saludo[0] = 'M';  // ❌ ERROR: no se puede modificar un string
+saludo[0] = 'M';  // ❌ ERROR de compilación: los strings son inmutables
+// Debes crear un nuevo string: saludo = "Mola";
 ```
 
 > 💡 **Analogía:** Imagina una cadena como una frase escrita con tinta indeleble en un papel. Puedes leerla, pero no puedes borrar una letra y cambiarla. Si quieres cambiar algo, debes escribir una **copia nueva** en otro papel.
@@ -97,7 +98,7 @@ Console.WriteLine(resultado);  // "Hola"
 | `.Trim()` | Elimina espacios al inicio/final | `" hola ".Trim()` → `"hola"` |
 | `.ToUpper()` / `.ToLower()` | Mayúsculas / minúsculas | `"Hola".ToUpper()` → `"HOLA"` |
 | `.IndexOf(texto)` | Posición de la primera aparición | `"Hola".IndexOf("la")` → `2` |
-| `string.Join(sep, array)` | Une array en cadena | `string.Join("-", {"L","M","X"})` → `"L-M-X"` |
+| `string.Join(sep, array)` | Une array en cadena | `string.Join("-", "L", "M", "X")` → `"L-M-X"` |
 | `$"{var}"` | Interpolación de cadenas | `$"Tengo {edad} años"` |
 
 ```csharp
@@ -138,8 +139,10 @@ for (int i = 0; i < 1000; i++)
 ### 5.4.2. Uso Correcto de `StringBuilder`
 
 ```csharp
+using System.Text;
+
 // ✅ RÁPIDO: modificar un buffer interno
-var sb = new System.Text.StringBuilder();
+var sb = new StringBuilder();
 for (int i = 0; i < 1000; i++)
 {
     sb.Append($"Línea {i}\n");

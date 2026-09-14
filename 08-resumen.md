@@ -157,12 +157,14 @@ graph TD
 
 ### Algoritmos de Ordenación y Búsqueda
 
+> 📝 **Nota:** Un algoritmo es **estable** si mantiene el orden original de los elementos que tienen el mismo valor. Por ejemplo, si dos películas tienen rating 5 y la primera aparece antes, después de ordenar sigue estando antes.
+
 | Algoritmo | Complejidad | Estable | Cuándo usarlo |
 | :--- | :---: | :---: | :--- |
 | **Burbuja** | $O(n^2)$ | ✅ | Didáctico, arrays pequeños |
 | **Selección** | $O(n^2)$ | ❌ | Intercambio costoso |
 | **Inserción** | $O(n^2)$ | ✅ | Arrays pequeños o casi ordenados |
-| **Shell Sort** | $O(n \log n)$ | ❌ | Compromiso para arrays medianos |
+| **Shell Sort** | $O(n^{1.5})$ promedio | ❌ | Compromiso para arrays medianos |
 | **QuickSort** | $O(n \log n)$ | ❌ | Más rápido en la práctica |
 | **Búsqueda Lineal** | $O(n)$ | N/A | Arrays no ordenados |
 | **Búsqueda Binaria** | $O(\log n)$ | N/A | Arrays ordenados |
@@ -256,7 +258,7 @@ Antes de dar por cerrado el tema, asegúrate de poder responder **SÍ** a estas 
 | **Burbuja** | Ordenación comparando adyacentes — $O(n^2)$ |
 | **Selección** | Ordenación buscando el mínimo — $O(n^2)$ |
 | **Inserción** | Ordenación insertando en posición — $O(n^2)$ |
-| **Shell Sort** | Inserción con brechas — $O(n \log n)$ |
+| **Shell Sort** | Inserción con brechas — $O(n^{1.5})$ promedio |
 | **QuickSort** | Divide y vencerás con pivote — $O(n \log n)$ |
 | **Búsqueda Lineal** | Recorre todo el array — $O(n)$ |
 | **Búsqueda Binaria** | Divide por la mitad — $O(\log n)$, requiere ordenación |

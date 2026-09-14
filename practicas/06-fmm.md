@@ -1,6 +1,6 @@
-# Práctica FMM (Forest-Fire Model) 🔥🌳: Algoritmos y Matrices
+# Práctica FMM (Forest-Fire Model): Algoritmos y Matrices
 
-- [Práctica FMM (Forest-Fire Model) 🔥🌳: Algoritmos y Matrices](#práctica-fmm-forest-fire-model--algoritmos-y-matrices)
+- [Práctica FMM (Forest-Fire Model): Algoritmos y Matrices](#práctica-fmm-forest-fire-model-algoritmos-y-matrices)
   - [1. El Modelo FFM: Reglas de Evolución](#1-el-modelo-ffm-reglas-de-evolución)
   - [2. Especificaciones Técnicas y Constantes](#2-especificaciones-técnicas-y-constantes)
     - [2.1. Definición de Constantes (Lenguaje DAW)](#21-definición-de-constantes-lenguaje-daw)
