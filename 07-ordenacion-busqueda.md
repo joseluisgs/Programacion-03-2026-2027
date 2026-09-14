@@ -1,400 +1,387 @@
-﻿- [7. Algoritmos y Métodos de Ordenación y Búsqueda](#7-algoritmos-y-métodos-de-ordenación-y-búsqueda)
-  - [7.1. Algoritmos y Métodos de Ordenación (Sorting)](#71-algoritmos-y-métodos-de-ordenación-sorting)
-    - [7.1.1. Algoritmo de Burbuja (Bubble Sort)](#711-algoritmo-de-burbuja-bubble-sort)
-    - [7.1.2. Algoritmo de Selección (Selection Sort)](#712-algoritmo-de-selección-selection-sort)
-    - [7.1.3. Algoritmo de Inserción (Insertion Sort)](#713-algoritmo-de-inserción-insertion-sort)
-    - [7.1.4. Algoritmo Shell Sort](#714-algoritmo-shell-sort)
-    - [7.1.5. Algoritmo QuickSort (Ordenación Rápida)](#715-algoritmo-quicksort-ordenación-rápida)
+﻿- [7. Algoritmos de Ordenación y Búsqueda](#7-algoritmos-de-ordenación-y-búsqueda)
+  - [7.1. Algoritmos de Ordenación (Sorting)](#71-algoritmos-de-ordenación-sorting)
+    - [7.1.1. Burbuja (Bubble Sort)](#711-burbuja-bubble-sort)
+    - [7.1.2. Selección (Selection Sort)](#712-selección-selection-sort)
+    - [7.1.3. Inserción (Insertion Sort)](#713-inserción-insertion-sort)
+    - [7.1.4. Shell Sort](#714-shell-sort)
+    - [7.1.5. QuickSort](#715-quicksort)
   - [7.2. Algoritmos de Búsqueda (Searching)](#72-algoritmos-de-búsqueda-searching)
-    - [7.2.1. Búsqueda Lineal o Secuencial (Linear Search)](#721-búsqueda-lineal-o-secuencial-linear-search)
-    - [7.2.2. Búsqueda Binaria o Dicotómica (Binary Search)](#722-búsqueda-binaria-o-dicotómica-binary-search)
+    - [7.2.1. Búsqueda Lineal](#721-búsqueda-lineal)
+    - [7.2.2. Búsqueda Binaria](#722-búsqueda-binaria)
   - [7.3. Tabla Comparativa de Complejidad (Big O)](#73-tabla-comparativa-de-complejidad-big-o)
+  - [7.4. Cuándo Usar Cada Algoritmo](#74-cuándo-usar-cada-algoritmo)
 
+# 7. Algoritmos de Ordenación y Búsqueda
 
-# 7. Algoritmos y Métodos de Ordenación y Búsqueda
+> 💡 **Punto de partida:** ¿Alguna vez has abierto Netflix y has visto que las películas están ordenadas por "Más populares", "Estrenos recientes" o "Mi lista"? Detrás de ese orden hay algoritmos. Pero, ¿cuál es el mejor? ¿El más rápido siempre es el mejor?
 
-Los algoritmos de ordenación son procedimientos sistemáticos para organizar los elementos de una colección (como un array) en un orden específico, ya sea ascendente o descendente. La elección del algoritmo adecuado depende de varios factores, incluyendo la eficiencia, la estabilidad y la simplicidad.
+En este punto aprenderás los algoritmos de ordenación más importantes (Burbuja, Selección, Inserción, Shell Sort, QuickSort) y los de búsqueda (Lineal y Binaria), analizando su eficiencia con la notación Big O.
 
-| Concepto        | Explicación |
-| :-------------- | :--- |
-| **Ordenación**  | Proceso de organizar los elementos de una colección según una clave específica (ej. valor numérico, orden alfabético). |
-| **Estabilidad** | Un algoritmo es **estable** si mantiene el orden relativo original de los elementos que tienen valores iguales. (Ej. Si dos "5" estaban en orden A, B, tras la ordenación seguirán en orden A, B). |
-| **Complejidad** | Se mide por el número de comparaciones e intercambios. Es crucial para elegir el algoritmo adecuado para grandes volúmenes de datos. |
+**Objetivos de aprendizaje:**
 
-De todos los algoritmos de ordenación, los más comunes y didácticos que veremos, puedes visualizarlos [aquí](https://www.cs.usfca.edu/~galles/visualization/Algorithms.html) o [aquí](https://visualgo.net/en/sorting) y [aquí](https://algorithm-visualizer.org/).
+- Implementar los algoritmos de ordenación básicos
+- Entender la notación Big O y comparar rendimientos
+- Implementar búsqueda lineal y binaria
+- Saber cuándo usar cada algoritmo según el contexto
 
-## 7.1. Algoritmos y Métodos de Ordenación (Sorting)
+## 7.1. Algoritmos de Ordenación (Sorting)
 
-### 7.1.1. Algoritmo de Burbuja (Bubble Sort)
+### 7.1.1. Burbuja (Bubble Sort)
 
-#### Teoría
-El algoritmo de [burbuja](https://es.wikipedia.org/wiki/Ordenamiento_de_burbuja) compara repetidamente **elementos adyacentes** y los intercambia si están en el orden incorrecto. El proceso se repite hasta que el array está completamente ordenado. En cada pasada, el elemento más grande "flota" o "sube" hasta su posición final. Es uno de los algoritmos más simples, pero también uno de los menos eficientes para grandes conjuntos de datos.
-
-#### Pros y Contras
-| Aspecto               | Evaluación | Uso Habitual |
-| :-------------------- | :--- | :--- |
-| **Fácil de entender** | **✅ Pro:** Es el algoritmo de ordenación más sencillo de explicar y visualizar para principiantes. | **Uso Didáctico:** Ideal para introducir el concepto de ordenación y la complejidad $O(n^2)$. |
-| **Eficiencia**        | **❌ Contra:** Su complejidad en el peor y caso promedio es **$O(n^2)$** (cuadrática), lo que lo hace inutilizable para grandes conjuntos de datos. | **Array casi ordenado:** Rinde sorprendentemente bien si el array está *casi* ordenado (su mejor caso es $O(n)$). |
-
-#### Visualización
-![imagen](https://upload.wikimedia.org/wikipedia/commons/c/c8/Bubble-sort-example-300px.gif)
-
-**Visualización del Algoritmo de Burbuja**: https://www.youtube.com/watch?v=lyZQPjUT5B4
+**Idea:** Compara elementos adyacentes y los intercambia si están en orden incorrecto. Los elementos más grandes "burbujean" hacia el final.
 
 ```mermaid
 graph TD
-    Start((Inicio)) --> LoopI["for i = 0 hasta n-1"]
-    LoopI --> LoopJ["for j = 0 hasta n-i-1"]
-    LoopJ --> Comp{"¿A[j] > A[j+1]?"}
-    Comp -- Sí --> Swap[Intercambiar]
-    Swap --> NextJ[Siguiente j]
-    Comp -- No --> NextJ
-    NextJ --> LoopJ
-    LoopJ -- "Fin J" --> NextI[Siguiente i]
-    NextI --> LoopI
-    LoopI -- "Fin I" --> End((Fin))
+    A["[5, 3, 8, 1]"] -->|"Comparar 5,3"| B["[3, 5, 8, 1]"]
+    B -->|"Comparar 5,8"| C["[3, 5, 8, 1]"]
+    C -->|"Comparar 8,1"| D["[3, 5, 1, 8]"]
+    D -->|"Siguiente pasada"| E["[3, 1, 5, 8]"]
+    style A fill:#2196F3,color:#fff
+    style D fill:#FF9800,color:#fff
+    style E fill:#4CAF50,color:#fff
 ```
 
-#### Implementación en Lenguaje DAW
 ```csharp
-// Función auxiliar para intercambiar dos elementos
-procedure swap(int[] arr, int i, int j) {
-    var temp = arr[i];
-    arr[i] = arr[j];
-    arr[j] = temp;
-}
-
-procedure bubbleSort(int[] arr) {
-    var n = arr.Length;
-    var swapped = bool; // Inicializado a false
-
-    for (int i = 0; i < n - 1; i++) {
-        swapped = false; 
-        for (int j = 0; j < n - i - 1; j++) {
-            if (arr[j] > arr[j + 1]) {
-                swap(arr, j, j + 1);
-                swapped = true; 
+void Burbuja(int[] arr)
+{
+    for (int i = 0; i < arr.Length - 1; i++)
+    {
+        for (int j = 0; j < arr.Length - 1 - i; j++)
+        {
+            if (arr[j] > arr[j + 1])
+            {
+                // Intercambiar
+                (arr[j], arr[j + 1]) = (arr[j + 1], arr[j]);
             }
-        }
-        if (!swapped) {
-            break;
         }
     }
 }
 ```
 
----
+| Aspecto | Evaluación |
+| :--- | :--- |
+| **Mejor caso** | $O(n)$ — ya ordenado |
+| **Peor caso** | $O(n^2)$ — orden inverso |
+| **Estable** | ✅ Sí — preserva orden de elementos iguales |
+| **Uso** | Didáctico, arrays pequeños |
 
-### 7.1.2. Algoritmo de Selección (Selection Sort)
+### 7.1.2. Selección (Selection Sort)
 
-#### Teoría
-El algoritmo de [selección](https://es.wikipedia.org/wiki/Ordenamiento_por_selecci%C3%B3n) divide el array en dos partes: una ordenada y otra sin ordenar. En cada iteración, busca el **elemento más pequeño** de la parte sin ordenar y lo **intercambia** con el primer elemento de la parte sin ordenar. Este método es más eficiente que el método de la burbuja, ya que solo hace una comparación por cada iteración.
-
-#### Pros y Contras
-| Aspecto          | Evaluación | Uso Habitual |
-| :--------------- | :--- | :--- |
-| **Intercambios** | **✅ Pro:** Realiza el **mínimo número de intercambios** posibles ($O(n)$ swaps). Esto es ventajoso si la escritura a memoria es costosa. | **Operaciones de Escritura Costosas:** Útil en sistemas donde el coste de la escritura es mucho mayor que el de la lectura. |
-| **Eficiencia**   | **❌ Contra:** Su complejidad es siempre **$O(n^2)$**, incluso si ya está ordenado. | **Uso Didáctico:** Ideal para enseñar la optimización del número de intercambios. |
-
-#### Visualización
-![imagen](https://upload.wikimedia.org/wikipedia/commons/9/94/Selection-Sort-Animation.gif)
-
-**Visualización del Algoritmo de Selección**: https://www.youtube.com/watch?v=Ns4TPTC8whw
+**Idea:** Busca el elemento mínimo y lo pone en su posición correcta, repitiendo para el resto.
 
 ```mermaid
 graph TD
-    Start((Inicio)) --> LoopI["for i = 0 hasta n-2"]
-    LoopI --> Min["min_idx = i"]
-    Min --> LoopJ["for j = i+1 hasta n-1"]
-    LoopJ --> Comp{"¿A[j] < A[min_idx]?"}
-    Comp -- Sí --> UpdateMin["min_idx = j"]
-    UpdateMin --> NextJ[Siguiente j]
-    Comp -- No --> NextJ
-    NextJ --> LoopJ
-    LoopJ -- "Fin J" --> Swap["swap A[i], A[min_idx]"]
-    Swap --> NextI[Siguiente i]
-    NextI --> LoopI
-    LoopI -- "Fin I" --> End((Fin))
+    A["[5, 3, 8, 1]"] -->|"Paso 1: Buscar mínimo (1)"| B["Intercambiar 5 ↔ 1"]
+    B --> C["[1, 3, 8, 5]"]
+    C -->|"Paso 2: Buscar mínimo en resto (3)"| D["Ya está en posición"]
+    D --> E["[1, 3, 8, 5]"]
+    E -->|"Paso 3: Buscar mínimo en resto (5)"| F["Intercambiar 8 ↔ 5"]
+    F --> G["[1, 3, 5, 8] ✅"]
+    style A fill:#2196F3,color:#fff
+    style B fill:#FF9800,color:#fff
+    style D fill:#FF9800,color:#fff
+    style F fill:#FF9800,color:#fff
+    style G fill:#4CAF50,color:#fff
 ```
 
-#### Implementación en Lenguaje DAW
 ```csharp
-procedure selectionSort(int[] arr) {
-    var n = arr.Length;
-    for (int i = 0; i < n - 1; i++) {
-        var min_idx = i;
-        for (int j = i + 1; j < n; j++) {
-            if (arr[j] < arr[min_idx]) {
-                min_idx = j;
-            }
+void Seleccion(int[] arr)
+{
+    for (int i = 0; i < arr.Length - 1; i++)
+    {
+        int minIdx = i;
+        for (int j = i + 1; j < arr.Length; j++)
+        {
+            if (arr[j] < arr[minIdx])
+                minIdx = j;
         }
-        swap(arr, min_idx, i);
+        (arr[i], arr[minIdx]) = (arr[minIdx], arr[i]);
     }
 }
 ```
 
----
+| Aspecto | Evaluación |
+| :--- | :--- |
+| **Mejor caso** | $O(n^2)$ — siempre compara todo |
+| **Peor caso** | $O(n^2)$ |
+| **Estable** | ❌ No — puede cambiar orden de iguales |
+| **Uso** | Cuando el intercambio es costoso |
 
-### 7.1.3. Algoritmo de Inserción (Insertion Sort)
+### 7.1.3. Inserción (Insertion Sort)
 
-#### Teoría
-El algoritmo de [insercción](https://es.wikipedia.org/wiki/Ordenamiento_por_inserci%C3%B3n) es similar a cómo un humano ordena un mazo de cartas: toma un elemento y lo **inserta en su lugar correcto** dentro de la sub-lista que ya está ordenada, desplazando los elementos mayores a la derecha.
-
-#### Pros y Contras
-| Aspecto                  | Evaluación | Uso Habitual |
-| :----------------------- | :--- | :--- |
-| **Datos Casi Ordenados** | **✅ Pro:** Extremadamente eficiente en el **mejor caso ($O(n)$)** y con datos casi ordenados. Es **estable**. | **Conjuntos de datos pequeños** y para **actualizar colecciones** donde el nuevo elemento se inserta en una lista ya ordenada. |
-| **Eficiencia**           | **❌ Contra:** Su complejidad en el peor y caso promedio es **$O(n^2)$**. | **Uso Didáctico:** Ideal para ilustrar el concepto de sub-lista ordenada. |
-
-#### Visualización
-![imagen](https://upload.wikimedia.org/wikipedia/commons/0/0f/Insertion-sort-example-300px.gif)
-
-**Visualización del Algoritmo de Inserción**: https://www.youtube.com/watch?v=ROalU379l3U
+**Idea:** Similar a ordenar cartas en la mano. Cada elemento se inserta en su posición correcta entre los ya ordenados.
 
 ```mermaid
 graph TD
-    Start((Inicio)) --> LoopI["for i = 1 hasta n-1"]
-    LoopI --> Key["key = A[i], j = i-1"]
-    Key --> Cond{"¿j >= 0 Y A[j] > key?"}
-    Cond -- Sí --> Move["A[j+1] = A[j]"]
-    Move --> DecJ["j = j - 1"]
-    DecJ --> Cond
-    Cond -- No --> Insert["A[j+1] = key"]
-    Insert --> NextI[Siguiente i]
-    NextI --> LoopI
-    LoopI -- "Fin I" --> End((Fin))
+    A["[5, 3, 8, 1]"] -->|"Insertar 3"| B["[3, 5, 8, 1]"]
+    B -->|"Insertar 8"| C["[3, 5, 8, 1]"]
+    C -->|"Insertar 1"| D["[1, 3, 5, 8] ✅"]
+    style A fill:#2196F3,color:#fff
+    style B fill:#FF9800,color:#fff
+    style C fill:#FF9800,color:#fff
+    style D fill:#4CAF50,color:#fff
 ```
 
-#### Implementación en Lenguaje DAW
 ```csharp
-procedure insertionSort(int[] arr) {
-    var n = arr.Length;
-    for (int i = 1; i < n; i++) {
-        var key = arr[i]; 
-        var j = i - 1; 
-        while (j >= 0 && arr[j] > key) {
+void Insercion(int[] arr)
+{
+    for (int i = 1; i < arr.Length; i++)
+    {
+        int clave = arr[i];
+        int j = i - 1;
+        while (j >= 0 && arr[j] > clave)
+        {
             arr[j + 1] = arr[j];
-            j = j - 1;
+            j--;
         }
-        arr[j + 1] = key;
+        arr[j + 1] = clave;
     }
 }
 ```
 
----
+| Aspecto | Evaluación |
+| :--- | :--- |
+| **Mejor caso** | $O(n)$ — casi ordenado |
+| **Peor caso** | $O(n^2)$ — orden inverso |
+| **Estable** | ✅ Sí |
+| **Uso** | Arrays pequeños o casi ordenados |
 
-### 7.1.4. Algoritmo Shell Sort
+📌 **Ejemplo real:** Netflix usa Inserción para ordenar tu "Lista de favoritos" cuando añades una sola película — como tiene pocos elementos, es rápido y estable.
 
-#### Teoría
-El [Shell Short](https://es.wikipedia.org/wiki/Ordenamiento_Shell) es una **mejora del Insertion Sort**. En lugar de comparar e intercambiar elementos adyacentes, compara elementos separados por un **intervalo (`gap`)** mayor a 1. El intervalo se reduce progresivamente hasta que es 1.
+### 7.1.4. Shell Sort
 
-#### Pros y Contras
-| Aspecto | Evaluación | Uso Habitual |
-| :--- | :--- | :--- |
-| **Velocidad** | **✅ Pro:** Significativamente más rápido que los métodos $O(n^2)$ puros. Se sitúa entre $O(n \log^2 n)$ y $O(n^{1.3})$. | **Conjuntos de datos de tamaño medio.** |
-| **Complejidad** | **❌ Contra:** Más complejo de implementar que Inserción Pura. | **Uso Didáctico.** |
-
-#### Visualización
-![imagen](https://upload.wikimedia.org/wikipedia/commons/d/d8/Sorting_shellsort_anim.gif)
-
-**Visualización del Algoritmo Shell Sort**: https://youtu.be/J-t4OIdqs5c
+**Idea:** Una mejora de Inserción que compara elementos separados por una "brecha" (gap) que se reduce progresivamente.
 
 ```mermaid
 graph TD
-    Start((Inicio)) --> InitGap["gap = n / 2"]
-    InitGap --> CondGap{"gap > 0"}
-    CondGap -- Sí --> LoopI["for i = gap hasta n-1"]
-    LoopI --> Key["temp = A[i], j = i"]
-    Key --> CondJ{"¿j >= gap Y A[j-gap] > temp?"}
-    CondJ -- Sí --> Move["A[j] = A[j-gap]"]
-    Move --> DecJ["j = j - gap"]
-    DecJ --> CondJ
-    CondJ -- No --> Insert["A[j] = temp"]
-    Insert --> NextI[Siguiente i]
-    NextI --> LoopI
-    LoopI -- "Fin i" --> RedGap["gap = gap / 2"]
-    RedGap --> CondGap
-    CondGap -- No --> End((Fin))
+    A["Array: [8, 5, 9, 3, 2, 7, 1, 6, 4]"] -->|"gap = 4"| B["Comparar elementos con salto 4"]
+    B --> C["[2, 5, 1, 3, 8, 7, 9, 6, 4]"]
+    C -->|"gap = 2"| D["Comparar elementos con salto 2"]
+    D --> E["[1, 3, 2, 5, 4, 6, 9, 7, 8]"]
+    E -->|"gap = 1"| F["Inserción final (gap=1)"]
+    F --> G["[1, 2, 3, 4, 5, 6, 7, 8, 9] ✅"]
+    style A fill:#2196F3,color:#fff
+    style B fill:#FF9800,color:#fff
+    style D fill:#FF9800,color:#fff
+    style F fill:#FF9800,color:#fff
+    style G fill:#4CAF50,color:#fff
 ```
 
-#### Estructura en Lenguaje DAW
 ```csharp
-procedure shellSort(int[] arr) {
-    var n = arr.Length;
-    var gap = n / 2;
-    while (gap > 0) {
-        for (int i = gap; i < n; i++) {
-            var temp = arr[i];
-            var j = i;
-            while (j >= gap && arr[j - gap] > temp) {
+void ShellSort(int[] arr)
+{
+    int n = arr.Length;
+    for (int gap = n / 2; gap > 0; gap /= 2)
+    {
+        for (int i = gap; i < n; i++)
+        {
+            int temp = arr[i];
+            int j = i;
+            while (j >= gap && arr[j - gap] > temp)
+            {
                 arr[j] = arr[j - gap];
-                j = j - gap;
+                j -= gap;
             }
             arr[j] = temp;
         }
-        gap = gap / 2;
     }
 }
 ```
 
----
+| Aspecto | Evaluación |
+| :--- | :--- |
+| **Mejor caso** | $O(n \log n)$ |
+| **Peor caso** | $O(n^2)$ dependiendo del gap |
+| **Estable** | ❌ No |
+| **Uso** | Buen compromiso para arrays medianos |
 
-### 7.1.5. Algoritmo QuickSort (Ordenación Rápida)
+### 7.1.5. QuickSort
 
-#### Teoría
-El método [quicksort](https://es.wikipedia.org/wiki/Quicksort) es el algoritmo de ordenación por **"Divide y Vencerás"** más utilizado. Consiste en dividir el array en dos partes, una con los elementos menores que el pivote y otra con los elementos mayores. Luego se ordenan las dos partes de forma recursiva.
+**Idea:** Elige un **pivote**, particiona el array en "menores que el pivote" y "mayores que el pivote", y aplica recursión.
 
-#### Pros y Contras
-| Aspecto | Evaluación | Uso Habitual |
-| :--- | :--- | :--- |
-| **Velocidad (Promedio)** | **✅ Pro:** Es el algoritmo más rápido ($O(n \log n)$). | **Grandes volúmenes de datos.** |
-| **Velocidad (Peor Caso)** | **❌ Contra:** Si el pivote se elige mal, degenera a $O(n^2)$. No es estable. | **Estándar industrial.** |
-
-#### Visualización
-![imagen](https://upload.wikimedia.org/wikipedia/commons/6/6a/Sorting_quicksort_anim.gif)
-![imagen](https://lizardorodriguez.files.wordpress.com/2012/06/ordenamiento-quicksort.png)
-
-**Visualización del Algoritmo QuickSort**: https://www.youtube.com/watch?v=ywWBy6J5gz8
-
-#### Diagrama de Flujo Mejorado (QuickSort)
 ```mermaid
 graph TD
-    Start[Inicio QuickSort] --> Cond{¿low < high?}
-    Cond -- No --> End[Fin / Retorno]
-    Cond -- Sí --> Part["Partición: elegir pivote"]
-    Part --> Swap["Reordenar: menores izq, mayores der"]
-    Swap --> RetP["Obtener índice pivote pi"]
-    RetP --> Left["Llamada recursiva Izq: low a pi-1"]
-    RetP --> Right["Llamada recursiva Der: pi+1 a high"]
-    Left --> Start
-    Right --> Start
+    A["[3, 6, 2, 8, 1, 5]"] --> PIVOTE["Pivote: 5"]
+    PIVOTE --> MENORES["[3, 2, 1]"]
+    PIVOTE --> MAYORES["[6, 8]"]
+    MENORES --> R1["Recursión → [1, 2, 3]"]
+    MAYORES --> R2["Recursión → [6, 8]"]
+    R1 --> RESULTADO["[1, 2, 3, 5, 6, 8]"]
+    R2 --> RESULTADO
+    style A fill:#2196F3,color:#fff
+    style PIVOTE fill:#FF9800,color:#fff
+    style MENORES fill:#4CAF50,color:#fff
+    style MAYORES fill:#f44336,color:#fff
+    style RESULTADO fill:#4CAF50,color:#fff
 ```
 
-#### Estructura en Lenguaje DAW (Concepto Recursivo)
 ```csharp
-function int partition(int[] arr, int low, int high) {
-    var pivot = arr[high];
-    var i = low - 1; 
-    for (int j = low; j < high; j++) {
-        if (arr[j] <= pivot) {
-            i = i + 1;
-            swap(arr, i, j); 
+void QuickSort(int[] arr, int bajo, int alto)
+{
+    if (bajo < alto)
+    {
+        int pivote = Partition(arr, bajo, alto);
+        QuickSort(arr, bajo, pivote - 1);
+        QuickSort(arr, pivote + 1, alto);
+    }
+}
+
+int Partition(int[] arr, int bajo, int alto)
+{
+    int pivote = arr[alto];
+    int i = bajo - 1;
+    for (int j = bajo; j < alto; j++)
+    {
+        if (arr[j] < pivote)
+        {
+            i++;
+            (arr[i], arr[j]) = (arr[j], arr[i]);
         }
     }
-    swap(arr, i + 1, high); 
+    (arr[i + 1], arr[alto]) = (arr[alto], arr[i + 1]);
     return i + 1;
-}
-
-procedure quickSort(int[] arr, int low, int high) {
-    if (low < high) {
-        var pi = partition(arr, low, high);
-        quickSort(arr, low, pi - 1);
-        quickSort(arr, pi + 1, high);
-    }
 }
 ```
 
----
+| Aspecto | Evaluación |
+| :--- | :--- |
+| **Mejor caso** | $O(n \log n)$ |
+| **Peor caso** | $O(n^2)$ — pivote mal elegido |
+| **Estable** | ❌ No |
+| **Uso** | El más rápido en la práctica para grandes volúmenes |
+
+> 💡 **Consejo:** En la práctica, los lenguajes modernos (C#, Java, Python) usan QuickSort o variantes (Introsort) en sus métodos de ordenación estándar. No necesitas implementarlo a mano, pero entenderlo te ayuda a elegir el mejor algoritmo.
 
 ## 7.2. Algoritmos de Búsqueda (Searching)
 
-| Concepto | Explicación |
+### 7.2.1. Búsqueda Lineal
+
+**Idea:** Recorre el array elemento por elemento hasta encontrar el objetivo o llegar al final.
+
+```mermaid
+graph TD
+    START(("Inicio")) --> IDX["i = 0"]
+    IDX --> COND{"¿i < Length?"}
+    COND -->|"Sí"| COMP{"¿arr[i] == objetivo?"}
+    COMP -->|"Sí"| FOUND["¡Encontrado! Devolver i"]
+    COMP -->|"No"| NEXT["i++"]
+    NEXT --> COND
+    COND -->|"No"| NOTFOUND["No encontrado → -1"]
+    style START fill:#4CAF50,color:#fff
+    style FOUND fill:#4CAF50,color:#fff
+    style NOTFOUND fill:#f44336,color:#fff
+    style COND fill:#FF9800,color:#fff
+    style COMP fill:#2196F3,color:#fff
+```
+
+```csharp
+int BuscarLineal(int[] arr, int objetivo)
+{
+    for (int i = 0; i < arr.Length; i++)
+    {
+        if (arr[i] == objetivo)
+            return i;  // Encontrado
+    }
+    return -1;  // No encontrado
+}
+```
+
+| Aspecto | Evaluación |
 | :--- | :--- |
-| **Elemento Clave** | Es el valor que estamos intentando encontrar. |
-| **Precondición** | La búsqueda binaria exige que la colección esté **ordenada**. |
+| **Mejor caso** | $O(1)$ — primer elemento |
+| **Peor caso** | $O(n)$ — último o no existe |
+| **Requiere ordenación** | ❌ No |
+| **Uso** | Arrays pequeños o no ordenados |
 
-### 7.2.1. Búsqueda Lineal o Secuencial (Linear Search)
+### 7.2.2. Búsqueda Binaria
 
-#### Teoría
-Recorre el array **elemento por elemento**, comparando cada valor con el elemento clave. Se detiene en la primera coincidencia o al final.
-
-#### Pros y Contras
-| Aspecto | Evaluación | Uso Habitual |
-| :--- | :--- | :--- |
-| **Simplicidad** | **✅ Pro:** Sin precondiciones. Extremadamente fácil de implementar. | **Arrays Pequeños y Desordenados.** |
-| **Eficiencia** | **❌ Contra:** Su complejidad es $O(n)$. No escala bien. | **Uso Didáctico.** |
-
-#### Visualización
-![imagen](https://jorgecontrerasp.files.wordpress.com/2012/06/d1.png)
-
-**Visualización de Búsqueda Lineal**: https://www.youtube.com/watch?v=-PuqKbu9K3U
+**Idea:** Divide el array por la mitad en cada paso. Si el objetivo es menor, busca en la izquierda; si es mayor, en la derecha. **Requiere array ordenado.**
 
 ```mermaid
 graph TD
-    Start((Inicio)) --> Loop["for i = 0 hasta n-1"]
-    Loop --> Cond{"¿A[i] == clave?"}
-    Cond -- Sí --> Found[Retornar i]
-    Cond -- No --> Next[Siguiente i]
-    Next --> Loop
-    Loop -- "Fin bucle" --> NotFound[Retornar -1]
-    Found --> End((Fin))
-    NotFound --> End
+    S(("Inicio")) --> MID["Calcular medio"]
+    MID --> COMP{"¿Igual?"}
+    COMP -->|"Sí"| OK["¡Encontrado!"]
+    COMP -->|"No"| DIR{"¿Mayor?"}
+    DIR -->|"Sí"| DER["Buscar derecha"]
+    DIR -->|"No"| IZQ["Buscar izquierda"]
+    DER --> S
+    IZQ --> S
+    style S fill:#4CAF50,color:#fff
+    style OK fill:#4CAF50,color:#fff
+    style COMP fill:#FF9800,color:#fff
+    style DIR fill:#FF9800,color:#fff
+    style DER fill:#2196F3,color:#fff
+    style IZQ fill:#2196F3,color:#fff
 ```
 
-#### Implementación en Lenguaje DAW
 ```csharp
-function int linearSearch(int[] arr, int key) {
-    for (int i = 0; i < arr.Length; i++) {
-        if (arr[i] == key) return i;
+int BuscarBinaria(int[] arr, int objetivo)
+{
+    int bajo = 0, alto = arr.Length - 1;
+    while (bajo <= alto)
+    {
+        int medio = (bajo + alto) / 2;
+        if (arr[medio] == objetivo) return medio;
+        else if (arr[medio] < objetivo) bajo = medio + 1;
+        else alto = medio - 1;
     }
     return -1;
 }
 ```
 
----
+| Aspecto | Evaluación |
+| :--- | :--- |
+| **Mejor caso** | $O(1)$ — elemento central |
+| **Peor caso** | $O(\log n)$ |
+| **Requiere ordenación** | ✅ Sí |
+| **Uso** | Arrays grandes y ordenados |
 
-### 7.2.2. Búsqueda Binaria o Dicotómica (Binary Search)
+📌 **Ejemplo real:** El buscador de Netflix dentro de su catálogo usa Búsqueda Binaria sobre los títulos ordenados alfabéticamente. Con millones de películas, $O(\log n)$ es mucho más rápido que $O(n)$.
 
-#### Teoría
-Algoritmo **altamente eficiente** basado en "Divide y Vencerás". Requiere array **ordenado**. Compara con el centro y reduce el espacio de búsqueda a la mitad.
-
-#### Pros y Contras
-| Aspecto | Evaluación | Uso Habitual |
-| :--- | :--- | :--- |
-| **Eficiencia** | **✅ Pro:** Complejidad $O(\log n)$. Muy rápida. | **Grandes Bases de Datos.** |
-| **Precondición** | **❌ Contra:** Exige que el array esté ordenado. | **Uso Didáctico.** |
-
-#### Visualización
-![imagen](http://2.bp.blogspot.com/-t8Ra7s0Usvc/TthYTUMUbvI/AAAAAAAAAFA/Ztuh8WzYqaE/s1600/secuen.jpg)
-
-**Visualización de Búsqueda Binaria**: https://www.youtube.com/watch?v=iP897Z5Nerk
-
-```mermaid
-graph TD
-    S((Inicio)) --> Mid[Calcular Punto Medio]
-    Mid --> Comp{"¿Coincide?"}
-    Comp -- Sí --> Success[¡Éxito!]
-    Comp -- No --> Dir{"¿Clave > Centro?"}
-    Dir -- Sí --> Right[Búsqueda en Derecha]
-    Dir -- No --> Left[Búsqueda en Izquierda]
-    Right --> S
-    Left --> S
-```
-
-#### Implementación en Lenguaje DAW
-```csharp
-function int binarySearch(int[] arr, int key) {
-    var low = 0;
-    var high = arr.Length - 1;
-    while (low <= high) {
-        var mid = (low + high) / 2;
-        if (arr[mid] == key) return mid;
-        else if (arr[mid] > key) high = mid - 1;
-        else low = mid + 1;
-    }
-    return -1;
-}
-```
-
----
+> 🔧 **Truco nemotecnico:** 
+> - **Búsqueda Lineal** = Revisar cada estantería una por una
+> - **Búsqueda Binaria** = Abrir el libro por la mitad y decidir si buscar en la primera o segunda parte
 
 ## 7.3. Tabla Comparativa de Complejidad (Big O)
 
-| Algoritmo | Mejor Caso | Caso Promedio | Peor Caso | Estabilidad |
+| Algoritmo | Mejor Caso | Promedio | Peor Caso | Estable |
 | :--- | :---: | :---: | :---: | :---: |
 | **Burbuja** | $O(n)$ | $O(n^2)$ | $O(n^2)$ | ✅ Sí |
 | **Selección** | $O(n^2)$ | $O(n^2)$ | $O(n^2)$ | ❌ No |
 | **Inserción** | $O(n)$ | $O(n^2)$ | $O(n^2)$ | ✅ Sí |
+| **Shell Sort** | $O(n \log n)$ | $O(n^{1.5})$ | $O(n^2)$ | ❌ No |
 | **QuickSort** | $O(n \log n)$ | $O(n \log n)$ | $O(n^2)$ | ❌ No |
 | **Búsqueda Lineal** | $O(1)$ | $O(n)$ | $O(n)$ | N/A |
-| **Búsqueda Binaria**| $O(1)$ | $O(\log n)$ | $O(\log n)$ | N/A |
+| **Búsqueda Binaria** | $O(1)$ | $O(\log n)$ | $O(\log n)$ | N/A |
+
+> 📝 **Nota:** En C# puedes usar `Array.Sort(arr)` (usa Introsort, una variante de QuickSort) y `Array.BinarySearch(arr, valor)` (Búsqueda Binaria). En la práctica, usa estos métodos estándar en lugar de implementar los algoritmos a mano.
+
+## 7.4. Cuándo Usar Cada Algoritmo
+
+| Situación | Algoritmo Recomendado |
+| :--- | :--- |
+| **Array pequeño (<20 elementos)** | Inserción |
+| **Array casi ordenado** | Inserción |
+| **Array grande, sin requisitos especiales** | QuickSort (o `Array.Sort`) |
+| **Estabilidad necesaria** | Burbuja o Inserción |
+| **Búsqueda en array ordenado** | Búsqueda Binaria |
+| **Búsqueda en array no ordenado** | Búsqueda Lineal |
+| **Máximo rendimiento** | QuickSort + Búsqueda Binaria |
+
+---
+
+**Resumen del punto:**
+
+| Concepto | Descripción |
+| :--- | :--- |
+| **Burbuja** | Compara adyacentes, $O(n^2)$, estable |
+| **Selección** | Busca mínimo, $O(n^2)$, no estable |
+| **Inserción** | Inserta en posición, $O(n^2)$, estable |
+| **Shell Sort** | Inserción con brechas, $O(n \log n)$ |
+| **QuickSort** | Divide y vencerás, $O(n \log n)$ promedio |
+| **Búsqueda Lineal** | Recorre todo, $O(n)$ |
+| **Búsqueda Binaria** | Divide por la mitad, $O(\log n)$, requiere ordenación |
+| **Big O** | Notación para comparar rendimiento de algoritmos |
+
+En el siguiente punto cerraremos la unidad con un resumen completo: mapa conceptual, errores comunes, checklist de supervivencia y glosario de términos clave.

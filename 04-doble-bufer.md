@@ -1,201 +1,153 @@
 ﻿- [4. Doble Búfer (Double Buffering)](#4-doble-búfer-double-buffering)
   - [4.1. Teoría de la Técnica](#41-teoría-de-la-técnica)
-  - [4.2. Aplicación Didáctica: Simulación de Propagación de Estado](#42-aplicación-didáctica-simulación-de-propagación-de-estado)
-  - [4.3. Mecanismo en Lenguaje DAW](#43-mecanismo-en-lenguaje-daw)
-  - [4.4. Mecanismo de Intercambio (Swap) y Justificación de la Eficiencia](#44-mecanismo-de-intercambio-swap-y-justificación-de-la-eficiencia)
-  - [4.5. Entendiendo el Doble Búfer: La Analogía del Pintor](#45-entendiendo-el-doble-búfer-la-analogía-del-pintor)
-  - [4.6. ¿Por qué es vital en DAW? El problema del Tearing](#46-por-qué-es-vital-en-daw-el-problema-del-tearing)
-  - [4.7. Análisis Detallado del Mecanismo de Intercambio (Swap)](#47-análisis-detallado-del-mecanismo-de-intercambio-swap)
-
+  - [4.2. La Analogía del Pintor](#42-la-analogía-del-pintor)
+  - [4.3. Mecanismo de Intercambio (Swap)](#43-mecanismo-de-intercambio-swap)
+  - [4.4. Aplicación Didáctica: Propagación de Estado](#44-aplicación-didáctica-propagación-de-estado)
+  - [4.5. ¿Por qué es vital en Desarrollo Web? El Problema del Tearing](#45-por-qué-es-vital-en-desarrollo-web-el-problema-del-tearing)
+  - [4.6. Código en C#](#46-código-en-c)
 
 # 4. Doble Búfer (Double Buffering)
 
+> 💡 **Punto de partida:** ¿Alguna vez has jugado a un videojuego y has notado que la imagen se ve "rota" o parpadea? Eso es el **tearing**: el monitor muestra parte de un frame antiguo y parte de uno nuevo al mismo tiempo. La solución es una técnica llamada Doble Búfer.
+
+En este punto aprenderás qué es el Doble Búfer, cómo funciona el mecanismo de Swap y por qué es esencial en animaciones, juegos y desarrollo web.
+
+**Objetivos de aprendizaje:**
+
+- Entender qué es el Doble Búfer y por qué existe
+- Comprender el mecanismo de Swap (intercambio de referencias)
+- Conocer la aplicación en desarrollo web y videojuegos
+
 ## 4.1. Teoría de la Técnica
 
-El **Doble Búfer** es un patrón de diseño que utiliza dos áreas de memoria (dos *búferes* o dos matrices idénticas) para gestionar datos que se están leyendo y escribiendo concurrentemente. Es la solución estándar para evitar la corrupción de datos y los artefactos visuales (*tearing*) que ocurren cuando una matriz se modifica al mismo tiempo que se está leyendo. Esta técnica es ampliamente utilizada en gráficos por computadora, simulaciones y juegos.
+El **Doble Búfer** es un patrón de diseño que utiliza **dos arrays** (búferes) para evitar el parpadeo. Mientras se muestra un búfer en pantalla, se prepara el siguiente en segundo plano.
 
-**El Principio:**
+| Búfer | Función |
+| :--- | :--- |
+| **Front Buffer** | El que se muestra en pantalla (visible) |
+| **Back Buffer** | El que se está preparando (oculto) |
 
-1.  **Búfer de Lectura (Front Buffer):** La matriz que se está **leyendo** y/o mostrando en pantalla en el momento actual.
-2.  **Búfer de Escritura (Back Buffer):** La matriz donde se están aplicando **todas las modificaciones** o los cálculos de la siguiente *iteración* de la simulación.
-3.  **Intercambio (Swap):** Cuando el Búfer de Escritura ha completado su actualización, los roles se **intercambian atómicamente** (de forma instantánea). El Búfer de Escritura pasa a ser el de Lectura, y viceversa.
+Cuando el Back Buffer está listo, se **intercambian** (swap) y el Back pasa a ser Front, y viceversa.
 
-El Doble Búfer asegura que el lector (o la función de impresión) siempre tenga acceso a una matriz **completa y consistente**, evitando la lectura de datos a medio modificar.
+## 4.2. La Analogía del Pintor
+
+> 💡 **Analogía:** Imagina un pintor que trabaja con **dos lienzos**. Mientras el público mira el Lienzo A (terminado), el pintor trabaja en el Lienzo B (preparando la siguiente escena). Cuando B está listo, los intercambia: el público ve B y el pintor empieza a trabajar en A de nuevo.
 
 ```mermaid
-sequenceDiagram
-    participant FB as Front Buffer (Lectura)
-    participant BB as Back Buffer (Escritura)
-    Note over FB,BB: 1. Renderizado desde Front
-    Note over BB: 2. Cálculo de siguiente estado en Back
-    rect rgb(200, 255, 200)
-    Note over FB,BB: 3. SWAP (O(1))
-    FB->>BB: Pasa a ser Back
-    BB->>FB: Pasa a ser Front
+graph LR
+    subgraph PASO1 ["Paso 1: Ver A, pintar B"]
+        A1["Front: A (visible)"] 
+        B1["Back: B (preparando)"]
     end
+    subgraph PASO2 ["Paso 2: Swap"]
+        A2["Front: B (visible)"]
+        B2["Back: A (preparando)"]
+    end
+    PASO1 -->|"Swap"| PASO2
+    style A1 fill:#4CAF50,color:#fff
+    style B1 fill:#607D8B,color:#fff
+    style A2 fill:#4CAF50,color:#fff
+    style B2 fill:#607D8B,color:#fff
 ```
 
-## 4.2. Aplicación Didáctica: Simulación de Propagación de Estado
+📌 **Ejemplo real:** Netflix usa Doble Búfer al reproducir vídeo. Mientras ves el frame actual (Front Buffer), el siguiente frame se descarga y prepara en el Back Buffer. Cuando llega el momento, se intercambian y la reproducción es fluida sin cortes.
 
-Imaginemos una simulación simple en una matriz 2D donde cada celda tiene un estado (0 o 1). Cada segundo, queremos calcular la siguiente generación de estados basándonos en la matriz actual, y luego mostrar esa nueva matriz.
+## 4.3. Mecanismo de Intercambio (Swap)
 
-**Problema sin Doble Búfer:**
-Si intentamos actualizar la matriz mientras la leemos, un cambio en la posición $(i, j)$ podría afectar inmediatamente el cálculo de la posición adyacente $(i, j+1)$ en la misma iteración, rompiendo la lógica de la simulación.
-
-**Solución con Doble Búfer en DAW:**
-La solución requiere dos matrices de la misma dimensión y el método de arrays para clonar y gestionar las referencias correctamente.     
-
-## 4.3. Mecanismo en Lenguaje DAW
-
-```csharp
-// Función para clonar una matriz (Copia Profunda)
-function int[][] cloneMatrix(int[][] source, int f, int c) {
-    // 1. Crear la NUEVA matriz (nueva referencia de memoria para las filas)
-    var target = int[f][];
-
-    // 2. Copia Profunda: Inicializar columnas y copiar el VALOR de cada celda
-    for (int i = 0; i < f; i++) {
-        // Inicializar cada fila (nueva referencia de memoria para las columnas)
-        target[i] = int[c];
-
-        for (int j = 0; j < c; j++) {
-            // Copia del valor
-            target[i][j] = source[i][j];
-        }
-    }
-    return target;
-}
-
-
-// Función para imprimir una matriz (simula la lectura/renderizado)
-procedure printMatrix(int[][] matriz, int FILAS, int COLUMNAS) {
-    writeLine("--- Rendering Matriz Actual ---");
-    for (int i = 0; i < FILAS; i++) {
-        for (int j = 0; j < COLUMNAS; j++) {
-            write(matriz[i][j] + " "); // Acceso con doble corchete
-        }
-        writeLine("");
-    }
-}
-
-// Lógica de la simulación: Propagación de estado
-procedure updateSimulation(int[][] lectura, int[][] escritura, int FILAS, int COLUMNAS) {
-    // Lectura: frontBuffer | Escritura: backBuffer
-    for (int i = 0; i < FILAS; i++) {
-        for (int j = 0; j < COLUMNAS; j++) {
-
-            // Si la celda actual del BÚFER DE LECTURA tiene estado 1...
-            if (lectura[i][j] == 1) {
-                // ...activar la celda central y sus adyacentes en el BÚFER DE ESCRITURA
-
-                // 1. Mantiene la célula que desencadenó la propagación
-                escritura[i][j] = 1;
-
-                // 2. Propaga el estado a los 4 vecinos cardinales, comprobando los límites:
-                if (i > 0) escritura[i - 1][j] = 1;  // Arriba
-                if (i < FILAS - 1) escritura[i + 1][j] = 1;  // Abajo
-                if (j > 0) escritura[i][j - 1] = 1;  // Izquierda
-                if (j < COLUMNAS - 1) escritura[i][j + 1] = 1;  // Derecha
-            }
-        }
-    }
-}
-
-Main {
-
-    // Dimensiones de la matriz
-    const int FILAS = 5;
-    const int COLUMNAS = 5;
-
-    // Estado inicial de la simulación (Front Buffer)
-    var frontBuffer = int[][] {
-        {0, 0, 0, 0, 0},
-        {0, 1, 0, 1, 0},
-        {0, 0, 0, 0, 0},
-        {0, 1, 0, 1, 0},
-        {0, 0, 0, 0, 0}
-    };
-
-    // Inicialización del Back Buffer usando nuestra función de CLONACIÓN explícita
-    var backBuffer = cloneMatrix(frontBuffer, FILAS, COLUMNAS);
-
-    // Simulación de 3 ciclos
-    for (int ciclo = 1; ciclo <= 3; ciclo++) {
-        writeLine("\n======== Ciclo " + ciclo + " ========");
-
-        // 1. LECTURA Y VISUALIZACIÓN
-        printMatrix(frontBuffer, FILAS, COLUMNAS);
-
-        // 2. ESCRITURA: El cálculo de la próxima generación se hace *siempre* en el Back Buffer
-        updateSimulation(frontBuffer, backBuffer, FILAS, COLUMNAS);
-
-        // 3. INTERCAMBIO (SWAP): Se intercambian los punteros de los búferes atómicamente.
-        //  Esta operación es O(1) (Constante): Solo se copian 3 referencias de memoria.
-        var temp = frontBuffer; // 1. Guardar referencia vieja.
-        frontBuffer = backBuffer; // 2. BackBuffer pasa a ser la visible.
-        backBuffer = temp; // 3. El antiguo frontBuffer se recicla.  
-    }
-    writeLine("\n======== Fin de la Simulación ========");
-    printMatrix(frontBuffer, FILAS, COLUMNAS);
-}
-```
-
-## 4.4. Mecanismo de Intercambio (Swap) y Justificación de la Eficiencia
-
-El **Intercambio (*Swap*)** es el corazón del patrón Doble Búfer y la clave de su rendimiento. Consiste en intercambiar las **referencias de memoria** de las dos matrices, lo que se realiza en un tiempo constante, independientemente del tamaño de la matriz.
-
-| Técnica                | Descripción | Complejidad | Por qué el SWAP es superior |
-| :--------------------- | :--- | :--- | :--- |
-| **Intercambio (Swap)** | Solo se manipulan los **punteros**. | **$O(1)$** | El tiempo es instantáneo e independiente del tamaño. |
-| **Clonación Repetida** | **Copia cada celda** del array. | **$O(n^2)$** | El tiempo crece exponencialmente con la resolución. |
-
-## 4.5. Entendiendo el Doble Búfer: La Analogía del Pintor
-
-Imagina que tienes una **pizarra** y un **público** mirando. Si quieres cambiar el dibujo completo, el público verá cómo borras y cómo vas dibujando trazo a trazo. Esto genera una sensación de parpadeo y desorden.
-
-Con **Doble Búfer**, tienes **dos pizarras**:
-1.  Una está de cara al público (**Front Buffer**). El público la ve terminada y perfecta.
-2.  La otra está detrás, oculta al público (**Back Buffer**). Tú borras y dibujas en esta con total tranquilidad.
-3.  Cuando terminas el dibujo, simplemente **giras el soporte** (haces el **Swap**). La que estaba detrás pasa adelante instantáneamente. El público nunca vio el proceso de "borrar y pintar", solo vio el resultado final de golpe.
-
----
-
-## 4.6. ¿Por qué es vital en DAW? El problema del Tearing
-
-Si procesamos una matriz directamente mientras la mostramos (ej. en un juego web o una simulación compleja), el usuario puede ver la matriz a "medio procesar". Esto se conoce como **Tearing** o artefactos visuales. 
-
-En simulaciones lógicas, el problema es aún más grave: si la celda `[1][1]` depende de la celda `[1][0]`, y ya hemos actualizado `[1][0]`, el cálculo de `[1][1]` será erróneo porque estará usando un dato de la "nueva generación" cuando debería usar uno de la "actual". El Doble Búfer garantiza la **integridad de la generación**.
-
----
-
-## 4.7. Análisis Detallado del Mecanismo de Intercambio (Swap)
-
-En el código DAW, el intercambio no mueve los datos de sitio, solo cambia "hacia dónde miran" nuestras variables. Es una operación de **reasignación de referencias**.
+El Swap **no copia datos** — solo intercambia las **referencias** (punteros) de los dos búferes. Por eso es $O(1)$: tiempo constante, sin importar el tamaño del array.
 
 ```mermaid
 graph TD
-    subgraph Memoria_Heap ["Memoria HEAP"]
-        M1["Bloque Datos A"]
-        M2["Bloque Datos B"]
-    end
-    subgraph Variables_Stack ["Variables STACK"]
-        FB["frontBuffer"]
-        BB["backBuffer"]
-    end
-
-    FB -->|Apunta a| M1
-    BB -->|Apunta a| M2
-    
-    INFO["ESTADO TRAS EL SWAP (Intercambio de punteros)"]
-    style INFO fill:#f9f,stroke:#333,stroke-dasharray: 5 5
-    
-    FB -.->|Ahora apunta a| M2
-    BB -.->|Ahora apunta a| M1
+    FRONT["Front → B"] -->|Swap| BACK["Back → A"]
+    BACK["Back → A"] -->|Swap| FRONT["Front → A"]
+    style FRONT fill:#4CAF50,color:#fff
+    style BACK fill:#607D8B,color:#fff
 ```
 
-**Paso a paso del código:**
-1.  `var temp = frontBuffer;`: Guardamos la dirección de la pizarra que el público está viendo.
-2.  `frontBuffer = backBuffer;`: Le decimos al público que ahora mire la pizarra que acabamos de terminar de pintar detrás.
-3.  `backBuffer = temp;`: Cogemos la pizarra vieja (que ya no se ve) y la ponemos detrás para borrarla y volver a pintar en el siguiente ciclo.
+```csharp
+// ✅ Mecanismo de Swap: intercambiar referencias
+int[] front = { 1, 2, 3 };
+int[] back = { 4, 5, 6 };
 
-**Impacto en el rendimiento**: Como solo movemos "punteros" (direcciones), la operación tarda lo mismo si la matriz es de 3x3 que si es de 10.000x10.000. Por eso decimos que es **O(1) (Tiempo Constante)**.
+// Swap: solo intercambiar las referencias
+(front, back) = (back, front);
+
+// Ahora front = {4,5,6} y back = {1,2,3}
+Console.WriteLine($"Front: [{string.Join(", ", front)}]");
+Console.WriteLine($"Back: [{string.Join(", ", back)}]");
+```
+
+> ⚠️ **Advertencia:** Si en lugar de Swap haces una **copia** de los datos (`Array.Copy`), la operación pasa de $O(1)$ a $O(n)$ — mucho más lenta. El Swap es la clave de la eficiencia.
+
+## 4.4. Aplicación Didáctica: Propagación de Estado
+
+El Doble Búfer se usa para simular la **propagación de estado**: calcular el siguiente estado basándose en el actual, sin modificarlo mientras se calcula.
+
+📌 **Ejemplo real:** En el juego de la Vida de Conway, cada célula se muere o nace según sus vecinas. El Doble Búfer asegura que todos los cálculos se hagan sobre el estado actual, y solo después se actualice el siguiente.
+
+```csharp
+int[] actual = { 0, 1, 1, 0, 1 };
+int[] siguiente = new int[actual.Length];
+
+// Calcular siguiente estado basándose en el actual
+for (int i = 1; i < actual.Length - 1; i++)
+{
+    int vecinas = actual[i - 1] + actual[i + 1];
+    siguiente[i] = vecinas == 2 ? 1 : 0;
+}
+
+// Swap cuando esté todo calculado
+(actual, siguiente) = (siguiente, actual);
+```
+
+## 4.5. ¿Por qué es vital en Desarrollo Web? El Problema del Tearing
+
+Sin Doble Búfer, el navegador dibuja la página directamente en el buffer visible. Si el usuario hace scroll mientras se está dibujando, ve una imagen **a medio pintar** (tearing).
+
+Con Doble Búfer:
+1. El navegador prepara el siguiente frame en el Back Buffer
+2. Cuando está listo, hace Swap
+3. El usuario ve un frame **completo**, nunca uno a medio pintar
+
+> 📝 **Nota:** En desarrollo web, el navegador gestiona el Doble Búfer automáticamente a través de la **GPU**. Pero entender el concepto te ayuda a escribir código que aproveche esta técnica (por ejemplo, usando `requestAnimationFrame` en JavaScript o `CompositionTarget.Rendering` en WPF).
+
+## 4.6. Código en C#
+
+```csharp
+// ✅ Doble Búfer completo: propagación de onda
+int[] front = { 0, 0, 0, 0, 0, 0, 0, 0 };
+int[] back = new int[front.Length];
+
+// Fuente en el centro
+front[front.Length / 2] = 1;
+
+for (int frame = 0; frame < 5; frame++)
+{
+    Console.WriteLine($"Frame {frame}: [{string.Join(", ", front)}]");
+
+    // Calcular siguiente estado
+    for (int i = 1; i < front.Length - 1; i++)
+    {
+        int promedio = (front[i - 1] + front[i] + front[i + 1]) / 3;
+        back[i] = promedio;
+    }
+
+    // Swap
+    (front, back) = (back, front);
+}
+```
+
+---
+
+**Resumen del punto:**
+
+| Concepto | Descripción |
+| :--- | :--- |
+| **Doble Búfer** | Dos arrays: uno visible, otro preparándose |
+| **Front Buffer** | El que se muestra en pantalla |
+| **Back Buffer** | El que se está calculando |
+| **Swap** | Intercambio de referencias — $O(1)$ |
+| **Tearing** | Imagen rota por mostrar frames a medio pintar |
+| **Propagación de estado** | Calcular siguiente estado sin modificar el actual |
+
+En el siguiente punto veremos las cadenas de texto en C#: su inmutabilidad, métodos esenciales y cómo construir textos eficientemente con `StringBuilder`.

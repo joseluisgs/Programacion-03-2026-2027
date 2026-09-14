@@ -1,481 +1,308 @@
-﻿- [3. Arrays multidimensionales](#3-arrays-multidimensionales)
+﻿- [3. Arrays Multidimensionales](#3-arrays-multidimensionales)
   - [3.1. Conceptos Fundamentales](#31-conceptos-fundamentales)
     - [3.1.1. Tipos de Matrices](#311-tipos-de-matrices)
-    - [3.1.2. Mecanismos de Almacenamiento y Rendimiento](#312-mecanismos-de-almacenamiento-y-rendimiento)
-  - [3.2. Arrays Multidimensionales en el Lenguaje DAW](#32-arrays-multidimensionales-en-el-lenguaje-daw)
-    - [3.2.1. Definición, Creación y Valores por Defecto](#321-definición-creación-y-valores-por-defecto)
-    - [3.2.2. Valores Anulables (`T?`)](#322-valores-anulables-t)
+    - [3.1.2. Mecanismos de Almacenamiento](#312-mecanismos-de-almacenamiento)
+  - [3.2. Declaración y Creación de Matrices](#32-declaración-y-creación-de-matrices)
+    - [3.2.1. Matrices Rectangulares](#321-matrices-rectangulares)
+    - [3.2.2. Matrices Escalonadas (Jagged)](#322-matrices-escalonadas-jagged)
   - [3.3. Recorrido con `for` y `foreach`](#33-recorrido-con-for-y-foreach)
     - [3.3.1. Bucle `for` (Acceso por Índice)](#331-bucle-for-acceso-por-índice)
-    - [3.3.2. Bucle `foreach` (Lectura con Anidación)](#332-bucle-foreach-lectura-con-anidación)
+    - [3.3.2. Bucle `foreach` (Lectura)](#332-bucle-foreach-lectura)
   - [3.4. Identidad, Igualdad y Clonación en Matrices](#34-identidad-igualdad-y-clonación-en-matrices)
-    - [3.4.1. Identidad vs. Igualdad (Doble Referencia)](#341-identidad-vs-igualdad-doble-referencia)
-    - [3.4.2. Clonación (Copia Profunda)](#342-clonación-copia-profunda)
   - [3.5. Paso por Referencia y Devolución de Matrices](#35-paso-por-referencia-y-devolución-de-matrices)
-  - [3.6. Copias, Clonación Profunda y Gestión del Tamaño en Matrices](#36-copias-clonación-profunda-y-gestión-del-tamaño-en-matrices)
-    - [3.6.1. La Doble Referencia (Copia Superficial vs. Copia Profunda)](#361-la-doble-referencia-copia-superficial-vs-copia-profunda)
-    - [3.6.2. Clonación Profunda Manual (Técnica Correcta)](#362-clonación-profunda-manual-técnica-correcta)
-    - [3.6.3. Modificación del Tamaño (Recreación de la Matriz)](#363-modificación-del-tamaño-recreación-de-la-matriz)
-  - [3.7. Rendimiento: El orden de los índices](#37-rendimiento-el-orden-de-los-índices)
+  - [3.6. Copias, Clonación Profunda y Cambio de Tamaño](#36-copias-clonación-profunda-y-cambio-de-tamaño)
+  - [3.7. Rendimiento: El Orden de los Índices](#37-rendimiento-el-orden-de-los-índices)
 
+# 3. Arrays Multidimensionales
 
-# 3. Arrays multidimensionales
-Los arrays multidimensionales son una extensión natural de los arrays unidimensionales. Permiten almacenar datos en una estructura más compleja, como matrices o tablas, donde cada elemento puede ser accedido mediante múltiples índices.
+> 💡 **Punto de partida:** ¿Alguna vez has visto un tablero de ajedrez? Tiene 8 filas y 8 columnas — 64 casillas. Para acceder a una casilla concreta, necesitas dos coordenadas: fila y columna. Eso es exactamente una **matriz**: un array con dos o más dimensiones.
 
-Para poder identificar un elemento en un array multidimensional, necesitamos tantos índices como dimensiones tenga el array. Por ejemplo, en un array de dos dimensiones (una matriz), cada elemento se identifica con dos índices: uno para la fila y otro para la columna.      
+En este punto aprenderás a crear, recorrer y manipular matrices en C#: rectangulares, escalonadas, clonación profunda y el secreto del rendimiento por el orden de los índices.
 
->Piensa en ello como un aramario donde tenemos varias cajoneras (filas) y cada cajonera tiene varios cajones (columnas). O el famoso juego de los barcos donde tenemos un tablero con filas y columnas y para disparar a una posición necesitamos dos coordenadas (índices).      
+**Objetivos de aprendizaje:**
+
+- Declarar matrices rectangulares y escalonadas
+- Recorrer matrices con bucles anidados (`for` y `foreach`)
+- Entender la diferencia entre copia superficial y copia profunda
+- Conocer el impacto del orden de los índices en el rendimiento
 
 ## 3.1. Conceptos Fundamentales
 
 ### 3.1.1. Tipos de Matrices
 
-En la programación existen principalmente dos modelos para representar datos multidimensionales:
+| Tipo | Descripción | Ejemplo |
+| :--- | :--- | :--- |
+| **Rectangular** | Todas las filas tienen el mismo número de columnas | `int[3, 4]` — 3 filas × 4 columnas |
+| **Escalonada (Jagged)** | Cada fila puede tener distinto número de columnas | `int[3][]` — 3 filas de tamaño variable |
 
-| Modelo                                                  | Descripción                                                                                                                                        | Sintaxis Típica (ej. Java, C\#)  | Propiedad en DAW            | 
-| :------------------------------------------------------ | :------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------- | :-------------------------- | 
-| **Array Rectangular** (*Rectangular Array*)             | Una cuadrícula perfecta. Todas las filas tienen **exactamente la misma longitud**, formando un bloque contiguo uniforme.                           | `int[,] matriz = new int[3, 5];` | **NO es el modelo de DAW.** | 
-| **Array Escalonado** (*Jagged Array* o Array de Arrays) | Es un **array de arrays**. La primera dimensión contiene referencias a otros arrays. **Cada sub-array (fila) puede tener una longitud diferente.** | `int[][] matriz = new int[3][];` | **Es el modelo de DAW.**    | 
+### 3.1.2. Mecanismos de Almacenamiento
 
-**Justificación de DAW (Array Escalonado):** El modelo escalonado ofrece mayor **flexibilidad** (filas de distinto tamaño) y permite una mejor **optimización de la memoria**, ya que cada sub-array se asigna solo con el espacio que necesita, sin dejar huecos obligatorios. Además, es el modelo que usan internamente lenguajes como Java y C\# cuando se anidan corchetes (`[][]`), lo que facilita la comprensión del paso a estos lenguajes.
-
-```mermaid
-graph TD
-    M["Matriz Variable"] --> F0["Fila 0: 2 elementos"]
-    M --> F1["Fila 1: 4 elementos"]
-    M --> F2["Fila 2: 1 elemento"]
-    F0 --> F0_0["data"]
-    F0 --> F0_1["data"]
-    F1 --> F1_0["data"]
-    F1 --> F1_1["data"]
-    F1 --> F1_2["data"]
-    F1 --> F1_3["data"]
-    F2 --> F2_0["data"]
-```
-
-### 3.1.2. Mecanismos de Almacenamiento y Rendimiento
-
-La memoria del ordenador es lineal (una secuencia de direcciones). Para almacenar una matriz, esta debe **linealizarse**. Las dos estrategias principales para esta linealización son:
-
-1.  **Almacenamiento por Filas (*Row-Major Order*):** Es el método más común en lenguajes como DAW, C, C++, Java y C\#.
-      * **Mecánica:** Se almacenan todos los elementos de la **primera fila**, seguidos de todos los elementos de la **segunda fila**, y así sucesivamente.
-      * **Rendimiento:** Es óptimo cuando el código accede a los datos **secuencialmente por filas**. La lectura consecutiva es muy rápida (*cache friendly*), ya que los datos están contiguos en la memoria caché del procesador.
-2.  **Almacenamiento por Columnas (*Column-Major Order*):** Utilizado históricamente por lenguajes como Fortran y, actualmente, en herramientas de computación numérica (ej. MATLAB).
-      * **Mecánica:** Se almacenan todos los elementos de la **primera columna**, seguidos de la segunda columna, etc.
-      * **Rendimiento:** Óptimo cuando el código itera sobre los datos **secuencialmente por columnas**.
-
-**En DAW (y en la mayoría de la programación orientada a objetos):** La matriz se almacena **por filas**. Esto significa que es **más eficiente** recorrer y procesar los datos iterando primero sobre el índice de la fila y luego sobre el de la columna (el orden natural `matriz[i][j]`).
+En C#, las matrices rectangulares se almacenan como **un único bloque contiguo** en memoria. Las escalonadas son **arrays de arrays** — cada fila es un array independiente.
 
 ```mermaid
 graph LR
-    subgraph MATRIZ_2D ["Representación 2D"]
-        F0["1, 2"]
-        F1["3, 4"]
+    subgraph RECT ["Rectangular (int[2,3])"]
+        R["| 1 | 2 | 3 | 4 | 5 | 6 |"]
     end
-    MATRIZ_2D -->|Linealización Row-Major| MEM["1, 2, 3, 4"]
-    INFO["INFO: Fila 0 siempre junta en RAM"]
-    style INFO fill:#dfd,stroke:#333,stroke-dasharray: 5 5
+    subgraph JAGGED ["Escalonada (int[2][])"]
+        J1["| 1 | 2 |"]
+        J2["| 3 | 4 | 5 | 6 |"]
+    end
+    style RECT fill:#2196F3,color:#fff
+    style JAGGED fill:#FF9800,color:#fff
+    style R fill:#4CAF50,color:#fff
+    style J1 fill:#4CAF50,color:#fff
+    style J2 fill:#4CAF50,color:#fff
 ```
 
-Por lo tanto debes tener en cuenta como ya indicamos a nivel generico con los arrays las siguientes directrices:
-* **Acceso por Índice:** El primer elemento está en el índice `0`, esta vez tenemos tantos índices como dimensiones tenga el array.
-* **Eficiencia:** El acceso a cualquier elemento es extremadamente rápido (tiempo constante, $O(1)$) porque su ubicación en memoria se calcula directamente.
-* **Inmutabilidad:** Una vez creado, el tamaño de un array no puede cambiar. Si se necesita un array más grande o más pequeño, se debe crear uno nuevo y copiar los elementos.
-* **Tipos de Referencia:** En DAW, los arrays son tipos de referencia, lo que significa que las variables que los contienen almacenan la dirección de memoria donde se encuentran los datos, no los datos en sí.
-* **Valores por Defecto:** Al crear un array, sus elementos se inicializan automáticamente a valores por defecto según su tipo (0 para `int`, `false` para `bool`, `""` para `string`, y `null` para tipos anulables).
-* **Acceso no permitido:** No se puede acceder a un elemento de un array utilizando un índice fuera de sus límites en alguna de sus dimensiones. Esto generará un error en tiempo de ejecución llamado `ArrayIndexOutOfBoundsException`.
+## 3.2. Declaración y Creación de Matrices
 
-
-![Arrays multidimensionales](./images/matrix.jpg)
-
-
-## 3.2. Arrays Multidimensionales en el Lenguaje DAW
-
-En DAW se utiliza la sintaxis del **Array Escalonado** (`[][]`) para cualquier dimensión superior a uno.
-
-### 3.2.1. Definición, Creación y Valores por Defecto
-
-La creación de matrices de dos dimensiones (bidimensionales) requiere dos pares de corchetes.
-
-| Sintaxis DAW                               | Propósito                                                                                           | Valor por defecto                              |
-| :----------------------------------------- | :-------------------------------------------------------------------------------------------------- | :--------------------------------------------- |
-| `tipo[][] nombre = tipo[filas][columnas];` | **Creación simplificada de una matriz** (todos los sub-arrays se crean con el mismo tamaño inicial). | **0** para `int`, **`""`** para `string`, etc. |
-| `tipo[][] nombre = { {v1, v2}, {v3} };`    | Creación con valores específicos, permitiendo tamaños de fila variables.                            | N/A                                            |
+### 3.2.1. Matrices Rectangulares
 
 ```csharp
-Main {
-  // 1. Matriz de 2x3 (todos se inicializan a 0)
-  var matrizEnteros = int[2][3];
+// ✅ Creación con tamaño fijo (valores por defecto: 0)
+int[,] matriz = new int[3, 4];  // 3 filas × 4 columnas
 
-  // 2. Matriz inicializada directamente (Array Escalonado)
-  var matrizDatos = string[][] {
-      string[] {"Ana", "Pérez"}, // Fila 0: Tamaño 2
-      string[] {"Luis"}         // Fila 1: Tamaño 1
-  };
+// ✅ Inicialización directa
+int[,] notas = {
+    { 5, 6, 7, 8 },   // Fila 0
+    { 9, 10, 8, 7 },   // Fila 1
+    { 6, 7, 9, 10 }    // Fila 2
+};
 
-  // Acceso: Se usa un par de corchetes por cada dimensión
-  writeLine("Elemento [0][1]: " + matrizDatos[0][1]); // Muestra: Pérez
+// ✅ Acceso por índices
+Console.WriteLine(notas[0, 2]);  // 7 (fila 0, columna 2)
+notas[1, 0] = 10;               // Modificar valor
 
-  // Si accedes a una posición fuera de los límites, lanza una excepción
-  // writeLine("Elemento [1][2]: " + matrizDatos[1][2); // Excepción en tiempo de ejecución `ArrayIndexOutOfBoundsException`
-}
+// ✅ Dimensiones
+Console.WriteLine($"Filas: {notas.GetLength(0)}");    // 3
+Console.WriteLine($"Columnas: {notas.GetLength(1)}");  // 4
 ```
 
-### 3.2.2. Valores Anulables (`T?`)
-
-Al igual que en los unidimensionales, un array de elementos anulables se inicializa a **`null`** en todas sus posiciones.
+### 3.2.2. Matrices Escalonadas (Jagged)
 
 ```csharp
-Main {
-  // Matriz de enteros anulables 2x2: todos son null.
-  var notasOpcionales = int?[2][2];
+// ✅ Matriz escalonada: cada fila tiene distinto tamaño
+int[][] escalonada = new int[3][];
+escalonada[0] = new int[] { 1, 2 };        // Fila 0: 2 columnas
+escalonada[1] = new int[] { 3, 4, 5 };     // Fila 1: 3 columnas
+escalonada[2] = new int[] { 6, 7, 8, 9 };  // Fila 2: 4 columnas
 
-  // Acceso con gestión de nulidad
-  // Se usa ?? para proporcionar un valor seguro (0)
-  var notaSegura = notasOpcionales[0][0] ?? 0;
-  writeLine("Nota segura: " + notaSegura); // Muestra 0
-
-  // Si no se gestiona, lanza excepción
-  // writeLine("Nota directa: " + (notasOpcionales[0][0] + 1)); // Excepción en tiempo de ejecución `NullPointerException`
-}
+// ✅ Acceso
+Console.WriteLine(escalonada[1][2]);  // 5 (fila 1, columna 2)
 ```
+
+> 💡 **Consejo:** Usa matrices rectangulares cuando todas las filas tengan el mismo tamaño (tableros, imágenes). Usa escalonadas cuando las filas tengan tamaños diferentes (listas de usuarios con distintos números de amigos).
+
+📌 **Ejemplo real:** Un tablero de Battleship es una matriz rectangular `char[10,10]` donde cada posición contiene `'Agua'`, `'Barco'` o `'Disparo'`. El juego necesita acceder rápidamente a cualquier casilla por sus coordenadas.
 
 ## 3.3. Recorrido con `for` y `foreach`
 
-Para recorrer una matriz, se necesita anidar bucles: un bucle exterior para las **filas** y un bucle interior para las **columnas** de la fila actual.
-
 ### 3.3.1. Bucle `for` (Acceso por Índice)
 
-### Esquema Lógico del Recorrido 2D (Anidado)
 ```mermaid
 graph TD
-    Start((Inicio)) --> InitI["i = 0"]
-    InitI --> CondI{"¿i < filas?"}
-    CondI -- Sí --> InitJ["j = 0"]
-    InitJ --> CondJ{"¿j < columnas de fila i?"}
-    CondJ -- Sí --> Access["Acceso: matriz[i][j]"]
-    Access --> Process[Procesar Elemento]
-    Process --> IncJ["j = j + 1"]
-    IncJ --> CondJ
-    CondJ -- No --> IncI["i = i + 1"]
-    IncI --> CondI
-    CondI -- No --> End((Fin))
+    START(("Inicio")) --> FI["i = 0"]
+    FI --> FC{"¿i < Filas?"}
+    FC -->|"Sí"| FJ["j = 0"]
+    FJ --> CC{"¿j < Columnas?"}
+    CC -->|"Sí"| ACC["Acceso: M[i,j]"]
+    ACC --> PJ["j++"]
+    PJ --> CC
+    CC -->|"No"| PI["i++"]
+    PI --> FC
+    FC -->|"No"| FIN(("Fin"))
+    style START fill:#4CAF50,color:#fff
+    style FIN fill:#f44336,color:#fff
+    style FC fill:#FF9800,color:#fff
+    style CC fill:#FF9800,color:#fff
+    style ACC fill:#2196F3,color:#fff
 ```
-
-Es el método más utilizado para matrices, ya que permite acceder al tamaño exacto de cada fila (`matriz[i].Length`) y **modificar** los valores.
 
 ```csharp
-Main {
-  var matriz = int[][] { {1, 2}, {3, 4, 5} };
+int[,] matriz = { { 1, 2, 3 }, { 4, 5, 6 } };
 
-  writeLine("--- Recorrido FOR (Fila por Fila) ---");
-  for (int i = 0; i < matriz.Length; i++) { // Bucle exterior: número de filas
-    for (int j = 0; j < matriz[i].Length; j++) { // Bucle interior: longitud de la fila 'i'
-      matriz[i][j] = matriz[i][j] * 2; // Modificación
-      writeLine($"Elemento [{i}][{j}]: {matriz[i][j]}");
+// ✅ Recorrer por filas y columnas
+for (int i = 0; i < matriz.GetLength(0); i++)
+{
+    for (int j = 0; j < matriz.GetLength(1); j++)
+    {
+        Console.Write($"{matriz[i,j]} ");
     }
-  }
+    Console.WriteLine();
 }
+// Salida:
+// 1 2 3
+// 4 5 6
 ```
 
-### 3.3.2. Bucle `foreach` (Lectura con Anidación)
-
-El `foreach` se anida dos veces: el bucle exterior itera sobre los **sub-arrays** (filas), y el interior itera sobre los **elementos** de la fila actual.
+### 3.3.2. Bucle `foreach` (Lectura)
 
 ```csharp
-Main {
-  var matriz = int[][] { {10, 20}, {30, 40} };
+int[,] matriz = { { 1, 2, 3 }, { 4, 5, 6 } };
 
-  writeLine("--- Recorrido FOREACH (Lectura) ---");
-  foreach (var fila in matriz) { // 'fila' es un array int[]
-    foreach (var elemento in fila) { // 'elemento' es un int
-      writeLine("Valor: " + elemento);
-    }
-  }
+// ✅ foreach recorre en orden de filas (row-major)
+foreach (int elemento in matriz)
+{
+    Console.Write($"{elemento} ");
 }
+// Salida: 1 2 3 4 5 6
 ```
 
-Si tenemos valores anulables, debemos gestionar la nulidad dentro del bucle.
-
-```csharp
-Main {
-  var matrizNulos = int?[][] { {10, null}, {null, 40} };
-
-  writeLine("--- Recorrido FOREACH con Nulos ---");
-  foreach (var fila in matrizNulos) {
-    foreach (var elemento in fila) {
-      // Gestión de nulidad
-      if (elemento != null) {
-        writeLine("Valor: " + elemento);
-      } else {
-        writeLine("Valor nulo.");
-      }
-      // Alternativa con coalescencia
-      writeLine("Valor con coalescencia: " + (elemento ?? "Valor nulo."));
-      // Alternativa con ternario
-      writeLine("Valor con ternario: " + (elemento != null ? elemento : "Valor nulo."));
-    }
-  }
-}
-```
+> ⚠️ **Advertencia:** Con `foreach` no puedes modificar los elementos ni conocer la posición (índice). Solo sirve para lectura. Si necesitas modificar, usa `for`.
 
 ## 3.4. Identidad, Igualdad y Clonación en Matrices
 
-Las matrices, al ser arrays de arrays, son **doblemente tipos de referencia**. Esto hace que los conceptos de copia y clonación sean más complejos. Al igual que con los arrays unidimensionales, es crucial entender la diferencia entre **identidad** (referencia) e **igualdad** (contenido), pero ahora debemos considerar tanto el array exterior como los sub-arrays internos.
-
-### 3.4.1. Identidad vs. Igualdad (Doble Referencia)
-
-  * **Identidad (`==`):** El operador `==` solo compara si las variables apuntan al mismo array externo (la misma *caja* de filas).      
-  * **Igualdad (Contenido):** Requiere una función que compare el tamaño y el contenido de **cada sub-array**.
-
-### 3.4.2. Clonación (Copia Profunda)
-
-La **clonación manual** es la única manera de garantizar la independencia total. Si solo copias el array exterior, los arrays internos siguen siendo compartidos (copia superficial de la segunda dimensión).
-
-| Tipo de Copia                     | Mecánica                                                                      | Efecto en Matrices                                                                                            |
-| :-------------------------------- | :---------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------ |
-| **Copia por Referencia**          | `matrizB = matrizA;`                                                          | **Total dependencia:** Ambas variables son la misma matriz.                                                   |
-| **Copia Superficial Engañosa**    | `matrizB = clonar(matrizA)` (función anterior)                                | **¡Cuidado\!** El array exterior es nuevo, pero los sub-arrays internos siguen siendo las mismas referencias. |
-| **Clonación Profunda (Correcta)** | Clonar el array exterior **Y** clonar manualmente **cada sub-array** interno. | **Total Independencia:** Se garantiza que todos los elementos y referencias internas sean nuevos.             |
+Al igual que los arrays unidimensionales, las matrices son **tipos de referencia**. `matrizB = matrizA` crea un alias, no una copia.
 
 ```csharp
-// Función para realizar la CLONACIÓN PROFUNDA
-function int[][] clonarMatriz(int[][] origen) {
-    // 1. Clonar el Array Exterior (la 'caja' de filas)
-    var matrizClonada = int[origen.Length][];
+int[,] original = { { 1, 2 }, { 3, 4 } };
+int[,] copia = original;  // Alias — misma referencia
 
-    // 2. Clonar cada Array Interno (la 'fila')
-    for (int i = 0; i < origen.Length; i++) {
-        // Se crea un NUEVO array para la fila actual y se copian los valores
-        matrizClonada[i] = int[origen[i].Length];
-        for (int j = 0; j < origen[i].Length; j++) {
-            matrizClonada[i][j] = origen[i][j];
-        }
-    }
-    return matrizClonada;
-}
-
-function bool sonMatricesIguales(int[][] a, int[][] b){
-    if (a.Length != b.Length) {
-        return false;
-    }
-    for (int i = 0; i < a.Length; i++) {
-        if (a[i].Length != b[i].Length) {
-            return false;
-        }
-        for (int j = 0; j < a[i].Length; j++) {
-            if (a[i][j] != b[i][j]) {
-                return false;
-            }
-        }
-    }
-    return true;
-}
-
-Main {
-    var original = int[][] { {10, 20}, {30, 40} };
-    var clon = clonarMatriz(original);
-
-    clon[0][0] = 999; // Modificamos el clon
-
-    writeLine("Original[0][0]: " + original[0][0]); // Muestra 10 (INDEPENDIENTE)
-    writeLine("Clon[0][0]: " + clon[0][0]);         // Muestra 999
-    writeLine("Identidad del array externo: " + (original == clon)); // Muestra false
-    writeLine("Son iguales (Contenido): " + sonMatricesIguales(original, clon)); // Muestra false
-}
+copia[0, 0] = 999;
+Console.WriteLine(original[0, 0]);  // 999 — ¡También cambió!
 ```
+
+> 🔧 **Truco nemotecnico:** Piensa en las matrices como un edificio de apartamentos. `matrizB = matrizA` es como darle a alguien la llave del **mismo** apartamento. Si mueve los muebles, tú también lo ves.
 
 ## 3.5. Paso por Referencia y Devolución de Matrices
-Al igual que con los arrays unidimensionales, las matrices se pasan a funciones por referencia. Cualquier modificación dentro de la función afectará al array original, a menos que se realice una clonación profunda antes de pasarla.
+
+Las matrices se pasan a funciones por referencia. Cualquier modificación dentro de la función afecta al original.
 
 ```csharp
-procedure modificarMatriz(int[][] matriz) {
-    matriz[0][0] = 555; // Modifica el contenido del array original
+void ModificarMatriz(int[,] matriz)
+{
+    matriz[0, 0] = 555;  // Modifica el original
 }
 
-function int[][] clonarMatriz(int[][] origen) {
-    var matrizClonada = int[origen.Length][];
-    for (int i = 0; i < origen.Length; i++) {
-        matrizClonada[i] = int[origen[i].Length];
-        for (int j = 0; j < origen[i].Length; j++) {
-            matrizClonada[i][j] = origen[i][j];
+int[,] miMatriz = { { 1, 2 }, { 3, 4 } };
+ModificarMatriz(miMatriz);
+Console.WriteLine(miMatriz[0, 0]);  // 555
+```
+
+Para devolver una matriz desde una función, se retorna la referencia:
+
+```csharp
+int[,] CrearMatriz(int filas, int columnas)
+{
+    return new int[filas, columnas];
+}
+
+int[,] nueva = CrearMatriz(3, 4);
+Console.WriteLine($"{nueva.GetLength(0)}x{nueva.GetLength(1)}");  // 3x4
+```
+
+## 3.6. Copias, Clonación Profunda y Cambio de Tamaño
+
+### Copia Superficial vs. Copia Profunda
+
+| Tipo de Copia | Mecanismo | Resultado |
+| :--- | :--- | :--- |
+| **Referencia** | `matrizB = matrizA` | Total dependencia — mismo objeto |
+| **Superficial** | Clonar solo el array exterior | Dependencia parcial — filas compartidas |
+| **Profunda** | Clonar exterior **Y** cada fila | Total independencia |
+
+```csharp
+// ❌ COPIA SUPERFICIAL: peligrosa
+int[,] original = { { 1, 2 }, { 3, 4 } };
+int[,] superficial = (int[,])original.Clone();  // Clona el bloque contiguo
+
+// ✅ Para matrices rectangulares, Clone() SÍ es profunda
+// (porque es un bloque contiguo en memoria)
+superficial[0, 0] = 999;
+Console.WriteLine(original[0, 0]);  // 1 — NO cambia (rectangular es segura)
+```
+
+> ⚠️ **Advertencia:** Con matrices **escalonadas** (`int[][]`), `Clone()` solo clona el array exterior. Las filas internas se comparten. Debes clonar cada fila manualmente.
+
+```csharp
+// ✅ CLONACIÓN PROFUNDA de matriz escalonada
+int[][] ClonarMatriz(int[][] origen)
+{
+    int[][] clonada = new int[origen.Length][];
+    for (int i = 0; i < origen.Length; i++)
+    {
+        clonada[i] = new int[origen[i].Length];
+        for (int j = 0; j < origen[i].Length; j++)
+        {
+            clonada[i][j] = origen[i][j];
         }
     }
-    return matrizClonada;
-}
-
-Main {
-    var matrizOriginal = int[][] { {1, 2}, {3, 4} };
-    modificarMatriz(matrizOriginal);
-    writeLine("Matriz Original[0][0] después de modif.: " + matrizOriginal[0][0]); // Muestra 555
-
-    var matrizClon = clonarMatriz(matrizOriginal);
-    matrizClon[0][0] = 999;
-    writeLine("Matriz Original[0][0] después de modif. clon: " + matrizOriginal[0][0]); // Muestra 555 (INDEPENDIENTE)
+    return clonada;
 }
 ```
-## 3.6. Copias, Clonación Profunda y Gestión del Tamaño en Matrices
 
-El manejo de copias y el tamaño de las matrices es más complejo que en los arrays unidimensionales, debido a que las matrices en DAW son **arrays de arrays** (doble referencia).
+### Cambio de Tamaño
 
-### 3.6.1. La Doble Referencia (Copia Superficial vs. Copia Profunda)
-
-Dado que un array escalonado (`int[][]`) es un array de referencias a otros arrays (las filas), una simple copia o clonación superficial es insuficiente y peligrosa.
-
-| Tipo de Copia                     | Mecanismo                                                                            | Efecto en la Memoria                                                                                                          | Consecuencia Didáctica                                                                                           |
-| :-------------------------------- | :----------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------- |
-| **Copia por Referencia**          | `matrizB = matrizA;`                                                                 | Se copia la referencia al array exterior.                                                                                     | **Total dependencia:** Modificar `matrizB[i][j]` modifica `matrizA[i][j]`.                                       |
-| **Copia Superficial Engañosa**    | Clonar solo el array exterior (`int[filas][]`).                                      | Se crea un nuevo array de filas, pero las **referencias a las filas internas (los arrays `int[]`) siguen siendo las mismas.** | **Dependencia Parcial:** Modificar `matrizB[i][j]` sigue modificando `matrizA[i][j]` porque se comparte la fila. |
-| **Clonación Profunda (Correcta)** | Clonar el array exterior **Y** clonar manualmente **cada sub-array** (fila) interno. | Se crean nuevas referencias para el array principal y para cada fila.                                                         | **Total Independencia:** Se garantiza una matriz completamente nueva e independiente.                            |
-
-##### Demostración de la Peligrosa Copia Superficial
-
-Si solo clonamos la primera dimensión, las filas (sub-arrays) siguen siendo compartidas:
+El tamaño de una matriz es **inmutble**. Para "cambiarlo", debes crear una nueva y copiar.
 
 ```csharp
-Main {
-    var original = int[][] { int[] {10, 20}, int[] {30, 40} };
+int[,] Original = { { 1, 2, 3 }, { 4, 5, 6 } };
 
-    // Clonación superficial (solo se clona el array externo)
-    var superficial = int[original.Length][];
-    for (int i = 0; i < original.Length; i++) {
-        superficial[i] = original[i]; // Copia la REFERENCIA de la fila, no el contenido
+// Ampliar de 2x3 a 4x5
+int[,] nueva = new int[4, 5];
+for (int i = 0; i < Original.GetLength(0); i++)
+{
+    for (int j = 0; j < Original.GetLength(1); j++)
+    {
+        nueva[i, j] = Original[i, j];
     }
-
-    superficial[0][0] = 999; // Modificamos el clon
-
-    writeLine("Original[0][0]: " + original[0][0]); // Muestra 999
-    // ¡El array original ha cambiado! La fila interna se compartió.
 }
+// nueva = { {1,2,3,0,0}, {4,5,6,0,0}, {0,0,0,0,0}, {0,0,0,0,0} }
 ```
 
-### 3.6.2. Clonación Profunda Manual (Técnica Correcta)
+📌 **Ejemplo real:** Cuando escalas una imagen en Photoshop, internamente el programa crea una nueva matriz de píxeles con el tamaño ampliado y copia los valores originales, rellenando los huecos con interpolación.
 
-La única forma de garantizar la independencia total es utilizando la técnica de **Clonación Profunda**, que requiere anidar dos bucles para copiar cada valor.
+## 3.7. Rendimiento: El Orden de los Índices
 
-**Justificación:** El alumnado debe entender que un tipo de referencia anidado requiere una clonación anidada.
+C# almacena matrices por **filas** (*row-major order*). Recorrer por filas es **mucho más rápido** que recorrer por columnas.
 
 ```csharp
-// Función para realizar la CLONACIÓN PROFUNDA y correcta
-function int[][] clonarMatriz(int[][] origen) {
-    // 1. Crear el Array Exterior (la 'caja' de referencias a las filas)
-    var matrizClonada = int[origen.Length][];
+int[,] matriz = new int[1000, 1000];
 
-    // 2. Clonar CADA Array Interno (la 'fila')
-    for (int i = 0; i < origen.Length; i++) {
-        // Clonar la fila: crear un nuevo array int[] para esta posición de fila
-        matrizClonada[i] = int[origen[i].Length];
+// ✅ RÁPIDO: Recorrido por filas (cache-friendly)
+for (int i = 0; i < 1000; i++)
+    for (int j = 0; j < 1000; j++)
+        matriz[i, j] = i + j;
 
-        // Copiar el contenido (valores) de la fila actual
-        for (int j = 0; j < origen[i].Length; j++) {
-            matrizClonada[i][j] = origen[i][j];
-        }
-    }
-    return matrizClonada;
-}
+// ❌ LENTO: Recorrido por columnas (cache misses)
+for (int j = 0; j < 1000; j++)
+    for (int i = 0; i < 1000; i++)
+        matriz[i, j] = i + j;
 ```
 
-### 3.6.3. Modificación del Tamaño (Recreación de la Matriz)
-
-El tamaño de la matriz principal (`matriz.Length`) y el de cada fila interna (`matriz[i].Length`) son **inmutables** después de su creación.
-
-Para cualquier cambio de tamaño (aumentar filas, reducir columnas, etc.), se debe aplicar el mismo principio que en los arrays unidimensionales: **crear una nueva matriz y copiar selectivamente los datos**.
-
-##### Ejemplo: Añadir una Fila a la Matriz
-
-Para "añadir una fila", se requiere crear una nueva matriz con una dimensión más y copiar todas las referencias o contenidos:
-
-```csharp
-function int[][] anadirFila(int[][] matrizOriginal, int[] nuevaFila) {
-    // 1. Definir el nuevo tamaño (una fila más)
-    var nuevasFilas = matrizOriginal.Length + 1;
-
-    // 2. Crear la nueva matriz (la 'caja' exterior)
-    var matrizNueva = int[nuevasFilas][];
-
-    // 3. Copiar las REFERENCIAS de las filas antiguas (copia superficial del array externo)
-    for (int i = 0; i < matrizOriginal.Length; i++) {
-        // Copiamos la referencia a la fila
-        matrizNueva[i] = matrizOriginal[i];
-    }
-
-    // 4. Asignar la nueva fila al final
-    matrizNueva[nuevasFilas - 1] = nuevaFila;
-
-    return matrizNueva;
-}
-
-Main {
-    var m1 = int[][] { int[] {1, 2}, int[] {3, 4} };
-    var filaExtra = int[] {5, 6};
-
-    var m2 = anadirFila(m1, filaExtra); // m2 es { {1, 2}, {3, 4}, {5, 6} }
-
-    writeLine("Filas de m2: " + m2.Length); // Muestra 3
-}
-```
-
-##### Ejemplo de Cambio de Tamaño: Migrar de 3x3 a 5x5 (Escalado)
-
-Para simular un cambio de tamaño de una matriz, se debe realizar un proceso de copia que maneje la creación del nuevo array principal y la copia de los elementos internos.
-
-**Objetivo Didáctico:** Demostrar que el cambio de tamaño es una **operación costosa** que implica doble anidamiento (doble bucle) y asignación de nueva memoria.
-
-```csharp
-Main {
-    // Matriz Original 3x3 (Todas las filas del mismo tamaño en este ejemplo)
-    var original = int[][] {
-        int[] {1, 2, 3},
-        int[] {4, 5, 6},
-        int[] {7, 8, 9}
-    };
-
-    var tamanoAntiguo = original.Length;   // 3
-    var tamanoNuevo = 5;
-
-    // 1. Crear la Nueva Matriz con el tamaño final (5x5)
-    // Se inicializa el array exterior con 5 filas.
-    var matrizNueva = int[tamanoNuevo][];
-
-    // 2. Iterar sobre las filas de la matriz nueva (hasta el tamaño nuevo)
-    for (int i = 0; i < tamanoNuevo; i++) {
-
-        // Crear cada fila interna de la matriz nueva con el tamaño final (5)
-        matrizNueva[i] = int[tamanoNuevo]; // {0, 0, 0, 0, 0}
-
-        // 3. Copiar solo los datos de la matriz antigua que existan (para i < 3)
-        if (i < tamanoAntiguo) {
-            // Se itera sobre las columnas de la matriz antigua
-            var limiteColumnas = tamanoAntiguo;
-
-            for (int j = 0; j < limiteColumnas; j++) {
-                // Copia el valor de la matriz antigua al nuevo array
-                matrizNueva[i][j] = original[i][j];
-            }
-        }
-        // Las filas restantes (i=3, i=4) ya tienen sus elementos inicializados a 0
-    }
-
-    // Comprobación de los resultados
-    writeLine("Tamaño de la matriz nueva: " + matrizNueva.Length + "x" + matrizNueva[0].Length); // 5x5
-    writeLine("Valor original [0][0]: " + matrizNueva[0][0]); // Muestra 1
-    writeLine("Valor rellenado [4][4]: " + matrizNueva[4][4]); // Muestra 0 (por defecto)
-}
-```
-
-## 3.8. Rendimiento: El orden de los índices
-Como DAW almacena matrices por filas, el acceso `matriz[i][j]` (donde `i` es fila) es mucho más rápido que `matriz[j][i]`. 
-*   **Recorrido por filas**: El procesador lee memoria contigua (Rápido - Cache Friendly).
-*   **Recorrido por columnas**: El procesador tiene que dar saltos enormes en la memoria para encontrar el siguiente elemento (Lento).
-
-**Aplanamiento en memoria:**
 ```mermaid
 graph LR
-    subgraph MATRIZ_2D ["Representación 2D"]
-        F0["1, 2"]
-        F1["3, 4"]
+    subgraph FILAS ["Por filas (RÁPIDO)"]
+        F0["1, 2, 3"] --> F1["4, 5, 6"]
     end
-    MATRIZ_2D -->|Linealización Row-Major| MEM["1, 2, 3, 4"]
-    INFO["INFO: Fila 0 siempre junta en RAM"]
-    style INFO fill:#dfd,stroke:#333,stroke-dasharray: 5 5
+    subgraph COLS ["Por columnas (LENTO)"]
+        C0["1"] -.-> C1["4"] -.-> C2["2"] -.-> C3["5"]
+    end
+    style FILAS fill:#4CAF50,color:#fff
+    style COLS fill:#f44336,color:#fff
+    style F0 fill:#2196F3,color:#fff
+    style F1 fill:#2196F3,color:#fff
+    style C0 fill:#FF9800,color:#fff
+    style C1 fill:#FF9800,color:#fff
+    style C2 fill:#FF9800,color:#fff
+    style C3 fill:#FF9800,color:#fff
 ```
+
+> 💡 **Consejo:** Siempre recorre las matrices por filas (índice `i` primero). Esto garantiza que el procesador acceda a memoria contigua y aproveche la caché.
+
+---
+
+**Resumen del punto:**
+
+| Concepto | Descripción |
+| :--- | :--- |
+| **Matriz rectangular** | `int[filas, columnas]` — todas las filas igual tamaño |
+| **Matriz escalonada** | `int[filas][]` — filas de tamaño variable |
+| **`.GetLength(n)`** | Devuelve el tamaño de la dimensión n |
+| **Recorrido por filas** | Más rápido — memoria contigua (cache-friendly) |
+| **Copia profunda** | Clonar exterior + cada fila (escalonadas) |
+| **Cambio de tamaño** | Crear nueva matriz + copiar elementos |
+| **`Clone()`** | Seguro para rectangulares, peligroso para escalonadas |
+
+En el siguiente punto veremos la técnica del Doble Búfer (Double Buffering), un patrón de diseño que utiliza arrays para evitar el parpadeo en animaciones y juegos.

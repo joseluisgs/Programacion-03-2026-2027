@@ -3,151 +3,186 @@
   - [1.2. El Problema de la Indexación (Índice Cero vs. Índice Uno)](#12-el-problema-de-la-indexación-índice-cero-vs-índice-uno)
     - [1.2.1. Indexación Basada en Cero](#121-indexación-basada-en-cero)
     - [1.2.2. Indexación Basada en Uno](#122-indexación-basada-en-uno)
-  - [1.3. Arrays en DAW](#13-arrays-en-daw)
-  - [1.4. El secreto de la velocidad: Localidad de Referencia](#14-el-secreto-de-la-velocidad-localidad-de-referencia)
-
-
+  - [1.3. Arrays en C#](#13-arrays-en-c)
+  - [1.4. El Secreto de la Velocidad: Localidad de Referencia](#14-el-secreto-de-la-velocidad-localidad-de-referencia)
 
 # 1. Arrays. Introducción
 
-Un array es una estructura de datos estática y fundamental que permite almacenar una colección ordenada de elementos del **mismo tipo**. Es una de las estructuras más antiguas y eficientes en informática para el acceso a datos.
+> 💡 **Punto de partida:** ¿Alguna vez has abierto Netflix y has visto que te muestra 50 thumbnails de películas en una fila? ¿O Spotify que carga tu lista de 200 canciones favoritas? Detrás de todas esas colecciones de datos hay una estructura que las almacena de forma eficiente: el **array**.
 
-### 1.1. Características Clave
+En este punto aprenderás qué es un array, por qué es tan rápido, cómo se organiza en memoria y qué lo diferencia de otras estructuras de datos.
 
-1.  **Homogeneidad (Tipo Fijo):** Todos los elementos deben ser del mismo tipo de dato (por ejemplo, todos `int` o todos `string`).      
-2.  **Tamaño Fijo (Inmutabilidad):** El tamaño de un array se establece en el momento de su creación y no puede ser alterado posteriormente. Si se necesita modificar el tamaño, la solución es crear un **nuevo array** con el tamaño deseado y **copiar** los elementos del original al nuevo.
-3.  **Contigüidad en Memoria:** Los elementos de un array se almacenan en posiciones de memoria **contiguas** (una al lado de la otra). Esto es lo que permite su alta eficiencia.
-4.  **Acceso por Índice:** El acceso a los elementos para lectura o escritura se realiza mediante su posición o **índice**, que siempre es un número entero.
-5.  **Eficiencia:** El acceso a cualquier elemento es extremadamente rápido (tiempo constante, $O(1)$) porque su ubicación en memoria se calcula directamente.
+**Objetivos de aprendizaje:**
+
+- Definir qué es un array y por qué es fundamental en programación
+- Entender la diferencia entre indexación basada en cero y basada en uno
+- Comprender la ventaja de rendimiento de los arrays (localidad de referencia)
+- Conocer cuándo usar arrays frente a otras estructuras
+
+## 1.1. Características Clave
+
+Un **array** es una estructura de datos estática que almacena una colección ordenada de elementos del **mismo tipo**. Es como una cajonera: todos los cajones son del mismo tamaño y están pegados unos a otros.
+
+1. **Homogeneidad (Tipo Fijo):** Todos los elementos deben ser del mismo tipo (`int[]`, `string[]`, `double[]`).
+2. **Tamaño Fijo:** El tamaño se establece al crear el array y **no puede cambiarse**. Si necesitas más espacio, debes crear uno nuevo y copiar.
+3. **Contigüidad en Memoria:** Los elementos se almacenan en posiciones de memoria **contiguas** (uno al lado del otro).
+4. **Acceso por Índice:** Cada elemento se accede mediante su posición (índice), que es un número entero.
+5. **Eficiencia:** El acceso es $O(1)$ — tiempo constante, sin importar la posición.
+
+> 💡 **Analogía:** Un array es como una hilera de casas en una calle. Cada casa tiene un número (índice) y están pegadas unas a otras. Si sabes el número de tu casa, llegas directamente sin preguntar a nadie.
 
 ```mermaid
 graph LR
-    subgraph Memoria_Física [Contigüidad en Memoria]
-        A[Índice 0] --- B[Índice 1] --- C[Índice 2] --- D[Índice 3]
+    subgraph Memoria ["Memoria Contigua"]
+        A["[0] = 10"] --- B["[1] = 20"] --- C["[2] = 30"] --- D["[3] = 40"]
     end
+    style Memoria fill:#2196F3,color:#fff
+    style A fill:#4CAF50,color:#fff
+    style B fill:#4CAF50,color:#fff
+    style C fill:#4CAF50,color:#fff
+    style D fill:#4CAF50,color:#fff
 ```
 
->Si una variable es como un cajón de un tamaño del tipo de dato (es decir, el indentificador apunta a la zona de memoria donde se almacena el valor), un array puede verse como un conjunto de cajones (una cajonera) del mismo tamaño del tipo de dato, donde cada cajón tiene un índice que nos permite acceder a él. Por tanto, un array es una estructura de datos que nos permite almacenar un conjunto de datos del mismo tipo.
+📌 **Ejemplo real:** Spotify almacena tu lista de reproducción como un array de canciones. Cada canción tiene un índice (posición 0, 1, 2...) y todas son del mismo tipo (objeto `Cancion`). Cuando pulsas "siguiente", simplemente accede al siguiente índice.
 
-### 1.2. El Problema de la Indexación (Índice Cero vs. Índice Uno)
+## 1.2. El Problema de la Indexación (Índice Cero vs. Índice Uno)
 
-Unos de los principales problemas que nos encontramos al trabajar con arrays es la **indexación**, es decir, cómo se numeran las posiciones de los elementos dentro del array y cuál es la posición del primer elemento.
+Uno de los principales problemas al trabajar con arrays es la **indexación**: ¿cómo se numeran las posiciones? ¿La primera posición es la 0 o la 1?
 
-La convención sobre si el primer índice comienza en `0` (Cero-basado) o en `1` (Uno-basado) tiene implicaciones directas en el cálculo de la posición de memoria y es tan antigua como los propios lenguajes de programación.
+### 1.2.1. Indexación Basada en Cero
 
-#### 1.2.1. Indexación Basada en Cero
+El primer elemento está en el **índice 0**. Esta convención se basa en el cálculo directo de la dirección de memoria.
 
-El primer elemento se encuentra en el **índice 0**. Esta convención se basa en el cálculo directo de la dirección de memoria.
-
-  * **Fundamento:** El índice representa el **desplazamiento** (*offset*) desde la dirección de inicio del array. El primer elemento no tiene desplazamiento, por lo que su índice es 0.
+**Fundamento:** El índice representa el **desplazamiento** (*offset*) desde la dirección de inicio. El primer elemento no tiene desplazamiento, por lo que su índice es 0.
 
 ```mermaid
 graph TD
-    BASE[Dirección Base: 1000]
-    BASE -->|Offset 0| E0[Elemento 0 - Dir 1000]
-    BASE -->|Offset 1| E1[Elemento 1 - Dir 1004]
-    BASE -->|Offset 2| E2[Elemento 2 - Dir 1008]
-    CALC[Cálculo: Dirección Base + Índice * Tamaño]
+    BASE["Dirección Base: 1000"] -->|"Offset 0"| E0["[0] → Dir 1000"]
+    BASE -->|"Offset 1"| E1["[1] → Dir 1004"]
+    BASE -->|"Offset 2"| E2["[2] → Dir 1008"]
+    CALC["Cálculo: Base + Índice × Tamaño"]
+    style BASE fill:#2196F3,color:#fff
+    style E0 fill:#4CAF50,color:#fff
+    style E1 fill:#4CAF50,color:#fff
+    style E2 fill:#4CAF50,color:#fff
+    style CALC fill:#607D8B,color:#fff
 ```
 
-  * **Fórmula para calcular la dirección de memoria de un elemento $A[i]$:**
-    La fórmula matemática se expresa en un formato de texto compatible con Markdown:
+**Fórmula:**
 
-    ```
-    Dirección(A[i]) = Dirección Base + (índice_i * Tamaño del Tipo)
-    ```
+```
+Dirección(A[i]) = Dirección Base + (índice × Tamaño del Tipo)
+```
 
-    Donde:
+Donde:
+- `Dirección Base`: dirección del primer elemento (índice 0)
+- `índice`: posición del elemento buscado
+- `Tamaño del Tipo`: bytes que ocupa el tipo (ej. 4 bytes para `int`)
 
-      * `Dirección Base`: Es la dirección de memoria del primer elemento (índice 0).
-      * `índice_i`: Es el índice del elemento buscado (ej. 0, 1, 2...).
-      * `Tamaño del Tipo`: Es el número de bytes que ocupa el tipo de dato (ej. 4 bytes para `int`).
+Este enfoque lo siguen C, C++, Java, JavaScript, Python, Kotlin y **C#**.
 
-Este enfoque lo siguen lenguajes que han heredado esta filosofía de C, como C++, Java, JavaScript, Python, Kotlin, entre otros y nuestro lenguaje DAW.
+### 1.2.2. Indexación Basada en Uno
 
-#### 1.2.2. Indexación Basada en Uno
+En algunos lenguajes (Fortran, MATLAB, Lua, Pascal) el primer elemento está en el **índice 1**.
 
-En algunos lenguajes de programación o en contextos puramente matemáticos, el primer elemento se encuentra en el **índice 1**.
+**Fundamento:** El índice representa la **posición ordinal** — más intuitivo para el ser humano, pero complica el cálculo de memoria.
 
-  * **Fundamento:** El índice representa la **posición ordinal** del elemento dentro de la colección, que es más intuitivo para el humano.
+**Fórmula:**
 
-  * **Fórmula para calcular la dirección de memoria de un elemento $A[i]$:**
-    Para compensar el índice `i` que empieza en 1, es necesario restarle 1 para obtener el desplazamiento correcto.
+```
+Dirección(A[i]) = Dirección Base + ((índice - 1) × Tamaño del Tipo)
+```
 
-    ```
-    Dirección(A[i]) = Dirección Base + ((índice_i - 1) * Tamaño del Tipo)
-    ```
+> ⚠️ **Advertencia:** Si vienes de lenguajes como Pascal o Visual Basic, cuidado. En C# el primer índice es **siempre 0**. Acceder a `array[array.Length]` lanza `IndexOutOfRangeException`.
 
-    Donde se resta **1** al índice (`índice_i`) para obtener el desplazamiento (offset) correcto respecto a la Dirección Base.
+> 💡 **Consejo:** Piensa así: si tienes 5 elementos, van del 0 al 4. Nunca del 1 al 5. El último siempre es `Length - 1`.
 
-Este enfoque tiene el problema de que complica el cálculo de la dirección de memoria y puede llevar a errores si no se maneja con cuidado. Lenguajes como Fortran, MATLAB, Lua y algunos sistemas matemáticos utilizan esta convención o Visual Basic, Pascal, entre otros.       
+## 1.3. Arrays en C#
 
-### 1.3. Arrays en DAW
+En C#, la indexación es **Cero-basada**. Si accedes a un índice negativo o a uno mayor o igual al tamaño, se produce un `IndexOutOfRangeException`.
 
-En el lenguaje DAW, la indexación es **Cero-basada**. Si se accede a un índice negativo o a un índice mayor o igual al tamaño del array, se producirá un error conocido como **`ArrayIndexOutOfBoundsException`** (Excepción de Índice Fuera de Límites del Array). Esto es una medida de seguridad para evitar accesos inválidos a memoria. Recuerda que un Array es como un conjunto de cajones, si intentas abrir un cajón que no existe, el sistema te avisará con una excepción para evitar que "metas la mano" en una zona de memoria que no te pertenece.    
-
-**Uso Recomendado:** Los arrays son la mejor opción de almacenamiento cuando:
-* Se conoce el **tamaño máximo de la colección** de antemano.
-* Se requiere un **acceso muy rápido** a los elementos por su posición.
-* No se requiere añadir o eliminar elementos con frecuencia, ya que esta operación es ineficiente (implica copiar el array).
-
-![array](./images/arrays.png)
-
-## 1.4. El secreto de la velocidad: Localidad de Referencia
-¿Por qué usamos arrays si son tan rígidos? Por el hardware. Al estar los datos pegados unos a otros en la memoria física, cuando el procesador lee el elemento `[0]`, el sistema aprovecha y carga también los siguientes en la **Memoria Caché**. Esto hace que recorrer un array sea órdenes de magnitud más rápido que saltar por posiciones de memoria dispersas.
-
-> 📝 **Nota del Profesor:** La contigüidad en memoria es la razón por la que los arrays son tan rápidos para el acceso secuencial. Cuando iteras sobre un array, el procesador aprovecha la **prefetching**: anticipa qué datos necesitarás y los carga antes de que los pidas.
+📌 **Ejemplo real:** YouTube usa arrays internamente para almacenar los comentarios de un vídeo. Cuando hay 1000 comentarios, están en los índices 0 a 999. Si alguien intenta acceder al índice 1000, el sistema lanza una excepción para evitar leer memoria que no le pertenece.
 
 ```csharp
-// DEMOSTRACIÓN: Arrays vs Listas enlazadas en acceso secuencial
-int[] array = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+int[] edades = { 25, 30, 35, 40, 45 };
 
-// Acceso SECUENCIAL (rápido - locality of reference)
-for (int i = 0; i < array.Length; i++)
+// ✅ BUENO: Acceso válido
+Console.WriteLine(edades[0]);   // 25 (primer elemento)
+Console.WriteLine(edades[4]);   // 45 (último → Length - 1)
+
+// ❌ MALO: IndexOutOfRangeException
+Console.WriteLine(edades[5]);   // Error: no existe el índice 5
+Console.WriteLine(edades[-1]);  // Error: índice negativo
+```
+
+**Uso recomendado de arrays:**
+
+- Se conoce el **tamaño máximo** de antemano
+- Se necesita **acceso rápido** por posición
+- No se añaden/eliminan elementos frecuentemente
+
+> 📝 **Nota:** En la UD07 veremos las **colecciones dinámicas** (`List<T>`, `Dictionary<K,V>`) que resuelven el problema del tamaño fijo. Pero los arrays siguen siendo más rápidos para acceso por índice.
+
+## 1.4. El Secreto de la Velocidad: Localidad de Referencia
+
+¿Por qué usamos arrays si son tan rígidos? Por el **hardware**. Al estar los datos contiguos en memoria, cuando el procesador lee `[0]`, el sistema carga también los siguientes en la **Memoria Caché**. Esto hace que recorrer un array sea órdenes de magnitud más rápido que acceder a memoria dispersa.
+
+```csharp
+int[] numeros = { 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 };
+
+// ✅ Acceso SECUENCIAL (rápido — cache-friendly)
+for (int i = 0; i < numeros.Length; i++)
 {
-    Console.WriteLine(array[i]);  // Cache-friendly
+    Console.WriteLine(numeros[i]);
 }
 
-// Acceso ALEATORIO (lento)
-Console.WriteLine(array[0]);   // Cache miss
-Console.WriteLine(array[9]);   // Cache miss
-Console.WriteLine(array[5]);   // Cache miss
-// Cada acceso puede requerir ir a memoria principal
+// ❌ Acceso ALEATORIO (más lento — cache misses)
+Console.WriteLine(numeros[0]);
+Console.WriteLine(numeros[9]);
+Console.WriteLine(numeros[5]);
 ```
 
 ```mermaid
 graph TB
-    subgraph "CPU Cache"
+    subgraph CPU ["CPU Cache"]
         CACHE["L1 Cache\n(8-64 KB)\nUltra-rápida"]
     end
-    
-    subgraph "Memoria Principal"
-        RAM["RAM\n(GB)\nRápida"]
+    subgraph RAM ["Memoria Principal"]
+        MEM["RAM\n(GB)\nRápida"]
     end
-    
-    subgraph "Almacenamiento"
-        SSD["SSD/HDD\n(Lento)"]
+    subgraph SSD ["Almacenamiento"]
+        DISK["SSD/HDD\n(Lento)"]
     end
-    
-    CACHE -->|"Array completo"| RAM
-    RAM -->|"Elementos dispersos"| SSD
-    
-    note1["Array: datos juntos → caben en cache"]
-    note2["Lista: datos dispersos → cache misses"]
-    
-    style CACHE fill:#e1ffe1
-    style RAM fill:#fff4e1
-    style SSD fill:#ffe1e1
+    CACHE -->|"Array completo"| MEM
+    MEM -->|"Elementos dispersos"| DISK
+    style CACHE fill:#4CAF50,color:#fff
+    style MEM fill:#FF9800,color:#fff
+    style DISK fill:#f44336,color:#fff
 ```
 
-> 💡 **Regla de oro:** Usa arrays cuando:
+📌 **Ejemplo real:** Netflix precarga las miniaturas de las siguiente 5-10 películas mientras ves la actual. Como están en un array contiguo, el procesador las carga todas a la vez en caché. Si estuvieran dispersas en memoria, la app iría lenta.
+
+> 💡 **Consejo:** Usa arrays cuando:
 > 1. Conozcas el tamaño exacto de antemano
 > 2. Necesites acceso rápido por índice
-> 3. Iteres secuencialmente (for/foreach)
+> 3. Iteres secuencialmente (`for`/`foreach`)
 >
-> Usa listas cuando:
+> Usa `List<T>` cuando:
 > 1. Necesitas añadir/quitar elementos frecuentemente
 > 2. No conoces el tamaño final
-> 3. Solo necesitas acceso secuencial (no por índice)
+> 3. Solo necesitas acceso secuencial
 
+---
 
+**Resumen del punto:**
+
+| Concepto | Descripción |
+|----------|------------|
+| **Array** | Estructura de datos estática, elementos del mismo tipo, tamaño fijo |
+| **Indexación basada en cero** | Primer elemento en índice 0 (C#, Java, Python) |
+| **Indexación basada en uno** | Primer elemento en índice 1 (Fortran, MATLAB, Pascal) |
+| **Contigüidad** | Elementos pegados en memoria → acceso $O(1)$ |
+| **Localidad de referencia** | El procesador carga datos cercanos en caché |
+| **`IndexOutOfRangeException`** | Error al acceder a un índice fuera de límites |
+
+En el siguiente punto veremos cómo se crean y manipulan los arrays unidimensionales en C#: definición, creación, recorrido y paso por referencia.

@@ -1,117 +1,182 @@
 ﻿- [6. Expresiones Regulares (`Regex`)](#6-expresiones-regulares-regex)
-  - [6.1. Explicación Teórica y Conceptos Clave](#61-explicación-teórica-y-conceptos-clave)
-    - [6.1.1. ¿Qué es una Expresión Regular?](#611-qué-es-una-expresión-regular)
-    - [6.1.2. Metacaracteres Esenciales (Modelo de Búsqueda)](#612-metacaracteres-esenciales-modelo-de-búsqueda)
-  - [6.2. Uso de Expresiones Regulares en el Lenguaje DAW](#62-uso-de-expresiones-regulares-en-el-lenguaje-daw)
-    - [6.2.1. Creación y Definición del Patrón](#621-creación-y-definición-del-patrón)
-    - [6.2.2. Métodos de Uso y Mecanismos de Coincidencia](#622-métodos-de-uso-y-mecanismos-de-coincidencia)
-    - [6.2.3. Ejemplos de Búsqueda y Extracción](#623-ejemplos-de-búsqueda-y-extracción)
-    - [6.2.4. Ejemplo de Validación y Sustitución](#624-ejemplo-de-validación-y-sustitución)
-  - [6.3. Tabla Maestra de Validaciones Comunes](#63-tabla-maestra-de-validaciones-comunes)
-  - [6.4. El concepto de Codicia (Greediness)](#64-el-concepto-de-codicia-greediness)
-
+  - [6.1. ¿Qué es una Expresión Regular?](#61-qué-es-una-expresión-regular)
+  - [6.2. Metacaracteres Esenciales](#62-metacaracteres-esenciales)
+  - [6.3. Uso de Regex en C#](#63-uso-de-regex-en-c)
+    - [6.3.1. Validación (`IsMatch`)](#631-validación-ismatch)
+    - [6.3.2. Búsqueda (`Match` y `Matches`)](#632-búsqueda-match-y-matches)
+    - [6.3.3. Extracción de Datos](#633-extracción-de-datos)
+    - [6.3.4. Sustitución (`Replace`)](#634-sustitución-replace)
+  - [6.4. Tabla Maestra de Validaciones Comunes](#64-tabla-maestra-de-validaciones-comunes)
+  - [6.5. El Concepto de Codicia (Greediness)](#65-el-concepto-de-codicia-greediness)
 
 # 6. Expresiones Regulares (`Regex`)
 
-Las expresiones regulares (a menudo abreviadas como *Regex* o *RegExp*) son patrones utilizados para encontrar combinaciones de subcadenas dentro de textos. Son una herramienta esencial para la validación de datos, la búsqueda avanzada y la manipulación compleja de cadenas.
+> 💡 **Punto de partida:** ¿Alguna vez has tenido que validar si un email es correcto, si un teléfono tiene 9 dígitos o si un DNI tiene el formato adecuado? Hacerlo con `if` y `.Contains()` es tedioso y propenso a errores. Las **expresiones regulares** resuelven esto con un solo patrón.
 
-## 6.1. Explicación Teórica y Conceptos Clave
+En este punto aprenderás a crear patrones de búsqueda y validación de texto usando Regex en C#.
 
-### 6.1.1. ¿Qué es una Expresión Regular?
+**Objetivos de aprendizaje:**
 
-Una expresión regular es esencialmente un **lenguaje de programación en miniatura** que describe un conjunto de cadenas. Permiten definir reglas de búsqueda de forma concisa. Puedes ayudarte a costruirlas [aquí](https://regex101.com/).
+- Entender qué es una expresión regular y para qué sirve
+- Conocer los metacaracteres esenciales
+- Usar `Regex` para validar, buscar, extraer y sustituir texto
+- Crear patrones comunes (email, teléfono, DNI, fecha)
 
-| Concepto | Detalle Didáctico | Justificación de su Uso |
-| :--- | :--- | :--- |
-| **Patrón** | Secuencia de caracteres especiales y literales que define la regla de búsqueda. | Permite buscar **estructuras**, no solo coincidencias exactas. |
-| **Búsqueda con Patrón** | El motor de Regex recorre la cadena, intentando hacer coincidir el patrón en cada posición. | Forma más potente de validar formatos complejos (emails, fechas). |
+## 6.1. ¿Qué es una Expresión Regular?
+
+Una **expresión regular** (regex) es un **patrón de búsqueda** que describe un conjunto de cadenas de texto. Se usa para validar, buscar, extraer y sustituir texto de forma declarativa.
+
+> 💡 **Analogía:** Una regex es como un filtro de búsqueda avanzado. Si buscar "texto" en Google es como usar `.Contains()`, una regex es como decir "quiero un email que empiece por letras, tenga una @, después un dominio y termine en .com".
 
 ```mermaid
 graph LR
-    P[Patrón Regex] --> E[Motor de Búsqueda]
-    T[Texto de Entrada] --> E
-    E -->|Resultado| Match[Coincidencia / Match]
-    E -->|No coincide| Fail[Búsqueda fallida]
+    TEXTO["Texto de entrada"] --> REGEX["Patrón Regex"]
+    REGEX --> COINCIDE["✅ Coincide"]
+    REGEX --> NO_COINCIDE["❌ No coincide"]
+    style TEXTO fill:#2196F3,color:#fff
+    style REGEX fill:#FF9800,color:#fff
+    style COINCIDE fill:#4CAF50,color:#fff
+    style NO_COINCIDE fill:#f44336,color:#fff
 ```
 
-### 6.1.2. Metacaracteres Esenciales (Modelo de Búsqueda)
+📌 **Ejemplo real:** Instagram usa expresiones regulares para validar usernames. Cuando escribes un nombre de usuario, la app verifica con una regex que solo contenga letras, números, puntos y guiones bajos, y que tenga entre 3 y 30 caracteres.
 
-| Metacarácter | Descripción | Equivalente en DAW |
+## 6.2. Metacaracteres Esenciales
+
+| Metacaracter | Significado | Ejemplo |
 | :--- | :--- | :--- |
-| **`\d`** | Coincide con cualquier **dígito** (0-9). | `[0-9]` |
-| **`\w`** | Cualquier **carácter de palabra** (letras, números y guion bajo). | `[a-zA-Z0-9_]` |
-| **`+`** | Coincide con el elemento anterior **una o más veces**. | Cuantificador |
-| **`*`** | Coincide con el elemento anterior **cero o más veces**. | Cuantificador |
-| **`?`** | Coincide con el anterior **cero o una vez** (opcional). | Cuantificador |
-| **`.`** | Coincide con **cualquier carácter** (excepto salto de línea). | Comodín |
-
-## 6.2. Uso de Expresiones Regulares en el Lenguaje DAW
-
-En DAW, las expresiones regulares se manejan a través de la clase **`Regex`**. Se utiliza la sintaxis de **`string` sin procesar (`@""`)** para evitar problemas con la barra invertida (`\`).
-
-### 6.2.1. Creación y Definición del Patrón
-
-| Sintaxis DAW | Propósito | Justificación |
-| :--- | :--- | :--- |
-| `var regex = Regex(patron);` | Crea el objeto con la lógica de búsqueda. | El objeto `Regex` compila el patrón internamente para optimizar. |
-| `var patron = @""...;` | Utiliza el string sin procesar. | El prefijo `@` trata la cadena literalmente, vital para las `\`. |
-
-### 6.2.2. Métodos de Uso y Mecanismos de Coincidencia
-
-| Método DAW | Descripción | Devuelve | Uso Recomendado |
-| :--- | :--- | :--- | :--- |
-| **`.IsMatch(cadena)`** | Comprueba si el patrón se encuentra **en alguna parte**. | `bool` | Validación rápida. |
-| **`.Match(cadena)`** | Encuentra **la primera** coincidencia. | Objeto `Match` | Extracción simple. |
-| **`.Matches(cadena)`** | Encuentra **todas** las coincidencias. | Colección de `Match` | Extracción múltiple. |
-| **`.Replace(cadena, nuevo)`** | Reemplaza las subcadenas que coinciden por el `nuevo` texto. | `string` | Limpieza de datos. |
-
-### 6.2.3. Ejemplos de Búsqueda y Extracción
+| `.` | Cualquier carácter | `a.c` → "abc", "a1c", "a c" |
+| `\d` | Dígito (0-9) | `\d\d` → "42" |
+| `\w` | Letra, dígito o `_` | `\w+` → "hola_123" |
+| `\s` | Espacio en blanco | `a\sb` → "a b" |
+| `+` | Una o más veces | `a+` → "a", "aa", "aaa" |
+| `*` | Cero o más veces | `a*` → "", "a", "aa" |
+| `?` | Cero o una vez | `colou?r` → "color", "colour" |
+| `{n}` | Exactamente n veces | `\d{3}` → "123" |
+| `{n,m}` | Entre n y m veces | `\d{2,4}` → "12", "123", "1234" |
+| `^` | Inicio de cadena | `^Hola` → "Hola mundo" ✅ |
+| `$` | Fin de cadena | `mundo$` → "Hola mundo" ✅ |
+| `[abc]` | Cualquier carácter del conjunto | `[aeiou]` → vocal |
+| `[^abc]` | Cualquier carácter NO del conjunto | `[^0-9]` → no dígito |
+| `(abc)` | Grupo de captura | `(http\|https)` |
 
 ```csharp
-Main {
-  var patron = @"\d+";
-  var regex = Regex(patron);
-  string texto = "El año 2024 tiene 366 días.";
-  var coincidencias = regex.Matches(texto);
+using System.Text.RegularExpressions;
 
-  foreach (var match in coincidencias) {
-      writeLine("Número encontrado: " + match.Value);
-  }
+// ✅ Validar que un string tiene exactamente 3 dígitos
+string patron = @"^\d{3}$";
+Console.WriteLine(Regex.IsMatch("123", patron));   // true
+Console.WriteLine(Regex.IsMatch("12", patron));    // false
+Console.WriteLine(Regex.IsMatch("1234", patron));  // false
+```
+
+> ⚠️ **Advertencia:** Usa `@""` (verbatim string) para las regex. Sin ella, `\d` se interpreta como `\` + `d` (carácter literal). Con `@""`, se interpreta como el metacaracter `\d`.
+
+## 6.3. Uso de Regex en C#
+
+### 6.3.1. Validación (`IsMatch`)
+
+```csharp
+using System.Text.RegularExpressions;
+
+// ✅ Validar email básico
+string patronEmail = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
+string email = "usuario@ejemplo.com";
+
+bool esValido = Regex.IsMatch(email, patronEmail);
+Console.WriteLine($"'{email}' es válido: {esValido}");  // true
+```
+
+### 6.3.2. Búsqueda (`Match` y `Matches`)
+
+```csharp
+string texto = "Mi número es 612-345-678 y otro es 911-222-333";
+
+// ✅ Buscar la primera coincidencia
+Match primera = Regex.Match(texto, @"\d{3}-\d{3}-\d{3}");
+if (primera.Success)
+    Console.WriteLine($"Primero: {primera.Value}");  // 612-345-678
+
+// ✅ Buscar todas las coincidencias
+MatchCollection todas = Regex.Matches(texto, @"\d{3}-\d{3}-\d{3}");
+foreach (Match m in todas)
+    Console.WriteLine($"Encontrado: {m.Value}");
+```
+
+### 6.3.3. Extracción de Datos
+
+```csharp
+string log = "ERROR 2024-01-15: Archivo no encontrado";
+Match coincidencia = Regex.Match(log, @"(\d{4})-(\d{2})-(\d{2})");
+
+if (coincidencia.Success)
+{
+    Console.WriteLine($"Año: {coincidencia.Groups[1].Value}");   // 2024
+    Console.WriteLine($"Mes: {coincidencia.Groups[2].Value}");   // 01
+    Console.WriteLine($"Día: {coincidencia.Groups[3].Value}");   // 15
 }
 ```
 
-### 6.2.4. Ejemplo de Validación y Sustitución
+### 6.3.4. Sustitución (`Replace`)
 
 ```csharp
-Main {
-  var patronHora = @"^\d{2}:\d{2}$";
-  var regexHora = Regex(patronHora);
-  string tiempo = "14:30";
-  bool esValido = regexHora.IsMatch(tiempo);
-  writeLine($"'{tiempo}' es una hora válida: {esValido}"); // true
+string texto = "La fruta (manzana) y la verdura (lechuga) son sanas.";
 
-  string cadenaSucio = "La fruta (manzana) y la verdura (lechuga) son sanas.";
-  var regexParentesis = Regex(@"\(.*?\)");
-  string cadenaLimpia = regexParentesis.Replace(cadenaSucio, "");
-  writeLine("Cadena limpia: " + cadenaLimpia);
-}
+// ✅ Eliminar contenido entre paréntesis
+string limpio = Regex.Replace(texto, @"\s*\(.*?\)", "");
+Console.WriteLine(limpio);  // "La fruta y la verdura son sanas."
+
+// ✅ Enmascarar números de teléfono
+string conMascara = Regex.Replace("612345678", @"(\d{3})(\d{3})(\d{3})", "$1-$2-$3");
+Console.WriteLine(conMascara);  // "612-345-678"
 ```
 
-## 6.3. Tabla Maestra de Validaciones Comunes
+## 6.4. Tabla Maestra de Validaciones Comunes
 
-| Objetivo | Patrón DAW (`@""`) | Explicación del Patrón |
+| Objetivo | Patrón | Explicación |
 | :--- | :--- | :--- |
-| **Solo Dígitos** | `@"\d+"` | Cualquier dígito, una o más veces. |
-| **Solo Minúsculas** | `@"[a-z]+"` | Letras de 'a' a 'z', una o más veces. |
-| **Solo Mayúsculas** | `@"[A-Z]+"` | Letras de 'A' a 'Z', una o más veces. |
-| **Teléfono (9 dígitos)** | `@"\d{9}"` | Dígito exactamente 9 veces. |
-| **DNI (8 Números y Letra)** | `@"\d{8}[A-Z]"` | 8 dígitos y una letra mayúscula final. |
-| **Email Básico** | `@"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"` | Parte local + @ + dominio + . + TLD. |
-| **Fecha (DD/MM/AAAA)** | `@"\d{2}/\d{2}/\d{4}"` | 2 d (día) / 2 d (mes) / 4 d (año). |
-| **URL (HTTP/HTTPS)** | `@"(http|https)://\w+\.\w+"` | http o https literal seguido de dominio. |
-| **Tarjeta de Crédito** | `@"\d{4} \d{4} \d{4} \d{4}"` | Cuatro bloques de 4 dígitos con espacios. |
+| **Solo dígitos** | `@"^\d+$"` | Una o más cifras |
+| **Teléfono (9 dígitos)** | `@"^\d{9}$"` | Exactamente 9 cifras |
+| **DNI (8 números + letra)** | `@"^\d{8}[A-Z]$"` | 8 dígitos + mayúscula |
+| **Email básico** | `@"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"` | Local + @ + dominio + TLD |
+| **Fecha (DD/MM/AAAA)** | `@"^\d{2}/\d{2}/\d{4}$"` | 2d / 2d / 4d |
+| **URL (HTTP/HTTPS)** | `@"^(http\|https)://\w+\.\w+"` | protocolo://dominio |
+| **Tarjeta de crédito** | `@"^\d{4} \d{4} \d{4} \d{4}$"` | 4 bloques de 4 dígitos |
+| **Código postal (5 cifras)** | `@"^\d{5}$"` | 5 dígitos |
 
-## 6.4. El concepto de Codicia (Greediness)
-Por defecto, cuantificadores como `+` o `*` son **codiciosos**: intentan capturar la mayor parte del texto posible. 
-*   *Ejemplo*: En `"<div>Hola</div>"`, la regex `<.*>` capturaría TODO el texto, no solo el primer tag. 
-*   *Solución*: Añade un `?` tras el cuantificador (`<.*?>`) para convertirlo en "no codicioso" (Lazy).
+📌 **Ejemplo real:** Amazon usa regex para validar direcciones de envío. Cuando escribes un código postal, la app verifica que tenga exactamente 5 dígitos antes de aceptarlo.
+
+## 6.5. El Concepto de Codicia (Greediness)
+
+Por defecto, los cuantificadores (`+`, `*`) son **codiciosos**: intentan capturar la mayor cantidad de texto posible.
+
+```csharp
+string html = "<div>Hola</div>";
+
+// ❌ Captura TODO (codicioso)
+string codicioso = Regex.Match(html, @"<.*>").Value;
+Console.WriteLine(codicioso);  // "<div>Hola</div>"
+
+// ✅ Captura solo el primer tag (no codicioso / lazy)
+string lazy = Regex.Match(html, @"<.*?>").Value;
+Console.WriteLine(lazy);  // "<div>"
+```
+
+> 💡 **Consejo:** Siempre usa `?` después de `+` o `*` cuando valides HTML o XML. Sin él, la regex captura demasiado texto.
+
+---
+
+**Resumen del punto:**
+
+| Concepto | Descripción |
+| :--- | :--- |
+| **Expresión regular** | Patrón de búsqueda y validación de texto |
+| **Metacaracteres** | Símbolos especiales (`\d`, `\w`, `+`, `*`, `^`, `$`) |
+| **`Regex.IsMatch()`** | Devuelve `true` si el texto cumple el patrón |
+| **`Regex.Match()`** | Devuelve la primera coincidencia |
+| **`Regex.Matches()`** | Devuelve todas las coincidencias |
+| **`Regex.Replace()`** | Sustituye texto que cumpla el patrón |
+| **Greediness** | `+`/`*` son codiciosos; añade `?` para hacerlos lazy |
+| **Verbatim string** | Siempre usa `@""` para regex en C# |
+
+En el siguiente punto veremos los algoritmos de ordenación y búsqueda: Burbuja, Selección, Inserción, Shell Sort, QuickSort y búsqueda lineal/binaria, analizando su eficiencia con la notación Big O.

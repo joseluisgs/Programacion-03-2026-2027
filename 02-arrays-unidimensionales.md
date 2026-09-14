@@ -4,358 +4,417 @@
     - [2.1.2. Valores por Defecto y Gestión de la Nulidad](#212-valores-por-defecto-y-gestión-de-la-nulidad)
   - [2.2. Obtener el Tamaño con `.Length` y Recorrido](#22-obtener-el-tamaño-con-length-y-recorrido)
     - [2.2.1. `array.Length`](#221-arraylength)
-    - [2.2.2. Recorrido con Bucle `for` (Precisión y Modificación)](#222-recorrido-con-bucle-for-precisión-y-modificación)
-    - [2.2.3. Recorrido con Bucle `foreach` (Sintaxis Correcta)](#223-recorrido-con-bucle-foreach-sintaxis-correcta)
-    - [2.2.4. Recorrido con Filtrado de Nulos (Combinando `if`)](#224-recorrido-con-filtrado-de-nulos-combinando-if)
+    - [2.2.2. Recorrido con Bucle `for`](#222-recorrido-con-bucle-for)
+    - [2.2.3. Recorrido con Bucle `foreach`](#223-recorrido-con-bucle-foreach)
+    - [2.2.4. Recorrido con Filtrado de Nulos](#224-recorrido-con-filtrado-de-nulos)
   - [2.3. Paso por Referencia, Devolución y Clonación](#23-paso-por-referencia-devolución-y-clonación)
-    - [2.3.1. Arrays y el Paso por Referencia (El Modelo de Memoria)](#231-arrays-y-el-paso-por-referencia-el-modelo-de-memoria)
+    - [2.3.1. Arrays y el Paso por Referencia](#231-arrays-y-el-paso-por-referencia)
     - [2.3.2. Clonación Manual para Romper la Referencia](#232-clonación-manual-para-romper-la-referencia)
     - [2.3.3. Devolución de Arrays](#233-devolución-de-arrays)
-  - [2.4. Parámetros Variables (`params`)](#24-parámetros-variables-params)
+  - [2.4. Parámetros Variables (`params`) y Modificador `in`](#24-parámetros-variables-params-y-modificador-in)
   - [2.5. Identidad vs. Igualdad (Referencia vs. Contenido)](#25-identidad-vs-igualdad-referencia-vs-contenido)
-  - [2.6. Copias, Clonación y la Inmutabilidad del Tamaño (DAW)](#26-copias-clonación-y-la-inmutabilidad-del-tamaño-daw)
-    - [2.6.1. La Inmutabilidad: Simulando el Cambio de Tamaño](#261-la-inmutabilidad-simulando-el-cambio-de-tamaño)
+  - [2.6. Copias, Clonación y la Inmutabilidad del Tamaño](#26-copias-clonación-y-la-inmutabilidad-del-tamaño)
   - [2.7. La Trampa del Alias](#27-la-trampa-del-alias)
-
 
 # 2. Arrays Unidimensionales
 
-Un array unidimensional, o vector, es una colección ordenada y homogénea (mismo tipo de datos) de elementos almacenados en memoria contigua. Es la estructura de datos fundamental para la gestión de listas de tamaño fijo.
+> 💡 **Punto de partida:** Cuando abres tu lista de reproducción de Spotify, ¿te has fijado en que cada canción tiene un número de posición? La canción 0, la 1, la 2... Eso es un array: una lista ordenada donde cada elemento tiene una posición fija. Pero, ¿cómo se crea? ¿Cómo se recorre? ¿Qué pasa si quieres hacer una copia?
 
-Puedes pensar en ello como una cajonera, es decir, una serie de cajones (elementos) del mismo tamaño (tipo de dato) donde cada cajón tiene un índice que nos permite acceder a él. Por tanto, un array es una estructura de datos que nos permite almacenar un conjunto de datos del mismo tipo.
+En este punto aprenderás a crear, recorrer y manipular arrays unidimensionales en C#: definición, valores por defecto, bucles, paso por referencia y clonación.
 
-![array](./images/arrays.jpg)
+**Objetivos de aprendizaje:**
 
-Como se ha indicado anteriormente, los arrays en DAW tienen las siguientes características clave:
-1.  **Homogeneidad:** Todos los elementos deben ser del mismo tipo de dato (por ejemplo, todos `int` o todos `string`).
-2.  **Tamaño Fijo:** El tamaño de un array se establece en el momento de su creación y no puede ser alterado posteriormente. Si se necesita modificar el tamaño, la solución es crear un **nuevo array** con el tamaño deseado y **copiar** los elementos del original al nuevo.  
-3.  **Contigüidad en Memoria:** Los elementos de un array se almacenan en posiciones de memoria **contiguas** (una al lado de la otra). Esto es lo que permite su alta eficiencia.
-4.  **Acceso por Índice:** El acceso a los elementos para lectura o escritura se realiza mediante su posición o **índice**, que siempre es un número entero. El primer elemento está en el índice `0`.
-5.  **Eficiencia:** El acceso a cualquier elemento es extremadamente rápido (tiempo constante, $O(1)$) porque su ubicación en memoria se calcula directamente.
-6.  **Inmutabilidad:** Una vez creado, el tamaño de un array no puede cambiar. Si se necesita un array más grande o más pequeño, se debe crear uno nuevo y copiar los elementos.
-7.  **Tipos de Referencia:** En DAW, los arrays son tipos de referencia, lo que significa que las variables que los contienen almacenan la dirección de memoria donde se encuentran los datos, no los datos en sí.
-8.  **Valores por Defecto:** Al crear un array, sus elementos se inicializan automáticamente a valores por defecto según su tipo (0 para `int`, `false` para `bool`, `""` para `string`, y `null` para tipos anulables).
-9.  **Acceso no permitido:** No se puede acceder a un elemento de un array utilizando un índice fuera de sus límites. Esto generará un error en tiempo de ejecución llamado `ArrayIndexOutOfBoundsException`.
+- Declarar y crear arrays unidimensionales en C#
+- Conocer los valores por defecto según el tipo de dato
+- Recorrer arrays con `for` y `foreach`
+- Entender el paso por referencia y la clonación
+- Diferenciar identidad (`==`) de igualdad (contenido)
+- Usar los modificadores `params` e `in`
 
 ## 2.1. Definición, Creación y Valores por Defecto
 
 ### 2.1.1. Inmutabilidad del Tamaño y Creación
 
-| Característica | Detalle Didáctico | Sintaxis DAW |
+| Característica | Detalle | Sintaxis C# |
 | :--- | :--- | :--- |
-| **Tamaño Fijo** | El tamaño se define al crearse y **no puede cambiarse**. | `tipo[] nombre = tipo[tamaño];` |
-| **Homogeneidad** | Todos los elementos deben ser del mismo tipo. | `var numeros = int[10];` |
-| **Valores Iniciales** | Se puede crear asignando valores directamente. | `var dias = string[] {"Lun", "Mar", "Mié"};` |
+| **Tamaño Fijo** | Se define al crear y **no puede cambiarse** | `int[] numeros = new int[10];` |
+| **Homogeneidad** | Todos los elementos del mismo tipo | `var dias = new string[] { "Lun", "Mar", "Mié" };` |
+| **Inicialización directa** | Asignar valores al crear | `int[] pares = { 2, 4, 6, 8 };` |
+
+```csharp
+// ✅ Creación con tamaño fijo (valores por defecto: 0)
+int[] edades = new int[5];
+
+// ✅ Creación con valores iniciales
+string[] frutas = { "Manzana", "Pera", "Naranja" };
+
+// ✅ Creación explícita
+double[] precios = new double[] { 9.99, 19.99, 29.99 };
+```
 
 ### 2.1.2. Valores por Defecto y Gestión de la Nulidad
 
-Cuando un array se crea solo con su tamaño, DAW lo rellena automáticamente.
+Cuando creas un array solo con su tamaño, C# lo rellena automáticamente:
 
-| Tipo de Array | Valor por Defecto | Justificación Didáctica |
+| Tipo de Array | Valor por Defecto | Ejemplo |
 | :--- | :--- | :--- |
-| **Primitivo** (`int[]`, `bool[]`) | **0** / **`false`** | Se inicializa al valor que representa la 'ausencia' de información. |
-| **Cadena** (`string[]`) | **`""`** (Cadena vacía) | Es un objeto, pero se inicializa a la cadena sin caracteres. |
-| **Anulable** (`T?[]`) | **`null`** | Indica que la posición no tiene ningún valor válido. |
+| **Numérico** (`int[]`, `double[]`) | `0` / `0.0` | `new int[3]` → `{ 0, 0, 0 }` |
+| **Booleano** (`bool[]`) | `false` | `new bool[2]` → `{ false, false }` |
+| **Cadena** (`string[]`) | `null` | `new string[2]` → `{ null, null }` |
+| **Anulable** (`int?[]`) | `null` | `new int?[2]` → `{ null, null }` |
+
+> ⚠️ **Advertencia:** `string[]` se inicializa a `null`, **no** a `""`. Si intentas acceder a un método de un elemento sin verificar, obtendrás `NullReferenceException`.
 
 ```csharp
-Main {
-  // Array de tipos anulables: todos los elementos son 'null'
-  var numeroOpcionales = int?[3];
-  numeroOpcionales[0] = 5;
+int?[] numerosOpcionales = new int?[3];
+numerosOpcionales[0] = 5;
 
-  // ¡CRÍTICO! Acceder a un método sin verificar lanza una excepción.
-  // writeLine("Número: " + (numeroOpcionales[1] + 1)); // Excepción en tiempo de ejecución
+// ❌ Peligro: acceder a un null
+// Console.WriteLine(numerosOpcionales[1] + 1);  // NullReferenceException
 
-  // Solución 1: Operador de Coalescencia (Sustitución rápida)
-  writeLine("Número con coalescencia: " + (numeroOpcionales[1] ?? 0 + 1)); // Muestra 1
-  // Solución 2: Comprobación explícita con if
-  if (numeroOpcionales[1] != null) {
-    writeLine("Número con if: " + (numeroOpcionales[1] + 1));
-  } else {
-    writeLine("Número con if: Valor nulo, no se puede operar.");
-  }
-  // Operador ternario
-  writeLine("Número con ternario: " + (numeroOpcionales[1] != null ? (numeroOpcionales[1] + 1) : "Valor nulo, no se puede operar."));    
-}
+// ✅ Solución 1: Coalescencia
+Console.WriteLine($"Con coalescencia: {numerosOpcionales[1] ?? 0 + 1}");
+
+// ✅ Solución 2: Comprobación explícita
+if (numerosOpcionales[1] != null)
+    Console.WriteLine($"Con if: {numerosOpcionales[1] + 1}");
+else
+    Console.WriteLine("Valor nulo, no se puede operar");
 ```
+
+📌 **Ejemplo real:** Netflix usa arrays de perfiles. Si un usuario solo tiene 2 perfiles pero el array tiene 5 posiciones, las 3 restantes son `null`. Cuando intentas acceder a un perfil vacío, la app verifica el `null` antes de mostrar datos.
 
 ## 2.2. Obtener el Tamaño con `.Length` y Recorrido
 
 ### 2.2.1. `array.Length`
 
-La propiedad `.Length` devuelve el número de elementos. Es la manera fiable de conocer el límite superior del array.
+La propiedad `.Length` devuelve el número total de elementos. Es la forma fiable de conocer el límite del array.
 
-### 2.2.2. Recorrido con Bucle `for` (Precisión y Modificación)
+```csharp
+string[] colores = { "Rojo", "Verde", "Azul" };
+Console.WriteLine($"Longitud: {colores.Length}");  // 3
+Console.WriteLine($"Último índice: {colores.Length - 1}");  // 2
+```
 
-### Esquema Lógico del Recorrido 1D
+> 💡 **Consejo:** El último elemento siempre está en `array.Length - 1`. Si accedes a `array[array.Length]`, obtienes `IndexOutOfRangeException`.
+
+### 2.2.2. Recorrido con Bucle `for`
+
+El bucle `for` se usa cuando necesitas **modificar** elementos o conocer el **índice** actual.
+
 ```mermaid
 graph TD
-    Start((Inicio)) --> Init[i = 0]
-    Init --> Cond{¿i < array.Length?}
-    Cond -- Sí --> Access["Acceso: array[i]"]
-    Access --> Process[Procesar Elemento]
-    Process --> Inc[Incrementar: i = i + 1]
-    Inc --> Cond
-    Cond -- No --> End((Fin))
+    START(("Inicio")) --> INIT["i = 0"]
+    INIT --> COND{"¿i < Length?"}
+    COND -->|"Sí"| ACCESO["Acceso: array[i]"]
+    ACCESO --> PROCESO["Procesar elemento"]
+    PROCESO --> INC["i++"]
+    INC --> COND
+    COND -->|"No"| FIN(("Fin"))
+    style START fill:#4CAF50,color:#fff
+    style FIN fill:#f44336,color:#fff
+    style COND fill:#FF9800,color:#fff
+    style ACCESO fill:#2196F3,color:#fff
+    style PROCESO fill:#9C27B0,color:#fff
 ```
 
-El bucle `for` se utiliza principalmente cuando se necesita **modificar** los elementos del array o si se requiere conocer el **índice (`i`)** de la posición actual (ej. para un recorrido inverso).
+```csharp
+int[] calificaciones = new int[5];
 
-**Justificación:** El `for` es la herramienta más precisa porque el índice `i` permite el acceso directo a la memoria contigua (`array[i]`).
+// ✅ Recorrer y modificar con for
+for (int i = 0; i < calificaciones.Length; i++)
+{
+    calificaciones[i] = i * 10;
+    Console.WriteLine($"Índice {i}: {calificaciones[i]}");
+}
+// Salida: 0, 10, 20, 30, 40
+```
+
+📌 **Ejemplo real:** YouTube usa un bucle `for` para cargar los 50 primeros comentarios de un vídeo. Cada comentario se accede por su índice y se muestra en pantalla.
+
+### 2.2.3. Recorrido con Bucle `foreach`
+
+El `foreach` se usa cuando solo necesitas **leer** los valores. Es más seguro porque no puedes equivocarte con el índice.
 
 ```csharp
-Main {
-  var calificaciones = int[5]; // {0, 0, 0, 0, 0}
+string[] diasSemana = { "L", "M", "X", "J", "V", "S", "D" };
 
-  writeLine("--- Recorrido FOR y Modificación ---");
-  for (int i = 0; i < calificaciones.Length; i++) {
-    calificaciones[i] = i * 10; // Modificamos el contenido
-    writeLine("Índice " + i + ": " + calificaciones[i]);
-  }
+// ✅ Recorrer con foreach (solo lectura)
+foreach (string dia in diasSemana)
+{
+    Console.WriteLine($"Día: {dia}");
 }
 ```
 
-### 2.2.3. Recorrido con Bucle `foreach` (Sintaxis Correcta)
+| Bucle | Cuándo usarlo | Ventaja |
+| :--- | :--- | :--- |
+| `for` | Necesitas modificar o conocer el índice | Acceso directo por posición |
+| `foreach` | Solo necesitas leer cada elemento | Más seguro y legible |
 
-El bucle `foreach` se utiliza cuando solo se necesita **leer** el valor de cada elemento. Simplifica la sintaxis, ya que no se necesita manejar el índice.
+### 2.2.4. Recorrido con Filtrado de Nulos
 
-**Justificación:** Es más seguro y legible para la lectura, ya que elimina el riesgo de errores al manejar el contador (`i`).
+Para arrays de tipos anulables, debes verificar `null` antes de usar cada elemento.
 
 ```csharp
-Main {
-  var diasSemana = string[] {"L", "M", "X", "J", "V"};
+string?[] nombres = new string?[3];
+nombres[0] = "Ana";
+nombres[2] = "Luis";
 
-  writeLine("--- Recorrido FOREACH ---");
-  foreach (var dia in diasSemana) {
-    writeLine("Día: " + dia);
-  }
+// ✅ Filtrado con foreach + if
+foreach (string? nombre in nombres)
+{
+    if (nombre != null)
+        Console.WriteLine($"Usuario: {nombre}");
+    else
+        Console.WriteLine("Posición vacía");
 }
-```
 
-### 2.2.4. Recorrido con Filtrado de Nulos (Combinando `if`)
-
-Para arrays de tipos anulables, el `foreach` es ideal para la lectura, pero debemos usar el `if` para el filtrado, o el operador de coalescencia (`??`) para evitar excepciones al acceder a métodos o propiedades de un valor nulo. También podemos usar el operador ternario.   
-
-```csharp
-Main {
-  string?[] nombres = string?[3];
-  nombres[0] = "Pepe";
-
-  writeLine("--- Recorrido FOREACH con IF de Nulos ---");
-  foreach (var nombre in nombres) {
-    if (nombre != null) { // CRÍTICO: Solo se procesa si el valor NO es nulo
-      writeLine("Usuario: " + nombre);
-    } else {
-      writeLine("Posición vacía.");
-    }
-    // Alternativa con coalescencia
-    writeLine("Usuario con coalescencia: " + (nombre ?? "Posición vacía."));
-    // Alternativa con ternario
-    writeLine("Usuario con ternario: " + (nombre != null ? nombre : "Posición vacía."));
-  }
+// ✅ Alternativa más concisa con coalescencia
+foreach (string? nombre in nombres)
+{
+    Console.WriteLine($"Usuario: {nombre ?? "vacío"}");
 }
 ```
 
 ## 2.3. Paso por Referencia, Devolución y Clonación
 
-### 2.3.1. Arrays y el Paso por Referencia (El Modelo de Memoria)
+### 2.3.1. Arrays y el Paso por Referencia
 
-**Concepto Clave:** En DAW, los arrays son **tipos de referencia**. La variable que guarda el array (`arrayOriginal`) en realidad guarda la **dirección de memoria** donde están los datos.
+Los arrays en C# son **tipos de referencia**. La variable no contiene los datos, sino la **dirección de memoria** donde están.
 
-**Al pasar a una función:** Se pasa una **copia de esa dirección** (referencia). Como dos variables apuntan al mismo sitio, cualquier modificación de los **elementos internos** dentro de la función afecta al array **original**.
+**Al pasar un array a una función:** se pasa una **copia de la dirección** (referencia). Como dos variables apuntan al mismo sitio, modificar los elementos dentro de la función **afecta al original**.
 
 ```mermaid
 graph LR
-    subgraph Stack ["STACK - Memoria Local"]
-        A[Original] --> PTR["Dir: 0x123"]
-        B["Copia en Función"] --> PTR
+    subgraph STACK ["Stack"]
+        A["arrayOriginal"] --> PTR["Dir: 0x123"]
+        B["arrayEnFunción"] --> PTR
     end
-    subgraph Heap ["HEAP - Memoria Dinámica"]
-        PTR --> DATA["| D | A | T | A |"]
+    subgraph HEAP ["Heap"]
+        PTR --> DATA["| 1 | 2 | 3 |"]
     end
-    INFO["Dos variables apuntando al mismo bloque"]
-    style INFO fill:#fff,stroke:#333,stroke-dasharray: 5 5
+    style STACK fill:#2196F3,color:#fff
+    style HEAP fill:#FF9800,color:#fff
+    style PTR fill:#607D8B,color:#fff
+    style DATA fill:#4CAF50,color:#fff
 ```
 
 ```csharp
-procedure modificarContenido(int[] array) {
-    // Modifica los datos apuntados por la referencia
-    array[0] = 999;
+void ModificarContenido(int[] array)
+{
+    array[0] = 999;  // Modifica el contenido apuntado
 }
 
-Main {
-    var arrayOriginal = int[] {1, 2, 3};
-    modificarContenido(arrayOriginal);
-    // El arrayOriginal ha cambiado porque se modificó la zona de memoria
-    writeLine("Original[0] después: " + arrayOriginal[0]); // Muestra 999
-}
+int[] arrayOriginal = { 1, 2, 3 };
+ModificarContenido(arrayOriginal);
+Console.WriteLine(arrayOriginal[0]);  // 999 — ¡También cambió!
 ```
+
+📌 **Ejemplo real:** Cuando editas una canción en una playlist de Spotify, la app modifica el array directamente. No crea una copia porque sería lento e ineficiente.
 
 ### 2.3.2. Clonación Manual para Romper la Referencia
 
-Para obtener un array completamente independiente, es necesario crear un nuevo array y **copiar manualmente** el contenido elemento por elemento. Esto se conoce como **copia profunda** (deep copy).
+Para obtener un array **completamente independiente**, debes crear uno nuevo y copiar elemento por elemento (**copia profunda**).
 
 ```csharp
-// Clonación Manual: Proporciona una nueva referencia con copia de datos
-function int[] clonar(int[] origen) {
-    var arrayClonado = int[origen.Length];
-    for (int i = 0; i < origen.Length; i++) {
-        arrayClonado[i] = origen[i]; // Copia del valor (copia superficial del array)
+int[] Clonar(int[] origen)
+{
+    int[] clonado = new int[origen.Length];
+    for (int i = 0; i < origen.Length; i++)
+    {
+        clonado[i] = origen[i];  // Copia el valor
     }
-    return arrayClonado;
+    return clonado;
 }
 
-Main {
-    var arrayA = int[] {10, 20};
-    var arrayClon = clonar(arrayA);
+int[] arrayA = { 10, 20 };
+int[] arrayClon = Clonar(arrayA);
 
-    arrayClon[0] = 500;
-    // El arrayA no cambia porque arrayClon apunta a una memoria distinta.
-    writeLine("Original A[0]: " + arrayA[0]);     // Muestra 10
-    writeLine("Clon[0]: " + arrayClon[0]); // Muestra 500
-}
+arrayClon[0] = 500;
+Console.WriteLine(arrayA[0]);    // 10 — A no cambia
+Console.WriteLine(arrayClon[0]); // 500 — C es independiente
 ```
 
 ### 2.3.3. Devolución de Arrays
 
-Una función que devuelve un array retorna la **referencia**. Si modificas la variable que recibe el retorno, estás modificando el array original.
-
-## 2.4. Parámetros Variables (`params`)
-
-El uso de **`params`** es una característica sintáctica de DAW que permite a una función aceptar un número variable de argumentos.       
-
-**Justificación Didáctica:** Es una abstracción útil para el desarrollador. Internamente, el compilador recoge todos los argumentos y los convierte en un **array** que es pasado a la función, facilitando su recorrido con `foreach`.
+Una función que devuelve un array retorna la **referencia**. La variable que recibe el retorno apunta al mismo objeto.
 
 ```csharp
-function int sumarTodos(params int numeros) {
-    // 'numeros' se trata como un array int[]
+int[] CrearArray(int tamanho)
+{
+    return new int[tamanho];  // Retorna la referencia
+}
+
+int[] miArray = CrearArray(10);
+Console.WriteLine(miArray.Length);  // 10
+```
+
+> 💡 **Consejo:** Usa comentarios XML `/// <summary>` en funciones que trabajen con arrays. Facilita la comprensión y la depuración del código.
+
+## 2.4. Parámetros Variables (`params`) y Modificador `in`
+
+El modificador **`params`** permite a una función aceptar un número variable de argumentos. Internamente, el compilador los convierte en un **array**.
+
+```csharp
+int SumarTodos(params int[] numeros)
+{
     int suma = 0;
-    foreach (var num in numeros) {
-        suma = suma + num;
+    foreach (int num in numeros)
+    {
+        suma += num;
     }
     return suma;
 }
+
+// ✅ Llamada con argumentos variables
+Console.WriteLine(SumarTodos(1, 2, 3));          // 6
+Console.WriteLine(SumarTodos(10, 20, 30, 40));   // 100
 ```
+
+### El Modificador `in` (Solo Lectura)
+
+El modificador `in` pasa un array por referencia pero **prohíbe modificarlo** dentro de la función. Ideal para arrays grandes donde solo necesitas leer.
+
+```csharp
+int SumarElementos(in int[] array)
+{
+    int suma = 0;
+    foreach (int elemento in array)
+    {
+        suma += elemento;
+    }
+    // array[0] = 999;  // ❌ ERROR de compilación
+    return suma;
+}
+
+int[] datos = { 10, 20, 30 };
+Console.WriteLine(SumarElementos(in datos));  // 60
+```
+
+| Modificador | Modificable | Rendimiento | Cuándo usarlo |
+| :--- | :--- | :--- | :--- |
+| *(ninguno)* | Sí | Copia la referencia | Uso general |
+| `ref` | Sí | Referencia directa | Cuando necesitas modificar el array |
+| `in` | **No** | Referencia (solo lectura) | Arrays grandes, solo lectura |
 
 ## 2.5. Identidad vs. Igualdad (Referencia vs. Contenido)
 
-Esta distinción es crítica para entender los tipos de referencia.
-
-| Concepto | Significado | Operador de Prueba en DAW | Justificación |
-| :--- | :--- | :--- | :--- |
-| **Identidad** | ¿Apuntan las variables a la **misma dirección**? | **`==`** | Compara la referencia, no el contenido. |
-| **Igualdad** | ¿Tienen las variables el **mismo contenido**? | Función manual | Requiere un bucle elemento a elemento. |
+| Concepto | Significado | Operador en C# |
+| :--- | :--- | :--- |
+| **Identidad** | ¿Apuntan a la **misma dirección**? | `==` |
+| **Igualdad** | ¿Tienen el **mismo contenido**? | Función manual |
 
 ```csharp
-// Función que verifica la igualdad de contenido
-function bool sonIguales(int[] a, int[] b) {
-  if (a.Length != b.Length) {
-    return false;
-  }
-  for (int i = 0; i < a.Length; i++) {
-    if (a[i] != b[i]) {
-      return false;
+bool SonIguales(int[] a, int[] b)
+{
+    if (a.Length != b.Length) return false;
+    for (int i = 0; i < a.Length; i++)
+    {
+        if (a[i] != b[i]) return false;
     }
-  }
-  return true;
+    return true;
 }
 
-Main {
-    var arrayA = int[] {1};
-    var arrayB = int[] {1}; 
-    var arrayC = arrayA;    
+int[] arrayA = { 1 };
+int[] arrayB = { 1 };
+int[] arrayC = arrayA;  // Misma referencia
 
-    writeLine("A == C (Identidad/Ref): " + (arrayA == arrayC)); // true
-    writeLine("A == B (Identidad/Ref): " + (arrayA == arrayB)); // false
-    writeLine("A y B son Iguales (Contenido): " + sonIguales(arrayA, arrayB)); // true
-}
+Console.WriteLine(arrayA == arrayC);               // true (misma dirección)
+Console.WriteLine(arrayA == arrayB);               // false (distinta dirección)
+Console.WriteLine(SonIguales(arrayA, arrayB));      // true (mismo contenido)
 ```
 
-## 2.6. Copias, Clonación y la Inmutabilidad del Tamaño (DAW)
+> 🔧 **Truco nemotecnico:** `==` comprueba si son la **misma persona** (misma dirección). `SonIguales` comprueba si son **gemelos** (mismo contenido pero distinta persona).
 
-### 2.6.1. La Inmutabilidad: Simulando el Cambio de Tamaño
+## 2.6. Copias, Clonación y la Inmutabilidad del Tamaño
 
-La propiedad `.Length` de un array es de **solo lectura**. Esto significa que es imposible modificar el tamaño de un array ya existente. 
-
-| Escenario | Solución en DAW | Justificación Didáctica |
-| :--- | :--- | :--- |
-| **Cambio de tamaño** | **Crear un Array Nuevo** y copiar los datos. | Garantiza bloque contiguo de memoria eficiente. |
-
-#### Mecánica de Cambio de Tamaño
+La propiedad `.Length` es de **solo lectura**. No puedes cambiar el tamaño de un array existente. Si necesitas más espacio, debes crear uno nuevo y copiar.
 
 ```mermaid
 graph TD
-    A[Array Viejo T=3] --> B[Crear Array Nuevo T=5]
-    B --> C[Bucle de Copia 0..2]
-    C --> D[Array Nuevo con datos + 2 huecos]
+    A["Array viejo (3 elementos)"] --> B["Crear array nuevo (5 elementos)"]
+    B --> C["Copiar 3 elementos"]
+    C --> D["Array nuevo: 3 datos + 2 huecos"]
+    style A fill:#f44336,color:#fff
+    style B fill:#4CAF50,color:#fff
+    style C fill:#2196F3,color:#fff
+    style D fill:#4CAF50,color:#fff
 ```
 
 ```csharp
-Main {
-    var arrayAntiguo = int[] {10, 20, 30}; 
-    var nuevoTamano = 5;
-    var arrayNuevo = int[nuevoTamano]; 
+int[] arrayAntiguo = { 10, 20, 30 };
+int nuevoTamano = 5;
+int[] arrayNuevo = new int[nuevoTamano];
 
-    for (int i = 0; i < arrayAntiguo.Length; i++) {
-        arrayNuevo[i] = arrayAntiguo[i];
-    }
+// Copiar elementos del viejo al nuevo
+for (int i = 0; i < arrayAntiguo.Length; i++)
+{
+    arrayNuevo[i] = arrayAntiguo[i];
 }
+
+// arrayNuevo = { 10, 20, 30, 0, 0 }
+Console.WriteLine(string.Join(", ", arrayNuevo));
 ```
 
 ## 2.7. La Trampa del Alias
-Un error muy común es pensar que al hacer `var b = a` hemos creado una copia. En realidad, hemos creado un **Alias**.
+
+Un error muy común es pensar que al hacer `int[] b = a` has creado una copia. En realidad, has creado un **alias** — dos nombres para el mismo array.
 
 ```mermaid
 graph TD
-    subgraph STACK
-        VAR_A[Variable A] --> HEAP_PTR
-        VAR_B[Variable B] --> HEAP_PTR
+    subgraph STACK ["Stack"]
+        VA["Variable A"] --> PTR["Dir: 0x123"]
+        VB["Variable B"] --> PTR
     end
-    subgraph HEAP
-        HEAP_PTR["BLOQUE ÚNICO DE DATOS"]
+    subgraph HEAP ["Heap"]
+        PTR --> DATOS["BLOQUE ÚNICO DE DATOS"]
     end
+    style STACK fill:#2196F3,color:#fff
+    style HEAP fill:#FF9800,color:#fff
+    style PTR fill:#607D8B,color:#fff
+    style DATOS fill:#f44336,color:#fff
 ```
+
 **Consecuencia:** Si cambias `b[0]`, el valor de `a[0]` también cambia. No son dos arrays, son dos nombres para la misma "cajonera".
 
-> 📝 **Truco del Examinador:** Pregunta típica: "¿Por qué al modificar un array se modifica el otro?"
-> **Respuesta:** Los arrays son tipos por referencia. Cuando asignas `b = a`, solo copias la referencia (la dirección), no los datos. Ambos punteros van al mismo objeto en el Heap.
-
 ```csharp
-// ERROR COMÚN: Aliasing
+// ❌ ERROR COMÚN: Aliasing
 int[] a = { 1, 2, 3 };
 int[] b = a;  // b es un ALIAS de a, NO una copia
 
 b[0] = 999;
-Console.WriteLine(a[0]);  // 999 - ¡También cambió!
+Console.WriteLine(a[0]);  // 999 — ¡También cambió!
 
-// CORRECTO: Clonación
+// ✅ CORRECTO: Clonación
 int[] c = new int[a.Length];
 for (int i = 0; i < a.Length; i++)
     c[i] = a[i];
 
 c[0] = 888;
-Console.WriteLine(a[0]);  // 999 - a NO cambia
-Console.WriteLine(c[0]);  // 888 - c es independiente
+Console.WriteLine(a[0]);  // 999 — a NO cambia
+Console.WriteLine(c[0]);  // 888 — c es independiente
 ```
 
-```mermaid
-flowchart LR
-    subgraph "ERROR - Alias (mismo objeto)"
-        A1["a = [1, 2, 3]"] -->|"b = a"| B1["b también apunta a [1, 2, 3]"]
-        B1 -->|"b[0] = 999"| A2["a = [999, 2, 3]"]
-    end
-    
-    subgraph "CORRECTO - Copia (objetos distintos)"
-        A3["a = [1, 2, 3]"] -->|"c =克隆(a)"| B3["c = [1, 2, 3] (copia)"]
-        B3 -->|"c[0] = 888"| A4["a = [1, 2, 3] (sin cambio)"]
-    end
-    
-    style A1 fill:#ffe1e1
-    style B1 fill:#ffe1e1
-    style A2 fill:#ffe1e1
-    style A3 fill:#e1ffe1
-    style B3 fill:#e1ffe1
-    style A4 fill:#e1ffe1
-```
+> 💡 **Analogía:** Imagina que `a` es la dirección de tu piso. Cuando escribes `b = a`, no estás comprando un piso nuevo, estás dando otra llave al **mismo piso**. Si `b` entra y mueve los muebles, `a` también ve los cambios.
 
-> 💡 **Analogía del piso compartido:** Imagina que `a` es una dirección de piso. Cuando escribes `b = a`, no estás comprtando un piso nuevo, estás dando otra llave al mismo piso. Si `b` entra y mueve los muebles, `a` también ve los cambios.
+📌 **Ejemplo real:** En un juego como Fortnite, si dos variables apuntan al mismo array de inventario y un jugador usa un objeto, el otro jugador también lo ve. Para evitarlo, el juego crea una **copia profunda** del inventario antes de modificarlo.
+
+---
+
+**Resumen del punto:**
+
+| Concepto | Descripción |
+| :--- | :--- |
+| **`new tipo[n]`** | Crea un array con n elementos (valores por defecto) |
+| **`{ val1, val2 }`** | Inicialización directa con valores |
+| **`.Length`** | Número total de elementos (solo lectura) |
+| **`for`** | Recorre modificando o accediendo por índice |
+| **`foreach`** | Recorre solo leyendo, sin índice |
+| **Paso por referencia** | Modificar elementos afecta al original |
+| **Clonación manual** | Copia profunda: crear nuevo array + copiar valores |
+| **`params`** | Número variable de argumentos (se convierte en array) |
+| **`in`** | Paso por referencia de solo lectura |
+| **`==`** | Compara identidad (misma dirección), no contenido |
+| **Alias** | `b = a` crea dos nombres para el mismo array |
+
+En el siguiente punto veremos cómo funcionan los arrays multidimensionales (matrices): su creación, recorrido y las diferencias clave con los unidimensionales.
