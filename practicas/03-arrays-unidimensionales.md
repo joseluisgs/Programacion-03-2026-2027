@@ -1,158 +1,113 @@
-## 20 Ejercicios de Aplicación con Arrays Unidimensionales
+# Batería de Ejercicios: Arrays Unidimensionales en C# 14
 
-- [20 Ejercicios de Aplicación con Arrays Unidimensionales](#20-ejercicios-de-aplicación-con-arrays-unidimensionales)
-  - [I. Algoritmos Fundamentales y Análisis](#i-algoritmos-fundamentales-y-análisis)
-  - [II. Manipulación y Lógica de Vectores](#ii-manipulación-y-lógica-de-vectores)
-  - [III. Conceptos Avanzados y Juegos](#iii-conceptos-avanzados-y-juegos)
-  - [IV. Ejercicios de Desarrollo y Clonación](#iv-ejercicios-de-desarrollo-y-clonación)
-  - [V. Desarrollo Contextual y Gestión de Memoria Dinámica (Acordeón)](#v-desarrollo-contextual-y-gestión-de-memoria-dinámica-acordeón)
+**Instrucciones:** Para cada ejercicio, implementa el código en C# usando Top-Level Statements. Puedes usar C# scripting (`dotnet run ejercicio.cs`) o crear un proyecto. Recuerda: **primero el diseño en papel, luego la codificación**.
 
+---
 
-### I. Algoritmos Fundamentales y Análisis
+### Bloque I: Fundamentos y Análisis (Ejercicios 1-8)
 
-1.  **Impresión y Análisis Básico:** Dado un vector de números enteros, obtenga funciones que permitan: a) **imprimir el vector**; b) calcular el **máximo** del vector; c) calcular el **mínimo** del vector; y d) calcular la **media** del vector.
-2.  **Algoritmo de Ordenación por Burbuja (Bubble Sort):** Implemente el algoritmo de ordenación por burbuja (Bubble Sort) sobre un vector de números enteros.
-3.  **Algoritmo de Ordenación por Selección (Selection Sort):** Implemente el algoritmo de ordenación por selección (Selection Sort) sobre un vector de números enteros.
-4.  **Algoritmo de Ordenación por Inserción (Insertion Sort):** Implemente el algoritmo de ordenación por inserción (Insertion Sort) sobre un vector de números enteros.
-5.  **Búsqueda Lineal:** Implemente una función para realizar la **búsqueda de un elemento de manera lineal** en un vector.
-6.  **Búsqueda Binaria Recursiva:** Implemente una función que realice la **búsqueda de un elemento de manera binaria recursiva**, teniendo en cuenta la precondición de que el vector debe estar ordenado.
-7.  **Operaciones de Vectores Físicos:** Realice un programa que dados dos vectores sea capaz de realizar las operaciones de vectores de física: **suma, resta y producto escalar**.
+**Ejercicio 1: Ficha de Tu Playlist**
+Implementa un programa que declare un array de 5 canciones favoritas (`string[]`). Muestra la lista numerada, luego pide al usuario una posición y muestra qué canción hay en esa posición. Incluye manejo de `IndexOutOfRangeException`.
 
-### II. Manipulación y Lógica de Vectores
+**Ejercicio 2: Estadísticas de un Equipo de Fútbol**
+Implementa un programa con un array de 11 enteros (goles de cada jugador en la temporada). Calcula y muestra: el máximo goleador, el mínimo, la media de goles y cuántos jugadores superan la media.
 
-8.  **Inversión del Orden:** Desarrolle un programa que **invierta el orden de un vector**.
-9.  **Comprobación Capicúa:** Realice un programa que dado un vector de números, determine si es **capicúa**.
-10. **Generación de Secuencia (Suma Simple):** Realice un programa que pida un valor entero, lo coloque en la primera posición de un vector e inicie el resto de elementos **sumando uno al anterior** (Ejemplo: si se introduce 9, la secuencia es 9, 10, 11, 12, 13...).
-11. **Generación de Secuencia (Suma por Índice):** Repita el ejercicio anterior de forma que se inicie el primer elemento, y el resto de componentes del vector sean **el anterior más el índice actual** (Ejemplo: si se introduce 2, el resto es 2, 3, 5, 8, 12, 17...).
-12. **Generación de la Primitiva:** Realice un programa que nos sirva para generar la **combinación de la primitiva, sin repetir un número**.
+**Ejercicio 3: Invertir un Array**
+Implementa un programa que declare un array de 10 números enteros y lo **invierta** sin usar un array auxiliar (intercambia elementos desde los extremos hacia el centro). Muestra el array original y el invertido.
 
-### III. Conceptos Avanzados y Juegos
+**Ejercicio 4: Capicúa**
+Implementa un programa que determine si un array de 5 enteros es **capicúa** (se lee igual de izquierda a derecha que de derecha a izquierda). Ejemplo: `[1, 2, 3, 2, 1]` → sí es capicúa.
 
-13. **Juego: ¿Dónde está la mosca? (Vector):** Implemente la versión del juego de la mosca para un vector. La mosca es un valor oculto en una posición. Si el jugador golpea una casilla adyacente a la mosca, **la mosca revolotea y se sitúa en otra casilla**; si no es adyacente, permanece en su posición.
-14. **Juego: Simulación de Onda (Piedra en el Río):** Simule el lanzamiento de una piedra a un río (vector). Pida posición e intensidad. La intensidad se almacena en esa casilla y las **adyacentes irán simulando las ondas con números que se van decrementando** hasta que el río vuelva a estar en calma (todo a cero).
-15. **Juego: El Buscaminas (Vector):** Realice el juego del Buscaminas con un vector de 20 casillas. Coloque 6 minas y genere las pistas, donde cada casilla destapada (sin mina) indica **cuántas minas hay adyacentes a esa posición**.
-16. **Juego: Barquitos Clásico (Vector):** Implemente el juego de los barquitos con un vector de 20 posiciones, utilizando solo submarinos (barcos de una casilla). El sistema debe llevar **dos paneles para cada jugador** (uno para su flota y otro para sus tiradas).
-17. **Juego: El Número de Pivote:** Genere un vector de 20 números aleatorios. Pida al usuario una posición de pivote y realice los siguientes cálculos: la **suma de todos los elementos a la izquierda y a la derecha** del pivote; y cuente cuántos elementos a la izquierda/derecha son **mayores y menores** que el pivote.
-18. **Juego: El Juego de las Parejas (Vector):** Inicie un vector (de dimensión par) y coloque al azar parejas de números. El panel se oculta y el jugador destapa de 2 en 2, buscando que los números coincidan.
+**Ejercicio 5: Búsqueda Lineal**
+Implementa una función que reciba un array de enteros y un valor objetivo. Devuelve el índice donde se encuentra el valor, o `-1` si no existe. Prueba con al menos 3 casos.
 
-### IV. Ejercicios de Desarrollo y Clonación
+**Ejercicio 6: Búsqueda Binaria**
+Implementa la búsqueda binaria sobre un array **ordenado**. Compara el resultado con la búsqueda lineal: ¿cuántas comparaciones se ahorran con 1000 elementos?
 
-19. **Análisis de Posiciones Pares/Impares:** Dado un vector de números enteros, calcule la **suma y la media de los números ubicados en posiciones pares** (índice 0, 2, 4...) y la suma y media de los números ubicados en **posiciones impares** (índice 1, 3, 5...). (Inventado, basado en la necesidad de iterar con el índice y aplicar lógica de paridad, similar a las tareas de matriz).
-20. **Simulación de Cambio de Tamaño (Clonación Profunda):** Escriba una función que simule el aumento de tamaño de un array unidimensional. La función debe crear un **nuevo array** con 5 posiciones adicionales y realizar la **clonación manual (copia profunda)** del contenido del array original al nuevo, demostrando así la inmutabilidad del tamaño en DAW.
+**Ejercicio 7: Ordenación por Burbuja**
+Implementa el algoritmo de ordenación por burbuja sobre un array de 10 números. Muestra el array en cada pasada para visualizar cómo los elementos "burbujean" hacia su posición.
 
-### V. Desarrollo Contextual y Gestión de Memoria Dinámica (Acordeón)
+**Ejercicio 8: Ordenación por Selección**
+Implementa el algoritmo de selección sobre un array de 10 números. En cada paso, muestra el array y el mínimo que se intercambia.
 
-21.  **Campeonato de Tiro al Blanco:**
-    Simule un campeonato de tiros a una diana entre dos jugadores, Jugador A y Jugador B. Las puntuaciones de cada jugador se almacenan en dos vectores unidimensionales de la misma longitud.
-    Implemente un programa que:
-    a) Calcule la **puntuación total** de cada jugador (suma de todos los elementos del vector).
-    b) Determine el **ganador** del campeonato.
-    c) Encuentre la **ronda con mayor diferencia** de puntuación (a favor o en contra) y muestre la posición (índice) donde ocurrió.
+---
 
-22.  **Gestión de Resultados de Partidas:**
-    Una liga de videojuegos registra las puntuaciones de un equipo en un vector de enteros anulables (`int?[]`). Los valores `null` representan partidas que fueron abandonadas o no jugadas (por lo tanto, no se cuentan para la media). El valor 0 es una partida jugada y perdida.
-    Diseñe una función que:
-    a) Calcule el **promedio de puntuación** solo de aquellas partidas que tienen un valor válido (es decir, **ignorando** los `null`).
-    b) Devuelva un **nuevo vector compacto** que contenga solo las puntuaciones válidas, eliminando las entradas `null`.
+### Bloque II: Manipulación y Lógica (Ejercicios 9-16)
 
-23.  **El Almacén de Datos Elástico:**
-    Implemente un programa que simule un sistema de almacenamiento de datos elástico utilizando un vector. Este vector debe dimensionarse automáticamente (simulando el efecto "acordeón") mediante la **creación y clonación** de un nuevo array.
-    El programa debe tener un **menú interactivo** con opciones para:
-    a) **Añadir** un nuevo número entero al final.
-    b) **Borrar** un número entero por índice.
-    c) **Mostrar** estado (capacidad total, elementos ocupados, porcentaje de ocupación).
-    *   **Regla de Expansión (Añadir):** Si al añadir un elemento la ocupación del vector supera el **90%**, el sistema debe crear un **nuevo vector con un 50% de capacidad adicional** y copiar todos los datos.
-    *   **Regla de Reducción (Borrar):** Si al borrar un elemento la ocupación del vector cae por debajo del **25%**, el sistema debe crear un **nuevo vector con el doble de capacidad del número de elementos actuales**, reduciendo así el desperdicio de memoria.
+**Ejercicio 9: Suma y Media de Posiciones Pares/Impares**
+Implementa un programa que calcule la suma y media de los elementos en posiciones pares y la suma y media de los elementos en posiciones impares de un array.
 
+**Ejercicio 10: Eliminar Duplicados**
+Implementa una función que reciba un array y devuelva un **nuevo array** sin elementos duplicados (manteniendo el orden de aparición).
 
-24.  **Historial de Errores con Nulos y Acordeón:**
-    Una aplicación de servidor registra códigos de error en un vector de cadenas anulables (`string?[]`).
-    a) Permita añadir un nuevo código de error. Si la capacidad está llena, expanda el vector en 5 posiciones (Acordeón).
-    b) Permita **eliminar por contenido** (ej. eliminar "ERROR-404"). La posición liberada debe rellenarse con `null`.
-    c) Implemente una función que recorra el vector para **"compactar"** la lista: mueva todos los valores válidos al principio, dejando los `null` al final.
+**Ejercicio 11: Rotación a la Derecha**
+Implementa un programa que **rote** todos los elementos de un array una posición a la derecha (el último pasa a ser el primero). Ejemplo: `[1, 2, 3, 4]` → `[4, 1, 2, 3]`.
 
-25.  **Análisis de la Racha:**
-    Dado un vector de números binarios (0 o 1), donde 1 representa un éxito y 0 un fallo, implemente un algoritmo que determine la **longitud de la racha máxima** de éxitos (secuencia contigua de 1s).
-    *Ejemplo: En el vector {1, 0, 1, 1, 1, 0, 1, 1}, la racha máxima es 3.*
+**Ejercicio 12: Generación de Secuencia**
+Implementa un programa que pida un valor entero, lo coloque en la primera posición de un array y genere el resto sumando el índice actual al anterior. Ejemplo: si introduces `2`, el array es `[2, 3, 5, 8, 12, 17...]`.
 
-26.  **Control de Inventario Desorganizado:**
-    En un almacén, el inventario se registra en un array de cadenas anulables (`string?[]`), donde `null` significa que el espacio está físicamente vacío, y `""` (cadena vacía) significa que el producto fue retirado pero la etiqueta sigue puesta.
-    Implemente una función de **búsqueda lineal** que reciba un nombre de producto (cadena) y devuelva su índice, pero con las siguientes precondiciones:
-    a) Si se busca la cadena `"ESPACIO VACÍO"`, la función debe encontrar solo las posiciones con valor **`null`**.
-    b) Si se busca una cadena de producto, la función debe **ignorar** las posiciones que contienen `""` o `null`.
-    c) Si el array contiene elementos `null`, la función debe usar el **operador de coalescencia de nulidad (`??`)** para garantizar que nunca se intenta llamar a un método (`.Equals()`) en un valor nulo, evitando así una excepción.
+**Ejercicio 13: Mezclar Dos Arrays**
+Implementa una función que reciba dos arrays de la misma longitud y cree un tercero **intercalando** sus elementos. Ejemplo: `[1, 3, 5]` + `[2, 4, 6]` → `[1, 2, 3, 4, 5, 6]`.
 
-27.  **Presupuesto Histórico:**
-    Un módulo de contabilidad almacena el presupuesto mensual en un array (`decimal[]`).
-    Escriba un programa que demuestre los peligros del **Paso por Referencia**:
-    a) Cree un `presupuestoActual`.
-    b) Cree una función llamada `simularCambio(arrayPresupuesto)` que modifique el último elemento del array pasado como argumento.
-    c) Invoque `simularCambio` pasando:
-        1. Una **copia superficial** (`var historial = presupuestoActual;`) y muestre cómo se arruina el historial.
-        2. Una **copia profunda/clonación manual** (creando un nuevo array y copiando valores) y muestre cómo el original permanece inalterado.
+**Ejercicio 14: Combinación de la Primitiva**
+Implementa un programa que genere 6 números aleatorios del 1 al 49 **sin repetir**, simulando una combinación de la primitiva. Ordena los números de menor a mayor.
 
-28.  **Intercalado de Turnos:**
-    Dadas dos listas de tareas (`string[]`): una lista de Tareas Prioritarias (P) y una lista de Tareas Secundarias (S), cree un tercer vector $C$ que intercale las tareas, asegurando que por cada dos tareas prioritarias haya una secundaria.
-    *Ejemplo: $P=\{P_1, P_2, P_3, P_4\}$ y $S=\{S_1, S_2\}$. El resultado es $C=\{P_1, P_2, S_1, P_3, P_4, S_2\}$.*
+**Ejercicio 15: Racha Máxima de Éxitos**
+Implementa un programa que, dado un array de 0s y 1s (1 = éxito, 0 = fallo), encuentre la **longitud de la racha máxima** de 1s consecutivos. Ejemplo: `[0, 1, 1, 1, 0, 1, 1]` → racha máxima = 3.
 
-29.  **Distribución de Tropas:**
-    Simule la distribución de tropas en un flanco utilizando un vector de enteros (`int[]`) de longitud 3: [Flanco Izquierdo, Centro, Flanco Derecho].
-    Implemente una función que reciba el vector de tropas y un valor de refuerzo $R$, y realice una **rotación cíclica a la izquierda** de $R$ posiciones. Esto simula el movimiento de tropas del flanco izquierdo al derecho, afectando la disposición del centro.
-    *Ejemplo: ` {1000, 500, 2000}` y $R=1$ resulta en ` {500, 2000, 1000}`.*
+**Ejercicio 16: Intercalar Tareas Prioritarias y Secundarias**
+Implementa un programa que reciba dos arrays: tareas prioritarias (`string[]`) y secundarias (`string[]`). Crea un tercero intercalando 2 prioritarias por 1 secundaria.
 
-30. Control de Calidad de Inventario (Manejo de Nulos y Cadenas Vacías):
+---
 
-Una fábrica utiliza un **vector de cadenas anulables** (`string?[]`) para registrar el resultado de las inspecciones de calidad de sus productos.
+### Bloque III: Paso por Referencia y Clonación (Ejercicios 17-22)
 
-**Definición de Estados:**
+**Ejercicio 17: Paso por Referencia vs. Copia**
+Implementa un programa que demuestre la diferencia entre pasar un array **sin modificador** (se modifica el original) y pasar con **`ref`** (se puede reasignar el array completo).
 
-*   El valor **`null`** representa un producto que **no ha sido inspeccionado** (ausencia de registro).
-*   La **cadena vacía (`""`)** representa un producto que fue inspeccionado y **explícitamente rechazado** (registro de rechazo).
-*   Cualquier otra cadena ("OK", "Defecto-A", etc.) es un resultado válido de inspección.
+**Ejercicio 18: Clonación Profunda de un Array**
+Implementa una función que reciba un array de enteros y devuelva un **nuevo array** completamente independiente (copia profunda). Demuestra que modificar la copia no afecta al original.
 
-**Vector de Datos de Ejemplo (Inicialización del `inventario`):**
+**Ejercicio 19: Almacenamiento Elástico (Acordeón)**
+Implementa un programa con un menú interactivo que permita **añadir** y **borrar** elementos de un array. Si la ocupación supera el 90%, expande el array un 50%. Si cae por debajo del 25%, reduce a la mitad.
 
-Para la implementación, considere el siguiente vector de cadenas anulables, donde el valor por defecto de los tipos anulables es `null`:
+**Ejercicio 20: Comparar Arrays con `==` y Clonación**
+Implementa un programa que compare dos arrays: uno asignado con `=` (misma referencia) y otro clonado con copia profunda. Muestra qué devuelve `==` en cada caso y por qué.
 
-```charp
-var inventario = string?[] { 
-    null, 
-    "OK", 
-    "", 
-    "Defecto-A", 
-    null, 
-    "OK", 
-    "", 
-    "Defecto-B", 
-    "OK", 
-    null 
-};
-```
+**Ejercicio 21: Presupuesto con Paso por Referencia**
+Implementa un programa que demuestre los peligros del paso por referencia: pasa un array de presupuesto a una función que modifica el último elemento. Compara el resultado con una copia profunda.
 
-Implemente un programa que realice las siguientes tareas:
+**Ejercicio 22: Historial de Errores con Nulos**
+Implementa un programa con un array `string?[]` donde `null` = sin inspeccionar, `""` = rechazado, y cualquier otro texto = válido. Cuenta cuántos hay de cada tipo y muestra un informe con `??` para los nulos.
 
-a) **Conteo de Estados:** Determine y muestre:
-    *   El número total de productos **no inspeccionados** (`null`).
-    *   El número total de productos **rechazados explícitamente** (`""`).
+---
 
-b) **Normalización y Filtrado:** Cree y devuelva un **nuevo vector de cadenas** que contenga **solo** los resultados de inspección válidos (es decir, excluyendo tanto los `null` como las cadenas vacías `""`). Recuerde que los *arrays* en DAW tienen un tamaño fijo, por lo que la simulación de filtrado requiere crear un nuevo *array*.
+### Bloque IV: Juegos y Simulación (Ejercicios 23-27)
 
-c) **Presentación de Informe:** Imprima el vector original utilizando el **operador de coalescencia de nulidad (`??`)** para que, en lugar de mostrar `null`, se muestre la etiqueta `"[PENDIENTE]"`.
-**Ejemplo de Salida Esperada:**
+**Ejercicio 23: ¿Dónde está la Mosca?**
+Implementa el juego de la mosca con un array de 20 casillas. La mosca está oculta en una posición. Si el jugador golpea una casilla adyacente, la mosca "revolotea" a otra posición. Si no es adyacente, permanece.
 
-```
-Productos no inspeccionados: 3
-Productos rechazados explícitamente: 2
-Resultados de inspección válidos: [ "OK", "Defecto-A", "OK", "Defecto-B", "OK" ]
-Informe de Inventario:
-[0]: [PENDIENTE]
-[1]: OK
-[2]: [RECHAZADO]
-[3]: Defecto-A
-[4]: [PENDIENTE]
-[5]: OK
-[6]: [RECHAZADO]
-[7]: Defecto-B
-[8]: OK
-[9]: [PENDIENTE]
-```
+**Ejercicio 24: El Buscaminas (Versión Vector)**
+Implementa el Buscaminas con un vector de 20 casillas. Coloca 6 minas aleatoriamente y genera las pistas (cada casilla sin mina indica cuántas minas hay adyacentes).
+
+**Ejercicio 25: El Número de Pivote**
+Genera un array de 20 números aleatorios. Pide al usuario una posición de pivote. Calcula la suma de elementos a la izquierda y derecha del pivote, y cuenta cuántos son mayores/menores que el pivote.
+
+**Ejercicio 26: Juego de las Parejas (Vector)**
+Implementa el juego de las parejas con un vector de 12 casillas (6 parejas). Coloca los números aleatoriamente, oculta el panel y deja al jugador destapar de 2 en 2 buscando coincidencias.
+
+**Ejercicio 27: Simulación de Onda (Piedra en el Río)**
+Simula el lanzamiento de una piedra a un río (vector de 15 posiciones). Pide posición e intensidad. La intensidad se almacena en esa casilla y las adyacentes van simulando las ondas decrementando hasta volver a cero.
+
+---
+
+### Bloque V: Rendimiento y Análisis (Ejercicios 28-30)
+
+**Ejercicio 28: Comparar Rendimiento de Búsquedas**
+Implementa un programa que genere un array de 10.000 números ordenados. Realiza una búsqueda lineal y una binaria del mismo elemento. Muestra cuántas comparaciones hace cada una.
+
+**Ejercicio 29: Comparar Rendimiento de Ordenación**
+Implementa burbuja, selección e inserción en el mismo array de 100 elementos. Mide y compara el tiempo de ejecución de cada algoritmo con `Stopwatch`.
+
+**Ejercicio 30: Campeonato de Tiro al Blanco**
+Simula un campeonato entre dos jugadores. Cada jugador tiene un vector de puntuaciones por ronda. Calcula la puntuación total, el ganador, y la ronda con mayor diferencia de puntuación.
