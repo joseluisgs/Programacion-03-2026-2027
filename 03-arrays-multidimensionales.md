@@ -351,58 +351,145 @@ for (int i = 0; i < Original.GetLength(0); i++)
 
 ## 3.7. Rendimiento: El Orden de los Índices
 
-C# almacena matrices por **filas** (*row-major order*). Esto significa que los elementos de una fila se guardan consecutivos en memoria, y la fila completa sigue a la anterior:
+### Row-major vs Column-major
+
+¿Cómo almacena el ordenador una matriz en la memoria? La memoria es **unidimensional** (una línea de casillas), pero la matriz es **bidimensional** (una tabla). La pregunta es: ¿qué orden se usa para "aplanar" la tabla en la línea?
+
+C# usa **row-major order** (por filas): primero se almacena la fila completa, luego la siguiente fila completa, y así sucesivamente. Es como si leyeras un libro: lees la fila de izquierda a derecha, y cuando terminas, saltas a la siguiente fila.
 
 ```
-Matriz int[2,3]:          Memoria:
-| 1 | 2 | 3 |    →    [1][2][3][4][5][6]
-| 4 | 5 | 6 |           Fila 0    Fila 1
-```
-
-> ⚠️ **Advertencia:** No todos los lenguajes funcionan igual. Fortran, MATLAB, R y Julia almacenan por **columnas** (*column-major order*): primero la columna completa, luego la siguiente. Si vienes de esos lenguajes, en C# el orden de recorrido es al revés. Esto es crucial para el rendimiento: lo que es rápido en MATLAB (recorrer por columnas) es lento en C#.
-
-Recorrer por filas es **mucho más rápido** que recorrer por columnas:
-
-```csharp
-int[,] matriz = new int[1000, 1000];
-
-// ✅ RÁPIDO: Recorrido por filas (cache-friendly)
-for (int i = 0; i < 1000; i++)
-    for (int j = 0; j < 1000; j++)
-        matriz[i, j] = i + j;
-
-// ❌ LENTO: Recorrido por columnas (cache misses)
-for (int j = 0; j < 1000; j++)
-    for (int i = 0; i < 1000; i++)
-        matriz[i, j] = i + j;
+Matriz int[3,4]:                    Memoria:
+┌────┬────┬────┬────┐
+│  1 │  2 │  3 │  4 │  Fila 0      [ 1 ][ 2 ][ 3 ][ 4 ]
+├────┼────┼────┼────┤                                         Fila 0
+│  5 │  6 │  7 │  8 │  Fila 1      [ 5 ][ 6 ][ 7 ][ 8 ]
+├────┼────┼────┼────┤                                         Fila 1
+│  9 │ 10 │ 11 │ 12 │  Fila 2      [ 9 ][10 ][11 ][12 ]
+└────┴────┴────┴────┘                                         Fila 2
 ```
 
 ```mermaid
-graph LR
-    subgraph FILAS ["Por filas (RÁPIDO)"]
-        F0["1, 2, 3"] --> F1["4, 5, 6"]
+graph TB
+    subgraph MATRIZ ["Matriz 3×4 en pantalla"]
+        direction LR
+        R0["Fila 0: 1  2  3  4"]
+        R1["Fila 1: 5  6  7  8"]
+        R2["Fila 2: 9 10 11 12"]
     end
-    subgraph COLS ["Por columnas (LENTO)"]
-        C0["1"] -.-> C1["4"] -.-> C2["2"] -.-> C3["5"]
+    subgraph MEMORIA ["Memoria (row-major)"]
+        direction LR
+        M0["1"] --- M1["2"] --- M2["3"] --- M3["4"] --- M4["5"] --- M5["6"] --- M6["7"] --- M7["8"] --- M8["9"] --- M9["10"] --- M10["11"] --- M11["12"]
     end
-    style FILAS fill:#4CAF50,color:#fff
-    style COLS fill:#f44336,color:#fff
-    style F0 fill:#2196F3,color:#fff
-    style F1 fill:#2196F3,color:#fff
-    style C0 fill:#FF9800,color:#fff
-    style C1 fill:#FF9800,color:#fff
-    style C2 fill:#FF9800,color:#fff
-    style C3 fill:#FF9800,color:#fff
+    R0 -->|"Fila 0 completa"| M0
+    R1 -->|"Fila 1 completa"| M4
+    R2 -->|"Fila 2 completa"| M8
+    style MATRIZ fill:#2196F3,color:#fff
+    style MEMORIA fill:#4CAF50,color:#fff
+    style M0 fill:#FF9800,color:#fff
+    style M1 fill:#FF9800,color:#fff
+    style M2 fill:#FF9800,color:#fff
+    style M3 fill:#FF9800,color:#fff
+    style M4 fill:#607D8B,color:#fff
+    style M5 fill:#607D8B,color:#fff
+    style M6 fill:#607D8B,color:#fff
+    style M7 fill:#607D8B,color:#fff
+    style M8 fill:#f44336,color:#fff
+    style M9 fill:#f44336,color:#fff
+    style M10 fill:#f44336,color:#fff
+    style M11 fill:#f44336,color:#fff
 ```
 
-> 💡 **Consejo:** Siempre recorre las matrices por filas (índice `i` primero). Esto garantiza que el procesador acceda a memoria contigua y aproveche la caché.
+> ⚠️ **Advertencia:** No todos los lenguajes funcionan igual. **Fortran, MATLAB, R y Julia** almacenan por **columnas** (*column-major order*): primero la columna completa, luego la siguiente. Si vienes de esos lenguajes, en C# el orden de recorrido es al revés.
 
-| Orden | Lenguajes | Fórmula | Ejemplo de recorrido rápido |
+### Ejemplo paso a paso: recorrido por filas vs columnas
+
+Imagina una matriz de notas de 3 alumnos × 4 exámenes:
+
+```csharp
+int[,] notas = {
+    { 5, 6, 7, 8 },   // Alumno 0
+    { 9, 10, 8, 7 },  // Alumno 1
+    { 6, 7, 9, 10 }   // Alumno 2
+};
+```
+
+**En memoria se almacena así (row-major):**
+```
+Posición:  [0]  [1]  [2]  [3]  [4]  [5]  [6]  [7]  [8]  [9]  [10] [11]
+Valor:      5    6    7    8    9   10    8    7    6    7    9   10
+           ─────────────────  ─────────────────  ─────────────────
+           Alumno 0 (fila 0)  Alumno 1 (fila 1)  Alumno 2 (fila 2)
+```
+
+**Recorrido por FILAS (✅ RÁPIDO — cache-friendly):**
+```csharp
+// Primer bucle: i = 0 (Alumno 0)
+for (int j = 0; j < 4; j++)
+    Console.Write(notas[0, j]);  // Lee posiciones 0,1,2,3 → CONTIGUO ✅
+
+// Segundo bucle: i = 1 (Alumno 1)
+for (int j = 0; j < 4; j++)
+    Console.Write(notas[1, j]);  // Lee posiciones 4,5,6,7 → CONTIGUO ✅
+```
+El procesador carga un **bloque de memoria** cada vez. Al acceder a posiciones contiguas (0→1→2→3), el bloque se usa **completamente**. Si el bloque tiene 16 bytes, usas 16 bytes útiles.
+
+**Recorrido por COLUMNAS (❌ LENTO — cache misses):**
+```csharp
+// Primer bucle: j = 0 (examen 0)
+for (int i = 0; i < 3; i++)
+    Console.Write(notas[i, 0]);  // Lee posiciones 0, 4, 8 → SALTO ✗
+```
+Para leer la posición 0, el procesador carga un bloque de memoria. Pero la posición 4 **no está en ese bloque** → tiene que cargar otro bloque. Y la posición 8 → otro bloque más. Cada salto es un **cache miss**: el procesador desperdicia tiempo buscando datos.
+
+### ¿Por qué importa la caché?
+
+La **caché** es una memoria pequeña y muy rápida del procesador. Cuando accedes a una posición, el procesador no carga solo ese valor, sino un **bloque contiguo** completo (típicamente 64 bytes). Si los siguientes accesos están en ese mismo bloque, son **hits** (rápidos). Si están en otro bloque, son **misses** (lentos):
+
+```mermaid
+graph LR
+    subgraph CACHE ["Caché del procesador"]
+        B1["Bloque 1: [0,1,2,3]"]
+        B2["Bloque 2: [4,5,6,7]"]
+        B3["Bloque 3: [8,9,10,11]"]
+    end
+    subgraph ACCESO_FILAS ["Por filas: 3 hits ✅"]
+        direction LR
+        F0["notas[0,0]=5 → HIT"] --> F1["notas[0,1]=6 → HIT"] --> F2["notas[0,2]=7 → HIT"] --> F3["notas[0,3]=8 → HIT"]
+    end
+    subgraph ACCESO_COLS ["Por columnas: 9 misses ❌"]
+        direction LR
+        C0["notas[0,0]=5 → HIT"] --> C1["notas[1,0]=9 → MISS"] --> C2["notas[2,0]=6 → MISS"]
+    end
+    style CACHE fill:#607D8B,color:#fff
+    style ACCESO_FILAS fill:#4CAF50,color:#fff
+    style ACCESO_COLS fill:#f44336,color:#fff
+```
+
+| Recorrido | Bloques cargados | Hits | Misses | Velocidad |
+| :--- | :--- | :--- | :--- | :--- |
+| **Por filas** | 3 bloques (4 posiciones c/u) | 12 | 0 | ✅ Rápido |
+| **Por columnas** | 12 bloques (1 posición c/u) | 3 | 9 | ❌ Lento (4x) |
+
+### Fórmulas de acceso
+
+```
+Row-major (C#, Java, Python, C++):
+  Dirección(A[i,j]) = Base + (i × NumColumnas + j) × Tamaño
+  Recorrido rápido:  for i → for j  (filas externo, columnas interno)
+
+Column-major (Fortran, MATLAB, R, Julia):
+  Dirección(A[i,j]) = Base + (j × NumFilas + i) × Tamaño
+  Recorrido rápido:  for j → for i  (columnas externo, filas interno)
+```
+
+| Orden | Lenguajes | Fórmula | Bucle externo |
 | :--- | :--- | :--- | :--- |
-| **Row-major** (por filas) | C#, Java, Python, C++ | `Base + (i × Cols + j) × Size` | `for j → for i` ❌ / `for i → for j` ✅ |
-| **Column-major** (por columnas) | Fortran, MATLAB, R, Julia | `Base + (j × Rows + i) × Size` | `for i → for j` ❌ / `for j → for i` ✅ |
+| **Row-major** | C#, Java, Python, C++ | `Base + (i × Cols + j) × Size` | `i` (filas) |
+| **Column-major** | Fortran, MATLAB, R, Julia | `Base + (j × Rows + i) × Size` | `j` (columnas) |
 
-> 📝 **Nota:** En C#, el bucle externo debe ser `i` (filas) y el interno `j` (columnas). En Fortran/MATLAB sería al revés. Si cambias de lenguaje, recuerda este detalle.
+> 💡 **Consejo:** En C#, **siempre** el bucle externo debe ser `i` (filas) y el interno `j` (columnas). Si cambias de lenguaje, recuerda: Fortran/MATLAB usan el orden contrario.
+
+> 📌 **Ejemplo real:** Netflix procesa millones de calificaciones en una matriz `usuarios × películas`. Si recorre por usuarios (filas), cada bloque de caché contiene las 5-10 calificaciones de ese usuario → rápido. Si recorre por películas (columnas), salta de usuario en usuario → lento. Por eso los motores de recomendación optimizan el orden de recorrido.
 
 ### Matrices de Structs y Enums
 
