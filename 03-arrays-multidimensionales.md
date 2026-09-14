@@ -1,26 +1,22 @@
 ﻿- [3. Arrays multidimensionales](#3-arrays-multidimensionales)
   - [3.1. Conceptos Fundamentales](#31-conceptos-fundamentales)
-    - [A. Tipos de Matrices](#a-tipos-de-matrices)
-    - [B. Mecanismos de Almacenamiento y Rendimiento](#b-mecanismos-de-almacenamiento-y-rendimiento)
+    - [3.1.1. Tipos de Matrices](#311-tipos-de-matrices)
+    - [3.1.2. Mecanismos de Almacenamiento y Rendimiento](#312-mecanismos-de-almacenamiento-y-rendimiento)
   - [3.2. Arrays Multidimensionales en el Lenguaje DAW](#32-arrays-multidimensionales-en-el-lenguaje-daw)
-    - [A. Definición, Creación y Valores por Defecto](#a-definición-creación-y-valores-por-defecto)
-    - [B. Valores Anulables (`T?`)](#b-valores-anulables-t)
+    - [3.2.1. Definición, Creación y Valores por Defecto](#321-definición-creación-y-valores-por-defecto)
+    - [3.2.2. Valores Anulables (`T?`)](#322-valores-anulables-t)
   - [3.3. Recorrido con `for` y `foreach`](#33-recorrido-con-for-y-foreach)
-    - [A. Bucle `for` (Acceso por Índice)](#a-bucle-for-acceso-por-índice)
-    - [Esquema Lógico del Recorrido 2D (Anidado)](#esquema-lógico-del-recorrido-2d-anidado)
-    - [B. Bucle `foreach` (Lectura con Anidación)](#b-bucle-foreach-lectura-con-anidación)
+    - [3.3.1. Bucle `for` (Acceso por Índice)](#331-bucle-for-acceso-por-índice)
+    - [3.3.2. Bucle `foreach` (Lectura con Anidación)](#332-bucle-foreach-lectura-con-anidación)
   - [3.4. Identidad, Igualdad y Clonación en Matrices](#34-identidad-igualdad-y-clonación-en-matrices)
-    - [A. Identidad vs. Igualdad (Doble Referencia)](#a-identidad-vs-igualdad-doble-referencia)
-    - [B. Clonación (Copia Profunda)](#b-clonación-copia-profunda)
+    - [3.4.1. Identidad vs. Igualdad (Doble Referencia)](#341-identidad-vs-igualdad-doble-referencia)
+    - [3.4.2. Clonación (Copia Profunda)](#342-clonación-copia-profunda)
   - [3.5. Paso por Referencia y Devolución de Matrices](#35-paso-por-referencia-y-devolución-de-matrices)
   - [3.6. Copias, Clonación Profunda y Gestión del Tamaño en Matrices](#36-copias-clonación-profunda-y-gestión-del-tamaño-en-matrices)
-    - [A. La Doble Referencia (Copia Superficial vs. Copia Profunda)](#a-la-doble-referencia-copia-superficial-vs-copia-profunda)
-        - [Demostración de la Peligrosa Copia Superficial](#demostración-de-la-peligrosa-copia-superficial)
-    - [B. Clonación Profunda Manual (Técnica Correcta)](#b-clonación-profunda-manual-técnica-correcta)
-    - [C. Modificación del Tamaño (Recreación de la Matriz)](#c-modificación-del-tamaño-recreación-de-la-matriz)
-        - [Ejemplo: Añadir una Fila a la Matriz](#ejemplo-añadir-una-fila-a-la-matriz)
-        - [Ejemplo de Cambio de Tamaño: Migrar de 3x3 a 5x5 (Escalado)](#ejemplo-de-cambio-de-tamaño-migrar-de-3x3-a-5x5-escalado)
-  - [3.8. Rendimiento: El orden de los índices](#38-rendimiento-el-orden-de-los-índices)
+    - [3.6.1. La Doble Referencia (Copia Superficial vs. Copia Profunda)](#361-la-doble-referencia-copia-superficial-vs-copia-profunda)
+    - [3.6.2. Clonación Profunda Manual (Técnica Correcta)](#362-clonación-profunda-manual-técnica-correcta)
+    - [3.6.3. Modificación del Tamaño (Recreación de la Matriz)](#363-modificación-del-tamaño-recreación-de-la-matriz)
+  - [3.7. Rendimiento: El orden de los índices](#37-rendimiento-el-orden-de-los-índices)
 
 
 # 3. Arrays multidimensionales
@@ -32,7 +28,7 @@ Para poder identificar un elemento en un array multidimensional, necesitamos tan
 
 ## 3.1. Conceptos Fundamentales
 
-### A. Tipos de Matrices
+### 3.1.1. Tipos de Matrices
 
 En la programación existen principalmente dos modelos para representar datos multidimensionales:
 
@@ -57,7 +53,7 @@ graph TD
     F2 --> F2_0["data"]
 ```
 
-### B. Mecanismos de Almacenamiento y Rendimiento
+### 3.1.2. Mecanismos de Almacenamiento y Rendimiento
 
 La memoria del ordenador es lineal (una secuencia de direcciones). Para almacenar una matriz, esta debe **linealizarse**. Las dos estrategias principales para esta linealización son:
 
@@ -97,7 +93,7 @@ Por lo tanto debes tener en cuenta como ya indicamos a nivel generico con los ar
 
 En DAW se utiliza la sintaxis del **Array Escalonado** (`[][]`) para cualquier dimensión superior a uno.
 
-### A. Definición, Creación y Valores por Defecto
+### 3.2.1. Definición, Creación y Valores por Defecto
 
 La creación de matrices de dos dimensiones (bidimensionales) requiere dos pares de corchetes.
 
@@ -125,7 +121,7 @@ Main {
 }
 ```
 
-### B. Valores Anulables (`T?`)
+### 3.2.2. Valores Anulables (`T?`)
 
 Al igual que en los unidimensionales, un array de elementos anulables se inicializa a **`null`** en todas sus posiciones.
 
@@ -148,7 +144,7 @@ Main {
 
 Para recorrer una matriz, se necesita anidar bucles: un bucle exterior para las **filas** y un bucle interior para las **columnas** de la fila actual.
 
-### A. Bucle `for` (Acceso por Índice)
+### 3.3.1. Bucle `for` (Acceso por Índice)
 
 ### Esquema Lógico del Recorrido 2D (Anidado)
 ```mermaid
@@ -182,7 +178,7 @@ Main {
 }
 ```
 
-### B. Bucle `foreach` (Lectura con Anidación)
+### 3.3.2. Bucle `foreach` (Lectura con Anidación)
 
 El `foreach` se anida dos veces: el bucle exterior itera sobre los **sub-arrays** (filas), y el interior itera sobre los **elementos** de la fila actual.
 
@@ -227,12 +223,12 @@ Main {
 
 Las matrices, al ser arrays de arrays, son **doblemente tipos de referencia**. Esto hace que los conceptos de copia y clonación sean más complejos. Al igual que con los arrays unidimensionales, es crucial entender la diferencia entre **identidad** (referencia) e **igualdad** (contenido), pero ahora debemos considerar tanto el array exterior como los sub-arrays internos.
 
-### A. Identidad vs. Igualdad (Doble Referencia)
+### 3.4.1. Identidad vs. Igualdad (Doble Referencia)
 
   * **Identidad (`==`):** El operador `==` solo compara si las variables apuntan al mismo array externo (la misma *caja* de filas).      
   * **Igualdad (Contenido):** Requiere una función que compare el tamaño y el contenido de **cada sub-array**.
 
-### B. Clonación (Copia Profunda)
+### 3.4.2. Clonación (Copia Profunda)
 
 La **clonación manual** es la única manera de garantizar la independencia total. Si solo copias el array exterior, los arrays internos siguen siendo compartidos (copia superficial de la segunda dimensión).
 
@@ -322,7 +318,7 @@ Main {
 
 El manejo de copias y el tamaño de las matrices es más complejo que en los arrays unidimensionales, debido a que las matrices en DAW son **arrays de arrays** (doble referencia).
 
-### A. La Doble Referencia (Copia Superficial vs. Copia Profunda)
+### 3.6.1. La Doble Referencia (Copia Superficial vs. Copia Profunda)
 
 Dado que un array escalonado (`int[][]`) es un array de referencias a otros arrays (las filas), una simple copia o clonación superficial es insuficiente y peligrosa.
 
@@ -353,7 +349,7 @@ Main {
 }
 ```
 
-### B. Clonación Profunda Manual (Técnica Correcta)
+### 3.6.2. Clonación Profunda Manual (Técnica Correcta)
 
 La única forma de garantizar la independencia total es utilizando la técnica de **Clonación Profunda**, que requiere anidar dos bucles para copiar cada valor.
 
@@ -379,7 +375,7 @@ function int[][] clonarMatriz(int[][] origen) {
 }
 ```
 
-### C. Modificación del Tamaño (Recreación de la Matriz)
+### 3.6.3. Modificación del Tamaño (Recreación de la Matriz)
 
 El tamaño de la matriz principal (`matriz.Length`) y el de cada fila interna (`matriz[i].Length`) son **inmutables** después de su creación.
 

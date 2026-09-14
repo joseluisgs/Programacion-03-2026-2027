@@ -1,12 +1,12 @@
 ﻿- [6. Expresiones Regulares (`Regex`)](#6-expresiones-regulares-regex)
   - [6.1. Explicación Teórica y Conceptos Clave](#61-explicación-teórica-y-conceptos-clave)
-    - [A. ¿Qué es una Expresión Regular?](#a-qué-es-una-expresión-regular)
-    - [B. Metacaracteres Esenciales (Modelo de Búsqueda)](#b-metacaracteres-esenciales-modelo-de-búsqueda)
+    - [6.1.1. ¿Qué es una Expresión Regular?](#611-qué-es-una-expresión-regular)
+    - [6.1.2. Metacaracteres Esenciales (Modelo de Búsqueda)](#612-metacaracteres-esenciales-modelo-de-búsqueda)
   - [6.2. Uso de Expresiones Regulares en el Lenguaje DAW](#62-uso-de-expresiones-regulares-en-el-lenguaje-daw)
-    - [A. Creación y Definición del Patrón](#a-creación-y-definición-del-patrón)
-    - [B. Métodos de Uso y Mecanismos de Coincidencia](#b-métodos-de-uso-y-mecanismos-de-coincidencia)
-    - [C. Ejemplos de Búsqueda y Extracción](#c-ejemplos-de-búsqueda-y-extracción)
-    - [D. Ejemplo de Validación y Sustitución](#d-ejemplo-de-validación-y-sustitución)
+    - [6.2.1. Creación y Definición del Patrón](#621-creación-y-definición-del-patrón)
+    - [6.2.2. Métodos de Uso y Mecanismos de Coincidencia](#622-métodos-de-uso-y-mecanismos-de-coincidencia)
+    - [6.2.3. Ejemplos de Búsqueda y Extracción](#623-ejemplos-de-búsqueda-y-extracción)
+    - [6.2.4. Ejemplo de Validación y Sustitución](#624-ejemplo-de-validación-y-sustitución)
   - [6.3. Tabla Maestra de Validaciones Comunes](#63-tabla-maestra-de-validaciones-comunes)
   - [6.4. El concepto de Codicia (Greediness)](#64-el-concepto-de-codicia-greediness)
 
@@ -17,7 +17,7 @@ Las expresiones regulares (a menudo abreviadas como *Regex* o *RegExp*) son patr
 
 ## 6.1. Explicación Teórica y Conceptos Clave
 
-### A. ¿Qué es una Expresión Regular?
+### 6.1.1. ¿Qué es una Expresión Regular?
 
 Una expresión regular es esencialmente un **lenguaje de programación en miniatura** que describe un conjunto de cadenas. Permiten definir reglas de búsqueda de forma concisa. Puedes ayudarte a costruirlas [aquí](https://regex101.com/).
 
@@ -34,7 +34,7 @@ graph LR
     E -->|No coincide| Fail[Búsqueda fallida]
 ```
 
-### B. Metacaracteres Esenciales (Modelo de Búsqueda)
+### 6.1.2. Metacaracteres Esenciales (Modelo de Búsqueda)
 
 | Metacarácter | Descripción | Equivalente en DAW |
 | :--- | :--- | :--- |
@@ -49,14 +49,14 @@ graph LR
 
 En DAW, las expresiones regulares se manejan a través de la clase **`Regex`**. Se utiliza la sintaxis de **`string` sin procesar (`@""`)** para evitar problemas con la barra invertida (`\`).
 
-### A. Creación y Definición del Patrón
+### 6.2.1. Creación y Definición del Patrón
 
 | Sintaxis DAW | Propósito | Justificación |
 | :--- | :--- | :--- |
 | `var regex = Regex(patron);` | Crea el objeto con la lógica de búsqueda. | El objeto `Regex` compila el patrón internamente para optimizar. |
 | `var patron = @""...;` | Utiliza el string sin procesar. | El prefijo `@` trata la cadena literalmente, vital para las `\`. |
 
-### B. Métodos de Uso y Mecanismos de Coincidencia
+### 6.2.2. Métodos de Uso y Mecanismos de Coincidencia
 
 | Método DAW | Descripción | Devuelve | Uso Recomendado |
 | :--- | :--- | :--- | :--- |
@@ -65,7 +65,7 @@ En DAW, las expresiones regulares se manejan a través de la clase **`Regex`**. 
 | **`.Matches(cadena)`** | Encuentra **todas** las coincidencias. | Colección de `Match` | Extracción múltiple. |
 | **`.Replace(cadena, nuevo)`** | Reemplaza las subcadenas que coinciden por el `nuevo` texto. | `string` | Limpieza de datos. |
 
-### C. Ejemplos de Búsqueda y Extracción
+### 6.2.3. Ejemplos de Búsqueda y Extracción
 
 ```csharp
 Main {
@@ -80,7 +80,7 @@ Main {
 }
 ```
 
-### D. Ejemplo de Validación y Sustitución
+### 6.2.4. Ejemplo de Validación y Sustitución
 
 ```csharp
 Main {

@@ -1,13 +1,12 @@
 ﻿- [5. Cadenas de Texto (`string`) y Manejo del Texto](#5-cadenas-de-texto-string-y-manejo-del-texto)
   - [5.1. Definición, Inmutabilidad y Tipo de Referencia](#51-definición-inmutabilidad-y-tipo-de-referencia)
   - [5.2. Acceso y Recorrido de Cadenas](#52-acceso-y-recorrido-de-cadenas)
-    - [A. Propiedad `Length` y Acceso por Índice](#a-propiedad-length-y-acceso-por-índice)
-    - [B. Recorrido con Bucles](#b-recorrido-con-bucles)
+    - [5.2.1. Propiedad `Length` y Acceso por Índice](#521-propiedad-length-y-acceso-por-índice)
+    - [5.2.2. Recorrido con Bucles](#522-recorrido-con-bucles)
   - [5.3. Métodos y Operadores Esenciales](#53-métodos-y-operadores-esenciales)
-    - [Ejemplo de Flujo de Datos](#ejemplo-de-flujo-de-datos)
   - [5.4. `StringBuilder`: Construcción de Cadenas Mutables y Rendimiento](#54-stringbuilder-construcción-de-cadenas-mutables-y-rendimiento)
-    - [A. El Problema del Rendimiento (`+` vs. `StringBuilder`)](#a-el-problema-del-rendimiento--vs-stringbuilder)
-    - [B. Uso Correcto de `StringBuilder`](#b-uso-correcto-de-stringbuilder)
+    - [5.4.1. El Problema del Rendimiento (`+` vs. `StringBuilder`)](#541-el-problema-del-rendimiento--vs-stringbuilder)
+    - [5.4.2. Uso Correcto de `StringBuilder`](#542-uso-correcto-de-stringbuilder)
   - [5.5. Curiosidad: String Interning (Pool de Cadenas)](#55-curiosidad-string-interning-pool-de-cadenas)
 
 
@@ -40,7 +39,7 @@ graph TD
 
 Una cadena se comporta lógicamente como un **array de caracteres**.
 
-### A. Propiedad `Length` y Acceso por Índice
+### 5.2.1. Propiedad `Length` y Acceso por Índice
 
 La propiedad **`.Length`** devuelve el número de caracteres. El acceso es **cero-basado**. El resultado de `palabra[i]` es una **cadena (`string`) de longitud 1**.
 
@@ -53,7 +52,7 @@ Main {
 }
 ```
 
-### B. Recorrido con Bucles
+### 5.2.2. Recorrido con Bucles
 
 | Bucle | Uso Recomendado | Justificación Didáctica |
 | :--- | :--- | :--- |
@@ -101,14 +100,14 @@ Main {
 
 El uso de **`StringBuilder`** es una práctica obligatoria cuando se requiere construir una cadena mediante muchas operaciones de concatenación.
 
-### A. El Problema del Rendimiento (`+` vs. `StringBuilder`)
+### 5.4.1. El Problema del Rendimiento (`+` vs. `StringBuilder`)
 
 | Operación | Complejidad | Justificación de la Ineficiencia |
 | :--- | :--- | :--- |
 | **Concatenación `+`** | **$O(n^2)$** | Por cada paso, se **crea una nueva cadena**. 1000 iteraciones = 1000 asignaciones. |
 | **`StringBuilder.Append()`** | **$O(n)$** | Modifica una única estructura de *buffer* interno de forma eficiente. |
 
-### B. Uso Correcto de `StringBuilder`
+### 5.4.2. Uso Correcto de `StringBuilder`
 
 | Método | Descripción | Retorno |
 | :--- | :--- | :--- |

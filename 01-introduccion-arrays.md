@@ -1,9 +1,9 @@
 - [1. Arrays. Introducción](#1-arrays-introducción)
-    - [1.1. Características Clave](#11-características-clave)
-    - [1.2. El Problema de la Indexación (Índice Cero vs. Índice Uno)](#12-el-problema-de-la-indexación-índice-cero-vs-índice-uno)
-      - [Indexación Basada en Cero](#indexación-basada-en-cero)
-      - [Indexación Basada en Uno](#indexación-basada-en-uno)
-    - [1.3. Arrays en DAW](#13-arrays-en-daw)
+  - [1.1. Características Clave](#11-características-clave)
+  - [1.2. El Problema de la Indexación (Índice Cero vs. Índice Uno)](#12-el-problema-de-la-indexación-índice-cero-vs-índice-uno)
+    - [1.2.1. Indexación Basada en Cero](#121-indexación-basada-en-cero)
+    - [1.2.2. Indexación Basada en Uno](#122-indexación-basada-en-uno)
+  - [1.3. Arrays en DAW](#13-arrays-en-daw)
   - [1.4. El secreto de la velocidad: Localidad de Referencia](#14-el-secreto-de-la-velocidad-localidad-de-referencia)
 
 
@@ -35,7 +35,7 @@ Unos de los principales problemas que nos encontramos al trabajar con arrays es 
 
 La convención sobre si el primer índice comienza en `0` (Cero-basado) o en `1` (Uno-basado) tiene implicaciones directas en el cálculo de la posición de memoria y es tan antigua como los propios lenguajes de programación.
 
-#### Indexación Basada en Cero
+#### 1.2.1. Indexación Basada en Cero
 
 El primer elemento se encuentra en el **índice 0**. Esta convención se basa en el cálculo directo de la dirección de memoria.
 
@@ -65,7 +65,7 @@ graph TD
 
 Este enfoque lo siguen lenguajes que han heredado esta filosofía de C, como C++, Java, JavaScript, Python, Kotlin, entre otros y nuestro lenguaje DAW.
 
-#### Indexación Basada en Uno
+#### 1.2.2. Indexación Basada en Uno
 
 En algunos lenguajes de programación o en contextos puramente matemáticos, el primer elemento se encuentra en el **índice 1**.
 

@@ -2,8 +2,8 @@
   - [8.1. Resumen de la Unidad](#81-resumen-de-la-unidad)
   - [8.2. Mapa Conceptual Maestro](#82-mapa-conceptual-maestro)
   - [8.3. Tabla de Referencia: Eficiencia de Algoritmos (Big O)](#83-tabla-de-referencia-eficiencia-de-algoritmos-big-o)
-  - [5.4. ⚠️ Top 5 Errores Comunes en UD03](#54-️-top-5-errores-comunes-en-ud03)
-  - [🚩 Checklist de Supervivencia UD03](#-checklist-de-supervivencia-ud03)
+  - [8.4. Top 5 Errores Comunes en UD03](#84-top-5-errores-comunes-en-ud03)
+  - [8.5. Checklist de Supervivencia UD03](#85-checklist-de-supervivencia-ud03)
 
 
 # 8. Resumen y Conclusiones UD03
@@ -48,14 +48,14 @@ graph TD
 | **Búsqueda Lineal** | $O(1)$ | $O(n)$ | $O(n)$ | N/A |
 | **Búsqueda Binaria**| $O(1)$ | $O(\log n)$ | $O(\log n)$ | N/A |
 
-## 5.4. ⚠️ Top 5 Errores Comunes en UD03
+## 8.4. Top 5 Errores Comunes en UD03
 1.  **ArrayIndexOutOfBounds**: Intentar acceder a `array[Length]`. Recuerda que el último es `Length - 1`.
 2.  **Alias Inesperado**: Hacer `b = a` y pensar que son independientes. ¡Usa clonación profunda!
 3.  **Concatenación en Bucle**: Usar `+` dentro de un `for` de 1000 iteraciones. ¡Usa `StringBuilder`!
 4.  **Regex sin Anclas**: Olvidar `^` y `$` en una validación, permitiendo que entre basura antes o después del dato.
 5.  **Búsqueda Binaria Desordenada**: Intentar usar búsqueda binaria en un array que no ha sido ordenado previamente.
 
-## 🚩 Checklist de Supervivencia UD03
+## 8.5. Checklist de Supervivencia UD03
 
 - [ ] ¿Sé dibujar en un papel cómo apunta una variable del Stack a los datos del Heap?
 - [ ] ¿Entiendo por qué cambiar el tamaño de un array obliga a crear uno nuevo y copiar?

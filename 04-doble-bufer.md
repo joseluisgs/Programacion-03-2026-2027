@@ -1,16 +1,16 @@
 ﻿- [4. Doble Búfer (Double Buffering)](#4-doble-búfer-double-buffering)
-  - [Teoría de la Técnica](#teoría-de-la-técnica)
-  - [Aplicación Didáctica: Simulación de Propagación de Estado](#aplicación-didáctica-simulación-de-propagación-de-estado)
-  - [Mecanismo en Lenguaje DAW](#mecanismo-en-lenguaje-daw)
-  - [Mecanismo de Intercambio (Swap) y Justificación de la Eficiencia](#mecanismo-de-intercambio-swap-y-justificación-de-la-eficiencia)
-  - [4.4. Entendiendo el Doble Búfer: La Analogía del Pintor](#44-entendiendo-el-doble-búfer-la-analogía-del-pintor)
-  - [4.5. ¿Por qué es vital en DAW? El problema del Tearing](#45-por-qué-es-vital-en-daw-el-problema-del-tearing)
-  - [4.6. Análisis Detallado del Mecanismo de Intercambio (Swap)](#46-análisis-detallado-del-mecanismo-de-intercambio-swap)
+  - [4.1. Teoría de la Técnica](#41-teoría-de-la-técnica)
+  - [4.2. Aplicación Didáctica: Simulación de Propagación de Estado](#42-aplicación-didáctica-simulación-de-propagación-de-estado)
+  - [4.3. Mecanismo en Lenguaje DAW](#43-mecanismo-en-lenguaje-daw)
+  - [4.4. Mecanismo de Intercambio (Swap) y Justificación de la Eficiencia](#44-mecanismo-de-intercambio-swap-y-justificación-de-la-eficiencia)
+  - [4.5. Entendiendo el Doble Búfer: La Analogía del Pintor](#45-entendiendo-el-doble-búfer-la-analogía-del-pintor)
+  - [4.6. ¿Por qué es vital en DAW? El problema del Tearing](#46-por-qué-es-vital-en-daw-el-problema-del-tearing)
+  - [4.7. Análisis Detallado del Mecanismo de Intercambio (Swap)](#47-análisis-detallado-del-mecanismo-de-intercambio-swap)
 
 
 # 4. Doble Búfer (Double Buffering)
 
-## Teoría de la Técnica
+## 4.1. Teoría de la Técnica
 
 El **Doble Búfer** es un patrón de diseño que utiliza dos áreas de memoria (dos *búferes* o dos matrices idénticas) para gestionar datos que se están leyendo y escribiendo concurrentemente. Es la solución estándar para evitar la corrupción de datos y los artefactos visuales (*tearing*) que ocurren cuando una matriz se modifica al mismo tiempo que se está leyendo. Esta técnica es ampliamente utilizada en gráficos por computadora, simulaciones y juegos.
 
@@ -35,7 +35,7 @@ sequenceDiagram
     end
 ```
 
-## Aplicación Didáctica: Simulación de Propagación de Estado
+## 4.2. Aplicación Didáctica: Simulación de Propagación de Estado
 
 Imaginemos una simulación simple en una matriz 2D donde cada celda tiene un estado (0 o 1). Cada segundo, queremos calcular la siguiente generación de estados basándonos en la matriz actual, y luego mostrar esa nueva matriz.
 
@@ -45,7 +45,7 @@ Si intentamos actualizar la matriz mientras la leemos, un cambio en la posición
 **Solución con Doble Búfer en DAW:**
 La solución requiere dos matrices de la misma dimensión y el método de arrays para clonar y gestionar las referencias correctamente.     
 
-## Mecanismo en Lenguaje DAW
+## 4.3. Mecanismo en Lenguaje DAW
 
 ```csharp
 // Función para clonar una matriz (Copia Profunda)
@@ -140,7 +140,7 @@ Main {
 }
 ```
 
-## Mecanismo de Intercambio (Swap) y Justificación de la Eficiencia
+## 4.4. Mecanismo de Intercambio (Swap) y Justificación de la Eficiencia
 
 El **Intercambio (*Swap*)** es el corazón del patrón Doble Búfer y la clave de su rendimiento. Consiste en intercambiar las **referencias de memoria** de las dos matrices, lo que se realiza en un tiempo constante, independientemente del tamaño de la matriz.
 
@@ -149,7 +149,7 @@ El **Intercambio (*Swap*)** es el corazón del patrón Doble Búfer y la clave d
 | **Intercambio (Swap)** | Solo se manipulan los **punteros**. | **$O(1)$** | El tiempo es instantáneo e independiente del tamaño. |
 | **Clonación Repetida** | **Copia cada celda** del array. | **$O(n^2)$** | El tiempo crece exponencialmente con la resolución. |
 
-## 4.4. Entendiendo el Doble Búfer: La Analogía del Pintor
+## 4.5. Entendiendo el Doble Búfer: La Analogía del Pintor
 
 Imagina que tienes una **pizarra** y un **público** mirando. Si quieres cambiar el dibujo completo, el público verá cómo borras y cómo vas dibujando trazo a trazo. Esto genera una sensación de parpadeo y desorden.
 
@@ -160,7 +160,7 @@ Con **Doble Búfer**, tienes **dos pizarras**:
 
 ---
 
-## 4.5. ¿Por qué es vital en DAW? El problema del Tearing
+## 4.6. ¿Por qué es vital en DAW? El problema del Tearing
 
 Si procesamos una matriz directamente mientras la mostramos (ej. en un juego web o una simulación compleja), el usuario puede ver la matriz a "medio procesar". Esto se conoce como **Tearing** o artefactos visuales. 
 
@@ -168,7 +168,7 @@ En simulaciones lógicas, el problema es aún más grave: si la celda `[1][1]` d
 
 ---
 
-## 4.6. Análisis Detallado del Mecanismo de Intercambio (Swap)
+## 4.7. Análisis Detallado del Mecanismo de Intercambio (Swap)
 
 En el código DAW, el intercambio no mueve los datos de sitio, solo cambia "hacia dónde miran" nuestras variables. Es una operación de **reasignación de referencias**.
 

@@ -1,23 +1,21 @@
 - [2. Arrays Unidimensionales](#2-arrays-unidimensionales)
   - [2.1. Definición, Creación y Valores por Defecto](#21-definición-creación-y-valores-por-defecto)
-    - [A. Inmutabilidad del Tamaño y Creación](#a-inmutabilidad-del-tamaño-y-creación)
-    - [B. Valores por Defecto y Gestión de la Nulidad](#b-valores-por-defecto-y-gestión-de-la-nulidad)
+    - [2.1.1. Inmutabilidad del Tamaño y Creación](#211-inmutabilidad-del-tamaño-y-creación)
+    - [2.1.2. Valores por Defecto y Gestión de la Nulidad](#212-valores-por-defecto-y-gestión-de-la-nulidad)
   - [2.2. Obtener el Tamaño con `.Length` y Recorrido](#22-obtener-el-tamaño-con-length-y-recorrido)
-    - [A. `array.Length`](#a-arraylength)
-    - [B. Recorrido con Bucle `for` (Precisión y Modificación)](#b-recorrido-con-bucle-for-precisión-y-modificación)
-    - [Esquema Lógico del Recorrido 1D](#esquema-lógico-del-recorrido-1d)
-    - [C. Recorrido con Bucle `foreach` (Sintaxis Correcta)](#c-recorrido-con-bucle-foreach-sintaxis-correcta)
-    - [D. Recorrido con Filtrado de Nulos (Combinando `if`)](#d-recorrido-con-filtrado-de-nulos-combinando-if)
+    - [2.2.1. `array.Length`](#221-arraylength)
+    - [2.2.2. Recorrido con Bucle `for` (Precisión y Modificación)](#222-recorrido-con-bucle-for-precisión-y-modificación)
+    - [2.2.3. Recorrido con Bucle `foreach` (Sintaxis Correcta)](#223-recorrido-con-bucle-foreach-sintaxis-correcta)
+    - [2.2.4. Recorrido con Filtrado de Nulos (Combinando `if`)](#224-recorrido-con-filtrado-de-nulos-combinando-if)
   - [2.3. Paso por Referencia, Devolución y Clonación](#23-paso-por-referencia-devolución-y-clonación)
-    - [A. Arrays y el Paso por Referencia (El Modelo de Memoria)](#a-arrays-y-el-paso-por-referencia-el-modelo-de-memoria)
-    - [B. Clonación Manual para Romper la Referencia](#b-clonación-manual-para-romper-la-referencia)
-    - [C. Devolución de Arrays](#c-devolución-de-arrays)
+    - [2.3.1. Arrays y el Paso por Referencia (El Modelo de Memoria)](#231-arrays-y-el-paso-por-referencia-el-modelo-de-memoria)
+    - [2.3.2. Clonación Manual para Romper la Referencia](#232-clonación-manual-para-romper-la-referencia)
+    - [2.3.3. Devolución de Arrays](#233-devolución-de-arrays)
   - [2.4. Parámetros Variables (`params`)](#24-parámetros-variables-params)
   - [2.5. Identidad vs. Igualdad (Referencia vs. Contenido)](#25-identidad-vs-igualdad-referencia-vs-contenido)
   - [2.6. Copias, Clonación y la Inmutabilidad del Tamaño (DAW)](#26-copias-clonación-y-la-inmutabilidad-del-tamaño-daw)
-    - [A. La Inmutabilidad: Simulando el Cambio de Tamaño](#a-la-inmutabilidad-simulando-el-cambio-de-tamaño)
-      - [Mecánica de Cambio de Tamaño](#mecánica-de-cambio-de-tamaño)
-  - [2.7. ⚠️ La Trampa del Alias](#27-️-la-trampa-del-alias)
+    - [2.6.1. La Inmutabilidad: Simulando el Cambio de Tamaño](#261-la-inmutabilidad-simulando-el-cambio-de-tamaño)
+  - [2.7. La Trampa del Alias](#27-la-trampa-del-alias)
 
 
 # 2. Arrays Unidimensionales
@@ -41,7 +39,7 @@ Como se ha indicado anteriormente, los arrays en DAW tienen las siguientes carac
 
 ## 2.1. Definición, Creación y Valores por Defecto
 
-### A. Inmutabilidad del Tamaño y Creación
+### 2.1.1. Inmutabilidad del Tamaño y Creación
 
 | Característica | Detalle Didáctico | Sintaxis DAW |
 | :--- | :--- | :--- |
@@ -49,7 +47,7 @@ Como se ha indicado anteriormente, los arrays en DAW tienen las siguientes carac
 | **Homogeneidad** | Todos los elementos deben ser del mismo tipo. | `var numeros = int[10];` |
 | **Valores Iniciales** | Se puede crear asignando valores directamente. | `var dias = string[] {"Lun", "Mar", "Mié"};` |
 
-### B. Valores por Defecto y Gestión de la Nulidad
+### 2.1.2. Valores por Defecto y Gestión de la Nulidad
 
 Cuando un array se crea solo con su tamaño, DAW lo rellena automáticamente.
 
@@ -83,11 +81,11 @@ Main {
 
 ## 2.2. Obtener el Tamaño con `.Length` y Recorrido
 
-### A. `array.Length`
+### 2.2.1. `array.Length`
 
 La propiedad `.Length` devuelve el número de elementos. Es la manera fiable de conocer el límite superior del array.
 
-### B. Recorrido con Bucle `for` (Precisión y Modificación)
+### 2.2.2. Recorrido con Bucle `for` (Precisión y Modificación)
 
 ### Esquema Lógico del Recorrido 1D
 ```mermaid
@@ -117,7 +115,7 @@ Main {
 }
 ```
 
-### C. Recorrido con Bucle `foreach` (Sintaxis Correcta)
+### 2.2.3. Recorrido con Bucle `foreach` (Sintaxis Correcta)
 
 El bucle `foreach` se utiliza cuando solo se necesita **leer** el valor de cada elemento. Simplifica la sintaxis, ya que no se necesita manejar el índice.
 
@@ -134,7 +132,7 @@ Main {
 }
 ```
 
-### D. Recorrido con Filtrado de Nulos (Combinando `if`)
+### 2.2.4. Recorrido con Filtrado de Nulos (Combinando `if`)
 
 Para arrays de tipos anulables, el `foreach` es ideal para la lectura, pero debemos usar el `if` para el filtrado, o el operador de coalescencia (`??`) para evitar excepciones al acceder a métodos o propiedades de un valor nulo. También podemos usar el operador ternario.   
 
@@ -160,7 +158,7 @@ Main {
 
 ## 2.3. Paso por Referencia, Devolución y Clonación
 
-### A. Arrays y el Paso por Referencia (El Modelo de Memoria)
+### 2.3.1. Arrays y el Paso por Referencia (El Modelo de Memoria)
 
 **Concepto Clave:** En DAW, los arrays son **tipos de referencia**. La variable que guarda el array (`arrayOriginal`) en realidad guarda la **dirección de memoria** donde están los datos.
 
@@ -193,7 +191,7 @@ Main {
 }
 ```
 
-### B. Clonación Manual para Romper la Referencia
+### 2.3.2. Clonación Manual para Romper la Referencia
 
 Para obtener un array completamente independiente, es necesario crear un nuevo array y **copiar manualmente** el contenido elemento por elemento. Esto se conoce como **copia profunda** (deep copy).
 
@@ -218,7 +216,7 @@ Main {
 }
 ```
 
-### C. Devolución de Arrays
+### 2.3.3. Devolución de Arrays
 
 Una función que devuelve un array retorna la **referencia**. Si modificas la variable que recibe el retorno, estás modificando el array original.
 
@@ -275,7 +273,7 @@ Main {
 
 ## 2.6. Copias, Clonación y la Inmutabilidad del Tamaño (DAW)
 
-### A. La Inmutabilidad: Simulando el Cambio de Tamaño
+### 2.6.1. La Inmutabilidad: Simulando el Cambio de Tamaño
 
 La propiedad `.Length` de un array es de **solo lectura**. Esto significa que es imposible modificar el tamaño de un array ya existente. 
 
@@ -304,7 +302,7 @@ Main {
 }
 ```
 
-## 2.7. ⚠️ La Trampa del Alias
+## 2.7. La Trampa del Alias
 Un error muy común es pensar que al hacer `var b = a` hemos creado una copia. En realidad, hemos creado un **Alias**.
 
 ```mermaid
