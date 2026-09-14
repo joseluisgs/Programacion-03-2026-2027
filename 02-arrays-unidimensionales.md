@@ -15,6 +15,7 @@
   - [2.5. Identidad vs. Igualdad (Referencia vs. Contenido)](#25-identidad-vs-igualdad-referencia-vs-contenido)
   - [2.6. Copias, Clonación y la Inmutabilidad del Tamaño](#26-copias-clonación-y-la-inmutabilidad-del-tamaño)
   - [2.7. La Trampa del Alias](#27-la-trampa-del-alias)
+  - [2.8. Arrays de Tipos Compuestos](#28-arrays-de-tipos-compuestos)
 
 # 2. Arrays Unidimensionales
 
@@ -417,6 +418,83 @@ Console.WriteLine(c[0]);  // 888 — c es independiente
 
 📌 **Ejemplo real:** En un juego como Fortnite, si dos variables apuntan al mismo array de inventario y un jugador usa un objeto, el otro jugador también lo ve. Para evitarlo, el juego crea una **copia profunda** del inventario antes de modificarlo.
 
+### Arrays de Tipos Compuestos
+
+Los arrays no solo almacenan `int`, `string` o `bool`. También puedes guardar **tuplas**, **enums** y **structs** en un array.
+
+#### Arrays de Tuplas
+
+```csharp
+// Array de tuplas con nombre
+(string nombre, int nota)[] alumnos = 
+{
+    ("Ana", 8),
+    ("Luis", 7),
+    ("María", 9)
+};
+
+// Recorrer
+for (int i = 0; i < alumnos.Length; i++)
+    Console.WriteLine($"{alumnos[i].nombre}: {alumnos[i].nota}");
+```
+
+#### Arrays de Enums
+
+```csharp
+enum DiaSemana { Lunes, Martes, Miercoles, Jueves, Viernes, Sabado, Domingo }
+
+// Array de enums
+DiaSemana[] semana = 
+{ 
+    DiaSemana.Lunes, 
+    DiaSemana.Miercoles, 
+    DiaSemana.Viernes 
+};
+
+// Recorrer
+foreach (DiaSemana dia in semana)
+    Console.WriteLine($"Día: {dia}");
+
+// Buscar un valor
+for (int i = 0; i < semana.Length; i++)
+{
+    if (semana[i] == DiaSemana.Viernes)
+        Console.WriteLine($"Viernes está en la posición {i}");
+}
+```
+
+#### Arrays de Structs
+
+```csharp
+struct Alumno
+{
+    public int Id;
+    public string Nombre;
+    public double Nota;
+}
+
+// Array de structs
+Alumno[] clase = new Alumno[3];
+clase[0] = new Alumno { Id = 1, Nombre = "Ana", Nota = 8.5 };
+clase[1] = new Alumno { Id = 2, Nombre = "Luis", Nota = 7.0 };
+clase[2] = new Alumno { Id = 3, Nombre = "María", Nota = 9.2 };
+
+// Recorrer
+for (int i = 0; i < clase.Length; i++)
+    Console.WriteLine($"{clase[i].Nombre} (ID {clase[i].Id}): {clase[i].Nota}");
+
+// Con inicialización directa
+Alumno[] clase2 = 
+{
+    new Alumno { Id = 1, Nombre = "Ana", Nota = 8.5 },
+    new Alumno { Id = 2, Nombre = "Luis", Nota = 7.0 }
+};
+```
+
+> 💡 **Nota:** Los structs son tipos de valor, así que cada elemento del array es una **copia independiente**. Si modificas `clase[0].Nota`, no afecta a otros arrays de la misma struct.
+
+> 📌 **Ejemplo real:** Un videojuego almacena un array de structs `Personaje` con campos como `Nombre`, `Nivel`, `Vida`. Cada personaje es un elemento independiente del array.
+
 **Resumen del punto:**
 
 | Concepto | Descripción |
@@ -432,5 +510,8 @@ Console.WriteLine(c[0]);  // 888 — c es independiente
 | **`in`** | Paso por referencia de solo lectura |
 | **`==`** | Compara identidad (misma dirección), no contenido |
 | **Alias** | `b = a` crea dos nombres para el mismo array |
+| **Tuplas** | `(string, int)[]` — arrays de tuplas |
+| **Enums** | `DiaSemana[]` — arrays de enumeraciones |
+| **Structs** | `Alumno[]` — arrays de tipos de valor compuestos |
 
 En el siguiente punto veremos cómo funcionan los arrays multidimensionales (matrices): su creación, recorrido y las diferencias clave con los unidimensionales.

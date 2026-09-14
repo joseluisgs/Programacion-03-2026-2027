@@ -15,6 +15,7 @@
   - [3.5. Paso por Referencia y Devolución de Matrices](#35-paso-por-referencia-y-devolución-de-matrices)
   - [3.6. Copias, Clonación Profunda y Cambio de Tamaño](#36-copias-clonación-profunda-y-cambio-de-tamaño)
   - [3.7. Rendimiento: El Orden de los Índices](#37-rendimiento-el-orden-de-los-índices)
+  - [3.8. Matrices de Structs y Enums](#38-matrices-de-structs-y-enums)
 
 # 3. Arrays Multidimensionales
 
@@ -366,6 +367,58 @@ graph LR
 
 > 💡 **Consejo:** Siempre recorre las matrices por filas (índice `i` primero). Esto garantiza que el procesador acceda a memoria contigua y aproveche la caché.
 
+### Matrices de Structs y Enums
+
+Al igual que los arrays unidimensionales, las matrices pueden almacenar **structs** y **enums**.
+
+#### Matriz de Enums
+
+```csharp
+enum EstadoCasilla { Vacía, Árbol, Ardiente }
+
+// Tablero de incendio forestal
+EstadoCasilla[,] tablero = new EstadoCasilla[4, 4];
+
+// Inicializar
+tablero[0, 0] = EstadoCasilla.Árbol;
+tablero[1, 2] = EstadoCasilla.Ardiente;
+
+// Recorrer
+for (int f = 0; f < 4; f++)
+{
+    for (int c = 0; c < 4; c++)
+        Console.Write($"{tablero[f, c],-10}");
+    Console.WriteLine();
+}
+```
+
+#### Matriz de Structs
+
+```csharp
+struct Alumno
+{
+    public string Nombre;
+    public double Nota;
+}
+
+// Matriz: 3 alumnos × 4 evaluciones
+Alumno[,] notas = new Alumno[3, 4];
+
+// Inicializar
+notas[0, 0] = new Alumno { Nombre = "Ana", Nota = 8.5 };
+notas[0, 1] = new Alumno { Nombre = "Ana", Nota = 7.0 };
+
+// Recorrer
+for (int f = 0; f < notas.GetLength(0); f++)
+{
+    for (int c = 0; c < notas.GetLength(1); c++)
+        Console.Write($"{notas[f, c].Nota} ");
+    Console.WriteLine();
+}
+```
+
+> 💡 **Nota:** Cada celda de la matriz contiene una **copia** del struct. Si modificas `notas[0,0].Nota`, no afecta a其他celdas ni a其他matrices.
+
 **Resumen del punto:**
 
 | Concepto | Descripción |
@@ -377,5 +430,7 @@ graph LR
 | **Copia profunda** | Clonar exterior + cada fila (escalonadas) |
 | **Cambio de tamaño** | Crear nueva matriz + copiar elementos |
 | **`Clone()`** | Seguro para rectangulares, peligroso para escalonadas |
+| **Enums** | `EstadoCasilla[,]` — matrices de enumeraciones |
+| **Structs** | `Alumno[,]` — matrices de tipos de valor compuestos |
 
 En el siguiente punto veremos la técnica del Doble Búfer (Double Buffering), un patrón de diseño que utiliza arrays para evitar el parpadeo en animaciones y juegos.
