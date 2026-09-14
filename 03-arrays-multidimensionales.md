@@ -2,6 +2,9 @@
   - [3.1. Conceptos Fundamentales](#31-conceptos-fundamentales)
     - [3.1.1. Tipos de Matrices](#311-tipos-de-matrices)
     - [3.1.2. Mecanismos de Almacenamiento](#312-mecanismos-de-almacenamiento)
+      - [Matriz Rectangular: Un bloque contiguo](#matriz-rectangular-un-bloque-contiguo)
+      - [Matriz Escalonada: Un array de arrays](#matriz-escalonada-un-array-de-arrays)
+      - [Comparación rápida](#comparación-rápida)
   - [3.2. Declaración y Creación de Matrices](#32-declaración-y-creación-de-matrices)
     - [3.2.1. Matrices Rectangulares](#321-matrices-rectangulares)
     - [3.2.2. Matrices Escalonadas (Jagged)](#322-matrices-escalonadas-jagged)
@@ -37,22 +40,93 @@ En este punto aprenderás a crear, recorrer y manipular matrices en C#: rectangu
 
 ### 3.1.2. Mecanismos de Almacenamiento
 
-En C#, las matrices rectangulares se almacenan como **un único bloque contiguo** en memoria. Las escalonadas son **arrays de arrays** — cada fila es un array independiente.
+¿Por qué importa saber cómo se guardan las matrices en memoria? Porque afecta directamente a la **velocidad** de acceso y a la **forma de clonar**. Vamos a ver las dos opciones que ofrece C#.
+
+#### Matriz Rectangular: Un bloque contiguo
+
+Una matriz rectangular (`int[3, 4]`) se almacena como **un único bloque continuo** en memoria, como si fuera un vector largo. Los elementos se guardan **por filas**: primero la fila 0 completa, luego la fila 1, etc.
+
+> 💡 **Analogía:** Imagina un libro de 3 capítulos con 4 páginas cada uno. El libro se imprime como un bloque de 12 páginas seguidas: páginas 0-3 (capítulo 0), páginas 4-7 (capítulo 1), páginas 8-11 (capítulo 2). No hay saltos ni pausas entre capítulos.
+
+¿Cómo encuentra el procesador cada elemento? Usando una **fórmula** similar a la de los arrays unidimensionales:
+
+```
+Dirección(A[i,j]) = Dirección Base + ((i × NumColumnas + j) × Tamaño del Tipo)
+```
+
+Donde:
+- `Dirección Base`: dirección del primer elemento (posición [0,0])
+- `i`: índice de la fila
+- `j`: índice de la columna
+- `NumColumnas`: número de columnas de la matriz (necesario para calcular el desplazamiento)
+- `Tamaño del Tipo`: bytes que ocupa el tipo (ej. 4 bytes para `int`)
+
+📌 **Ejemplo:** Para una `int[3,4]` (4 bytes por int), si Base = 1000:
+- `[0,0]` → 1000 + (0×4 + 0) × 4 = **1000**
+- `[0,3]` → 1000 + (0×4 + 3) × 4 = **1012**
+- `[1,0]` → 1000 + (1×4 + 0) × 4 = **1016** (fila 1, justo después de la fila 0)
+- `[2,3]` → 1000 + (2×4 + 3) × 4 = **1040** (último elemento)
+
+```
+Memoria:  [1000][1004][1008][1012][1016][1020][1024][1028][1032][1036][1040][1044]
+          ─────────────────────────  ─────────────────────────  ─────────────────────
+                 Fila 0                      Fila 1                     Fila 2
+```
+
+> 📝 **Nota:** Esto es exactamente igual que en un array unidimensional, pero con un paso extra: multiplicar `i × NumColumnas` para "saltar" filas completas. La fórmula de unidimensionales era `Base + (índice × Tamaño)`, aquí el "índice lineal" es `i × NumColumnas + j`.
+
+#### Matriz Escalonada: Un array de arrays
+
+Una matriz escalonada (`int[3][]`) es **un array que contiene otros arrays**. Cada fila es un array independiente que se almacena en un sitio diferente de memoria.
+
+> 💡 **Analogía:** Imagina un edificio de oficinas. La planta 0 tiene 2 despachos, la planta 1 tiene 4, y la planta 2 tiene 1. Cada planta es un "array" independiente, y el edificio es el "array de plantas". Las plantas no están pegadas: cada una está en su sitio.
+
+```
+Memoria:
+  Array exterior → [ puntero_0, puntero_1, puntero_2 ]
+                       ↓            ↓            ↓
+  Fila 0    → [ 1 | 2 ]
+  Fila 1    → [ 3 | 4 | 5 | 6 ]
+  Fila 2    → [ 7 ]
+```
+
+¿Cómo se accede? Primero se busca el puntero de la fila, y luego se accede al elemento dentro de esa fila:
+
+```
+Dirección(A[i][j]) = Dirección del array fila[i] + (j × Tamaño del Tipo)
+```
+
+#### Comparación rápida
+
+| Aspecto | Rectangular | Escalonada |
+| :--- | :--- | :--- |
+| **Memoria** | Un bloque contiguo | Varios bloques dispersos |
+| **Fórmula acceso** | `Base + (i × Cols + j) × Tamaño` | `Ptr[i] + j × Tamaño` |
+| **Velocidad** | Más rápida (caché-friendly) | Un poco más lenta (dos saltos) |
+| **Flexibilidad** | Todas las filas igual tamaño | Filas de tamaño variable |
+| **Clonación** | `Clone()` es profunda | `Clone()` es superficial |
 
 ```mermaid
 graph LR
-    subgraph RECT ["Rectangular (int[2,3])"]
+    subgraph RECT ["Rectangular: bloque único"]
         R["| 1 | 2 | 3 | 4 | 5 | 6 |"]
     end
-    subgraph JAGGED ["Escalonada (int[2][])"]
-        J1["| 1 | 2 |"]
-        J2["| 3 | 4 | 5 | 6 |"]
+    subgraph JAGGED ["Escalonada: array de arrays"]
+        J0["Punteros → [ ptr0 | ptr1 | ptr2 ]"]
+        J1["Fila 0 → [ 1 | 2 ]"]
+        J2["Fila 1 → [ 3 | 4 | 5 | 6 ]"]
+        J3["Fila 2 → [ 7 ]"]
+        J0 --> J1
+        J0 --> J2
+        J0 --> J3
     end
     style RECT fill:#2196F3,color:#fff
     style JAGGED fill:#FF9800,color:#fff
     style R fill:#4CAF50,color:#fff
+    style J0 fill:#607D8B,color:#fff
     style J1 fill:#4CAF50,color:#fff
     style J2 fill:#4CAF50,color:#fff
+    style J3 fill:#4CAF50,color:#fff
 ```
 
 ## 3.2. Declaración y Creación de Matrices
