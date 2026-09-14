@@ -1,31 +1,35 @@
-## 15 Preguntas de Investigación y Desarrollo (I+D)
+### **Cuestionario de Investigación y Desarrollo: Almacenamiento Estático y Cadenas en C#**
 
-1.  **Análisis de la Indexación:** Justifique desde el punto de vista del cálculo de direcciones de memoria por qué la **Indexación Basada en Cero** es la convención más eficiente para los arrays en DAW y en lenguajes como C, en comparación con la Indexación Basada en Uno. ¿Qué representa el índice 0 en la fórmula matemática utilizada para calcular la dirección de un elemento $A[i]$?.
+**Instrucciones:** Lee cada pregunta con atención y proporciona una respuesta detallada, justificando tus afirmaciones con los conceptos aprendidos.
 
-2.  **Eficiencia Algorítmica de Arrays:** Explique cómo la propiedad de **Contigüidad en Memoria** de los arrays garantiza que el acceso a cualquier elemento sea en **tiempo constante $O(1)$**. ¿Qué impacto tiene esta eficiencia en el rendimiento general de operaciones como la búsqueda lineal?.
+---
 
-3.  **Inmutabilidad y Diseño:** Dado que el tamaño de un array es **inmutable** en DAW, justifique por qué la solución para aumentar o reducir su tamaño es explícitamente **crear un array nuevo y copiar los datos**. Explique la justificación didáctica de esta mecánica en términos de la gestión de memoria contigua por parte del sistema operativo.
+**1. Indexación Basada en Cero y Cálculo de Memoria**
+Justifica desde el punto de vista del cálculo de direcciones de memoria por qué la Indexación Basada en Cero es la convención más eficiente para los arrays en C#. ¿Qué representa el índice 0 en la fórmula matemática `Dirección(A[i]) = Dirección Base + (i × Tamaño del Tipo)`? Compara con la Basada en Uno y explica por qué C#, Java, Python y C++ usan la Basada en Cero.
 
-4.  **Gestión de Referencias:** Los arrays son **tipos de referencia** en DAW, lo que implica que pasar un array a una función crea una dependencia. Si un array contiene tipos primitivos (como `int`), ¿por qué es obligatoria la técnica de **Clonación Profunda Manual** para garantizar que la copia sea totalmente independiente del array original?.
+**2. Contigüidad y Localidad de Referencia**
+Explica cómo la propiedad de contigüidad en memoria de los arrays garantiza que el acceso a cualquier elemento sea en tiempo constante. ¿Qué es la "localidad de referencia" y por qué el procesador carga datos cercanos en caché? Incluye un ejemplo práctico de cuándo un acceso secuencial es más rápido que uno aleatorio.
 
-5.  **Modelos de Matrices:** Compare el **Array Escalonado** (*Jagged Array*), utilizado por DAW, con el **Array Rectangular**. Justifique la elección del Array Escalonado por parte de DAW en términos de **flexibilidad** (respecto a la longitud de las filas) y **optimización de la memoria**.
+**3. Inmutabilidad del Tamaño y Gestión de Memoria**
+Dado que el tamaño de un array es inmutable en C#, justifica por qué la solución para aumentar o reducir su tamaño es crear un array nuevo y copiar los datos. Explica la justificación técnica en términos de la gestión de memoria contigua. ¿Qué alternativa dinámica verás en la UD07?
 
-6.  **Rendimiento en Matrices:** Las matrices en DAW se almacenan por **Filas** (*Row-Major Order*). Explique por qué esta organización hace que sea **más eficiente** iterar primero sobre el índice de la fila y luego sobre el de la columna (matriz\[i]\[j]), en relación con la memoria **caché del procesador**.
+**4. Tipos de Referencia y Clonación Profunda**
+Los arrays son tipos de referencia en C#. Diseña un escenario donde pasar un array a una función sin clonar provoque un bug inesperado. Explica la diferencia entre copia por referencia, copia superficial y copia profunda, indicando cuándo es necesaria cada una.
 
-7.  **Doble Referencia y Clonación:** Las matrices son **doblemente tipos de referencia** (array de arrays). Diseñe un argumento para convencer a otro programador sobre el peligro de la **Copia Superficial Engañosa**. ¿Por qué modificar un valor en la matriz copiada sigue afectando al original si solo se clonó la dimensión exterior?.
+**5. Doble Búfer y Consistencia de Datos**
+En simulaciones de propagación de estado (como un juego de la vida o propagación de fuego), ¿por qué es esencial utilizar la técnica de Doble Búfer en lugar de leer y escribir sobre la misma matriz simultáneamente? Justifica con un ejemplo concreto qué pasaría sin Doble Búfer y explica la eficiencia del Swap de referencias.
 
-8.  **Doble Búfer y Consistencia:** En simulaciones de propagación de estado (como el juego de la piedra), ¿por qué es esencial utilizar la técnica de **Doble Búfer** para la consistencia de los datos, en lugar de intentar leer y escribir sobre la misma matriz simultáneamente?.
+**6. Inmutabilidad de Strings y Rendimiento**
+Explica el concepto de inmutabilidad de las cadenas de texto en C#. ¿Qué implicación de rendimiento tiene usar el operador `+` repetidamente dentro de un bucle? Compara la complejidad de `+` con `StringBuilder.Append()` y justifica por qué StringBuilder es la solución correcta.
 
-9.  **Análisis del Rendimiento del Swap:** Justifique la extrema eficiencia del **Mecanismo de Intercambio (Swap)** en el Doble Búfer, indicando su complejidad algorítmica $O(1)$. Compare esto con la complejidad que implicaría **copiar el valor de cada celda** para actualizar el búfer ($O(n^2)$) y explique por qué la clonación repetida es insostenible en simulaciones grandes.
+**7. Expresiones Regulares: Anclaje y Seguridad**
+Al validar un formato de datos (como un DNI o un teléfono) usando `.IsMatch()`, ¿por qué es fundamental anclar el patrón usando `^` y `$`? Muestra un ejemplo concreto de un patrón que valide incorrectamente si no se ancla, y explica el riesgo que esto supone en una aplicación real.
 
-10. **Impacto de la Inmutabilidad en Strings:** Explique el concepto de **inmutabilidad** de las cadenas de texto en DAW. ¿Qué implicación de rendimiento tiene esta característica cuando se utiliza el operador de concatenación `+` repetidamente dentro de un bucle, resultando en una complejidad $O(n^2)$?.
+**8. Comparativa de Algoritmos de Ordenación O(n²)**
+Compara los algoritmos Burbuja, Selección e Inserción en términos de: número de intercambios, mejor caso, estabilidad y casos de uso recomendados. Si el coste de intercambiar elementos en memoria fuera excepcionalmente alto, ¿cuál de los tres sería preferible y por qué?
 
-11. **Diseño de Manipulación de Texto:** ¿En qué contexto de manipulación de cadenas la clase **StringBuilder** se convierte en una práctica obligatoria?. Explique conceptualmente por qué `.Append()` opera en tiempo lineal $O(n)$, a diferencia del operador `+`.
+**9. Búsqueda Binaria: Coste Inicial vs. Búsqueda Lineal**
+La Búsqueda Binaria ofrece O(log n) pero requiere un array ordenado. Discuta la siguiente situación: necesitas buscar repetidamente 1000 elementos en un array de 10.000 elementos inicialmente desordenado. ¿Es más eficiente aplicar Búsqueda Lineal siempre (1000 × O(n)) o pagar el coste de ordenar (O(n log n)) y luego aplicar Búsqueda Binaria (1000 × O(log n))? Justifica con números concretos.
 
-12. **Algoritmos de Ordenación $O(n^2)$:** Compare y contraste los algoritmos **Bubble Sort** y **Selection Sort**. Si el coste de realizar un **intercambio** (*swap*) de datos en memoria fuera excepcionalmente alto, ¿cuál de los dos algoritmos sería preferible y por qué, basándose en la métrica que cada uno optimiza?.
-
-13. **Casos de Uso de la Inserción:** Aunque **Insertion Sort** tiene una complejidad promedio de $O(n^2)$, justifique por qué se recomienda su uso en el **mejor caso** (datos casi ordenados) y cuál es su complejidad algorítmica en ese escenario. ¿Por qué esta característica lo hace útil para la actualización incremental de listas?.
-
-14. **Precondición de Búsqueda Binaria:** La **Búsqueda Binaria** ofrece una eficiencia superior de $O(\log n)$. Sin embargo, exige una **precondición** obligatoria. Si se debe buscar repetidamente en un array inicialmente desordenado, discuta la estrategia más eficiente: ¿aplicar Búsqueda Lineal siempre ($O(n)$) o pagar el costo inicial de ordenar ($O(n \log n)$ o $O(n^2)$) para luego aplicar Búsqueda Binaria?.
-
-15. **Validación con Expresiones Regulares:** Al validar un formato de datos (como un DNI o un teléfono) utilizando el método `.IsMatch(cadena)` de la clase `Regex`, ¿por qué es fundamental **anclar** el patrón usando los metacaracteres `^` (inicio de cadena) y `$` (fin de cadena)?. ¿Qué riesgo existe si se omite el anclaje?.
+**10. Notación Big O y Decisiones de Diseño**
+Un compañero de equipo afirma que "un algoritmo O(n²) siempre es peor que uno O(n log n)". ¿Es esta afirmación siempre cierra? Presenta un escenario donde un algoritmo O(n²) sea preferible a uno O(n log n) (piensa en arrays pequeños, coste de memoria, o simplicidad del código). Justifica tu respuesta usando la notación Big O.
