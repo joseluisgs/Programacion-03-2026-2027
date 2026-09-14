@@ -163,7 +163,7 @@ copia[0, 0] = 999;
 Console.WriteLine(original[0, 0]);  // 999 — ¡También cambió!
 ```
 
-> 🔧 **Truco nemotecnico:** Piensa en las matrices como un edificio de apartamentos. `matrizB = matrizA` es como darle a alguien la llave del **mismo** apartamento. Si mueve los muebles, tú también lo ves.
+> 🔧 **Truco mnemotecico:** Piensa en las matrices como un edificio de apartamentos. `matrizB = matrizA` es como darle a alguien la llave del **mismo** apartamento. Si mueve los muebles, tú también lo ves.
 
 ## 3.5. Paso por Referencia y Devolución de Matrices
 
@@ -234,7 +234,7 @@ int[][] ClonarMatriz(int[][] origen)
 
 ### Cambio de Tamaño
 
-El tamaño de una matriz es **inmutble**. Para "cambiarlo", debes crear una nueva y copiar.
+El tamaño de una matriz es **inmutable**. Para "cambiarlo", debes crear una nueva y copiar.
 
 ```csharp
 int[,] Original = { { 1, 2, 3 }, { 4, 5, 6 } };
@@ -290,8 +290,6 @@ graph LR
 ```
 
 > 💡 **Consejo:** Siempre recorre las matrices por filas (índice `i` primero). Esto garantiza que el procesador acceda a memoria contigua y aproveche la caché.
-
----
 
 **Resumen del punto:**
 

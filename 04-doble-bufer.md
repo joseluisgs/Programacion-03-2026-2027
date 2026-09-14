@@ -137,8 +137,6 @@ for (int frame = 0; frame < 5; frame++)
 }
 ```
 
----
-
 **Resumen del punto:**
 
 | Concepto | Descripción |

@@ -73,7 +73,7 @@ numerosOpcionales[0] = 5;
 // Console.WriteLine(numerosOpcionales[1] + 1);  // NullReferenceException
 
 // ✅ Solución 1: Coalescencia
-Console.WriteLine($"Con coalescencia: {numerosOpcionales[1] ?? 0 + 1}");
+Console.WriteLine($"Con coalescencia: {(numerosOpcionales[1] ?? 0) + 1}");
 
 // ✅ Solución 2: Comprobación explícita
 if (numerosOpcionales[1] != null)
@@ -251,6 +251,20 @@ Console.WriteLine(miArray.Length);  // 10
 
 > 💡 **Consejo:** Usa comentarios XML `/// <summary>` en funciones que trabajen con arrays. Facilita la comprensión y la depuración del código.
 
+> 📝 **Nota:** A veces necesitas devolver un array **junto con** otros valores (por ejemplo, el array y su suma). En ese caso, usa **tuplas** (que viste en la UD01/UD02):
+>
+> ```csharp
+> (int[] datos, int suma) ProcesarArray(int[] arr)
+> {
+>     int s = 0;
+>     foreach (int x in arr) s += x;
+>     return (arr, s);
+> }
+>
+> var (numeros, total) = ProcesarArray(new int[] { 10, 20, 30 });
+> Console.WriteLine($"Suma: {total}");  // 60
+> ```
+
 ## 2.4. Parámetros Variables (`params`) y Modificador `in`
 
 El modificador **`params`** permite a una función aceptar un número variable de argumentos. Internamente, el compilador los convierte en un **array**.
@@ -324,7 +338,7 @@ Console.WriteLine(arrayA == arrayB);               // false (distinta dirección
 Console.WriteLine(SonIguales(arrayA, arrayB));      // true (mismo contenido)
 ```
 
-> 🔧 **Truco nemotecnico:** `==` comprueba si son la **misma persona** (misma dirección). `SonIguales` comprueba si son **gemelos** (mismo contenido pero distinta persona).
+> 🔧 **Truco mnemotecico:** `==` comprueba si son la **misma persona** (misma dirección). `SonIguales` comprueba si son **gemelos** (mismo contenido pero distinta persona).
 
 ## 2.6. Copias, Clonación y la Inmutabilidad del Tamaño
 
@@ -398,8 +412,6 @@ Console.WriteLine(c[0]);  // 888 — c es independiente
 > 💡 **Analogía:** Imagina que `a` es la dirección de tu piso. Cuando escribes `b = a`, no estás comprando un piso nuevo, estás dando otra llave al **mismo piso**. Si `b` entra y mueve los muebles, `a` también ve los cambios.
 
 📌 **Ejemplo real:** En un juego como Fortnite, si dos variables apuntan al mismo array de inventario y un jugador usa un objeto, el otro jugador también lo ve. Para evitarlo, el juego crea una **copia profunda** del inventario antes de modificarlo.
-
----
 
 **Resumen del punto:**
 

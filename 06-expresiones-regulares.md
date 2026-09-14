@@ -164,8 +164,6 @@ Console.WriteLine(lazy);  // "<div>"
 
 > 💡 **Consejo:** Siempre usa `?` después de `+` o `*` cuando valides HTML o XML. Sin él, la regex captura demasiado texto.
 
----
-
 **Resumen del punto:**
 
 | Concepto | Descripción |

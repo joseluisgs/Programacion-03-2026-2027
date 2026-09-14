@@ -226,7 +226,7 @@ Antes de dar por cerrado el tema, asegúrate de poder responder **SÍ** a estas 
 - [ ] ¿Sé dibujar el diagrama de Swap del Doble Búfer?
 - [ ] ¿Conozco la complejidad Big O de cada algoritmo?
 
-> 🔧 **Truco nemotecnico:**
+> 🔧 **Truco mnemotecico:**
 > - **`for`** = **F**ijo → sabes cuántas veces
 > - **`foreach`** = Para cada → solo lectura
 > - **`ref`** = **R**eferencia → puedes modificar

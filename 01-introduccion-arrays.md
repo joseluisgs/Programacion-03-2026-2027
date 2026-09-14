@@ -4,6 +4,7 @@
     - [1.2.1. Indexación Basada en Cero](#121-indexación-basada-en-cero)
     - [1.2.2. Indexación Basada en Uno](#122-indexación-basada-en-uno)
   - [1.3. Arrays en C#](#13-arrays-en-c)
+    - [1.3.1. El primer array que ya estás usando: `string[] args`](#131-el-primer-array-que-ya-estás-usando-string-args)
   - [1.4. El Secreto de la Velocidad: Localidad de Referencia](#14-el-secreto-de-la-velocidad-localidad-de-referencia)
 
 # 1. Arrays. Introducción
@@ -123,6 +124,31 @@ Console.WriteLine(edades[-1]);  // Error: índice negativo
 
 > 📝 **Nota:** En la UD07 veremos las **colecciones dinámicas** (`List<T>`, `Dictionary<K,V>`) que resuelven el problema del tamaño fijo. Pero los arrays siguen siendo más rápidos para acceso por índice.
 
+### El primer array que ya estás usando: `string[] args`
+
+¿Has visto alguna vez esto en tu `Program.cs`?
+
+```csharp
+// Program.cs con Top-Level Statements
+Console.WriteLine($"Argumentos recibidos: {args.Length}");
+for (int i = 0; i < args.Length; i++)
+{
+    Console.WriteLine($"  args[{i}] = {args[i]}");
+}
+```
+
+`args` es un **`string[]`** — un array unidimensional de cadenas. El sistema operativo te pasa los argumentos de línea de comandos como un array. Por ejemplo, si ejecutas:
+
+```bash
+dotnet run --framework net10.0 -- "Hola" "Mundo"
+```
+
+Entonces `args` contiene `{ "Hola", "Mundo" }` y `args.Length` es `2`.
+
+📌 **Ejemplo real:** Cuando ejecutas `git commit -m "mensaje"`, Git recibe los argumentos como un array interno similar a `args`. Cada palabra que escribes después del comando es un elemento del array.
+
+> 💡 **Consejo:** `string[] args` es tu primer contacto real con un array. Aprovéchalo para entender cómo se accede a los elementos por índice y cómo se recorre con `for`.
+
 ## 1.4. El Secreto de la Velocidad: Localidad de Referencia
 
 ¿Por qué usamos arrays si son tan rígidos? Por el **hardware**. Al estar los datos contiguos en memoria, cuando el procesador lee `[0]`, el sistema carga también los siguientes en la **Memoria Caché**. Esto hace que recorrer un array sea órdenes de magnitud más rápido que acceder a memoria dispersa.
@@ -172,12 +198,10 @@ graph TB
 > 2. No conoces el tamaño final
 > 3. Solo necesitas acceso secuencial
 
----
-
 **Resumen del punto:**
 
 | Concepto | Descripción |
-|----------|------------|
+| :--- | :--- |
 | **Array** | Estructura de datos estática, elementos del mismo tipo, tamaño fijo |
 | **Indexación basada en cero** | Primer elemento en índice 0 (C#, Java, Python) |
 | **Indexación basada en uno** | Primer elemento en índice 1 (Fortran, MATLAB, Pascal) |

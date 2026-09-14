@@ -96,7 +96,7 @@ Console.WriteLine(resultado);  // "Hola"
 | `.Split(sep)` | Divide en array | `"a,b,c".Split(',')` → `{ "a", "b", "c" }` |
 | `.Trim()` | Elimina espacios al inicio/final | `" hola ".Trim()` → `"hola"` |
 | `.ToUpper()` / `.ToLower()` | Mayúsculas / minúsculas | `"Hola".ToUpper()` → `"HOLA"` |
-| `.IndexOf(texto)` | Posición del primer occurrence | `"Hola".IndexOf("la")` → `2` |
+| `.IndexOf(texto)` | Posición de la primera aparición | `"Hola".IndexOf("la")` → `2` |
 | `string.Join(sep, array)` | Une array en cadena | `string.Join("-", {"L","M","X"})` → `"L-M-X"` |
 | `$"{var}"` | Interpolación de cadenas | `$"Tengo {edad} años"` |
 
@@ -154,7 +154,7 @@ Console.WriteLine($"Longitud: {resultado.Length}");
 | `.Append(valor)` | Añade texto sin crear nuevas cadenas |
 | `.ToString()` | Convierte el buffer a `string` final |
 
-> 🔧 **Truco nemotecnico:** Si usas `+` más de **3 veces** en un bucle, cambia a `StringBuilder`. Es como la diferencia entre reescribir toda la carta cada vez que añades una palabra, o escribirla de corrido en un borrador.
+> 🔧 **Truco mnemotecico:** Si usas `+` más de **3 veces** en un bucle, cambia a `StringBuilder`. Es como la diferencia entre reescribir toda la carta cada vez que añades una palabra, o escribirla de corrido en un borrador.
 
 📌 **Ejemplo real:** Los servidores de email (Gmail, Outlook) usan `StringBuilder` para construir los headers de miles de emails por segundo. Usar `+` sería tan lento que el servidor se colapsaría.
 
@@ -172,8 +172,6 @@ Console.WriteLine(object.ReferenceEquals(a, b));  // true — misma referencia
 Esto funciona porque `string` es inmutable: no hay riesgo de que un cambio en `a` afecte a `b`. El compilador optimiza ahorrando memoria.
 
 > 📝 **Nota:** El *String Interning* es automático para literales. Si creas cadenas con `new string(...)`, cada una tendrá su propia dirección de memoria.
-
----
 
 **Resumen del punto:**
 

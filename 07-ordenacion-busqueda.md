@@ -321,7 +321,7 @@ int BuscarBinaria(int[] arr, int objetivo)
     int bajo = 0, alto = arr.Length - 1;
     while (bajo <= alto)
     {
-        int medio = (bajo + alto) / 2;
+        int medio = bajo + (alto - bajo) / 2;
         if (arr[medio] == objetivo) return medio;
         else if (arr[medio] < objetivo) bajo = medio + 1;
         else alto = medio - 1;
@@ -339,7 +339,7 @@ int BuscarBinaria(int[] arr, int objetivo)
 
 📌 **Ejemplo real:** El buscador de Netflix dentro de su catálogo usa Búsqueda Binaria sobre los títulos ordenados alfabéticamente. Con millones de películas, $O(\log n)$ es mucho más rápido que $O(n)$.
 
-> 🔧 **Truco nemotecnico:** 
+> 🔧 **Truco mnemotecico:** 
 > - **Búsqueda Lineal** = Revisar cada estantería una por una
 > - **Búsqueda Binaria** = Abrir el libro por la mitad y decidir si buscar en la primera o segunda parte
 
@@ -368,8 +368,6 @@ int BuscarBinaria(int[] arr, int objetivo)
 | **Búsqueda en array ordenado** | Búsqueda Binaria |
 | **Búsqueda en array no ordenado** | Búsqueda Lineal |
 | **Máximo rendimiento** | QuickSort + Búsqueda Binaria |
-
----
 
 **Resumen del punto:**
 
