@@ -351,7 +351,17 @@ for (int i = 0; i < Original.GetLength(0); i++)
 
 ## 3.7. Rendimiento: El Orden de los Índices
 
-C# almacena matrices por **filas** (*row-major order*). Recorrer por filas es **mucho más rápido** que recorrer por columnas.
+C# almacena matrices por **filas** (*row-major order*). Esto significa que los elementos de una fila se guardan consecutivos en memoria, y la fila completa sigue a la anterior:
+
+```
+Matriz int[2,3]:          Memoria:
+| 1 | 2 | 3 |    →    [1][2][3][4][5][6]
+| 4 | 5 | 6 |           Fila 0    Fila 1
+```
+
+> ⚠️ **Advertencia:** No todos los lenguajes funcionan igual. Fortran, MATLAB, R y Julia almacenan por **columnas** (*column-major order*): primero la columna completa, luego la siguiente. Si vienes de esos lenguajes, en C# el orden de recorrido es al revés. Esto es crucial para el rendimiento: lo que es rápido en MATLAB (recorrer por columnas) es lento en C#.
+
+Recorrer por filas es **mucho más rápido** que recorrer por columnas:
 
 ```csharp
 int[,] matriz = new int[1000, 1000];
@@ -386,6 +396,13 @@ graph LR
 ```
 
 > 💡 **Consejo:** Siempre recorre las matrices por filas (índice `i` primero). Esto garantiza que el procesador acceda a memoria contigua y aproveche la caché.
+
+| Orden | Lenguajes | Fórmula | Ejemplo de recorrido rápido |
+| :--- | :--- | :--- | :--- |
+| **Row-major** (por filas) | C#, Java, Python, C++ | `Base + (i × Cols + j) × Size` | `for j → for i` ❌ / `for i → for j` ✅ |
+| **Column-major** (por columnas) | Fortran, MATLAB, R, Julia | `Base + (j × Rows + i) × Size` | `for i → for j` ❌ / `for j → for i` ✅ |
+
+> 📝 **Nota:** En C#, el bucle externo debe ser `i` (filas) y el interno `j` (columnas). En Fortran/MATLAB sería al revés. Si cambias de lenguaje, recuerda este detalle.
 
 ### Matrices de Structs y Enums
 
