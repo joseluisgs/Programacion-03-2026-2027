@@ -1,0 +1,52 @@
+# Compilación
+bin/
+obj/
+out/
+
+# IDEs
+.idea/
+.vs/
+.vscode/
+*.sln.iml
+*.DotSettings.user
+
+# Archivos temporales
+*.user
+*.suo
+*.userprefs
+*.log
+*.cache
+*.pdb
+*.tmp
+*.bak
+
+# NuGet
+*.nupkg
+*.snupkg
+packages/
+artifacts/
+
+# Publicaciones
+publish/
+TestResults/
+
+# Contenido multimedia y docs (no subir a git)
+/multimedia/
+/docs/
+/ejemplos/
+
+# Presentaciones
+*.pptx
+*.pdf
+
+# Sistema
+.DS_Store
+
+# Archivos de ejercicios anteriores
+/Ejercicios/*.docx
+
+# Scripts de subida
+upload.sh
+
+# Extras
+/Extras/Informe-Eficiencia.xlsx
