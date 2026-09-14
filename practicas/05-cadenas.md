@@ -66,19 +66,52 @@ Implementa el ejercicio del palíndromo pero usando `StringBuilder` para inverti
 Implementa el juego del ahorcado: pide una palabra secreta y permite al jugador adivinar letras con un máximo de **7 intentos**. Muestra los aciertos y fallos.
 
 **Ejercicio 18: Juego del Lingo**
-Implementa el juego del Lingo: el jugador adivina palabras de 5 letras. Indica con **rosa** si la letra está en posición correcta, con **amarillo** si está pero en posición incorrecta, y sin color si no existe.
+Implementa el juego del Lingo: el jugador adivina palabras de 5 letras. El programa indica con un asterisco `*` si la letra está en posición correcta, con un `+` si está pero en posición incorrecta, y con un `-` si no existe en la palabra. Ejemplo con la palabra secreta "CASA":
+
+```
+Palabra secreta: CASA (oculta)
+Tu intento 1: CERO → C* E- R- O-  (acierto en posición 1)
+Tu intento 2: SOLA → S- O+ L- A*  (A acertada, O existe pero en otra posición)
+Tu intento 3: CASA → C* A* S* A*  ¡Enhorabuena! Has acertado en 3 intentos
+```
 
 **Ejercicio 19: La Clave del César**
-Implementa el algoritmo de cifrado "Clave del César": desplaza cada letra 3 posiciones en el alfabeto (Z → C). Los números se convierten: 9 → 0. Muestra el texto original y el cifrado.
+Implementa el algoritmo de cifrado "Clave del César": desplaza cada letra 3 posiciones en el alfabeto (Z → C). Los números se convierten: 9 → 0. Los espacios y符号其他字符 se mantienen sin cambios. Muestra el texto original y el cifrado. Ejemplo:
+
+```
+Texto original:  HOLA MUNDO 123
+Texto cifrado:   KROD PXQGR 123
+
+Texto original:  XYZ
+Texto cifrado:   ABC
+```
 
 **Ejercicio 20: Generador de Contraseñas**
-Implementa un programa que genere una contraseña aleatoria de 12 caracteres usando letras mayúsculas, minúsculas, números y símbolos.
+Implementa un programa que genere una contraseña aleatoria de 12 caracteres usando letras mayúsculas, minúsculas, números y símbolos. Muestra la contraseña generada y verifica que contenga al menos un carácter de cada tipo.
 
 **Ejercicio 21: Codificador Morse**
-Implementa un programa que convierta un texto a código Morse y viceversa. Usa un diccionario o arrays para la conversión.
+Implementa un programa que convierta un texto a código Morse y viceversa. Usa un diccionario o arrays para la conversión. El código Morse usa puntos (`.`) y guiones (`-`) para cada letra, separados por espacios entre letras y `/` entre palabras. Ejemplo:
+
+```
+Texto: HOLA MUNDO
+Morse: .... --- .-.. .- / -- ..- -. -.. ---
+
+Morse: ... --- ...
+Texto: SOS
+```
 
 **Ejercicio 22: Adivina la Palabra**
-Implementa un juego donde el jugador debe adivinar una palabra letra a letra. Muestra las letras acertadas y los intentos restantes.
+Implementa un juego donde el jugador debe adivinar una palabra letra a letra. El programa elige una palabra de una lista y muestra guiones bajos por cada letra. El jugador propone letras; si acierta, se revela la posición. Si falla, pierde un intento. Máximo 7 intentos. Ejemplo:
+
+```
+Palabra: _ _ _ _ _ (5 letras)
+Intento 1: A → ¡Correcto! _ A _ _ _
+Intento 2: E → ¡Correcto! _ A _ _ E
+Intento 3: Z → Fallo (6 intentos restantes)
+Intento 4: R → _ A _ R E
+Intento 5: P → ¡Correcto! P A _ R E
+Intento 6: L → ¡Enhorabuena! PALABRA (4 intentos restantes)
+```
 
 ---
 

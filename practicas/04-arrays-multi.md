@@ -69,7 +69,20 @@ Implementa el juego de barquitos para dos jugadores. Cada jugador tiene **dos pa
 Generaliza el juego de las parejas para una matriz `int[4,6]` (24 casillas = 12 parejas). Coloca las parejas aleatoriamente y deja al jugador destapar de 2 en 2.
 
 **Ejercicio 19: ¿Dónde está la Mosca? (Matriz)**
-Implementa la versión generalizada del juego de la mosca para una matriz `int[N,M]` con `K` moscas. Si golpeas una casilla adyacente a una mosca, esta "revolotea" a otra posición.
+Implementa la versión generalizada del juego de la mosca para una matriz `int[N,M]` con `K` moscas. Si golpeas una casilla adyacente a una mosca (horizontal, vertical o diagonal), esta "revolotea" a otra posición libre. Muestra el tablero con puntos si no hay nada y `X` si aciertas. Ejemplo de partida:
+
+```
+=== Tablero 5x5 con 2 moscas ===
+. . . . .
+. . . . .
+. . . . .
+. . . . .
+. . . . .
+
+Tu tiro: 2,2 → Agua
+Tu tiro: 3,3 → ¡Casi! Una mosca revolotea
+Tu tiro: 4,4 → ¡Tocada! Has dado en la mosca en 3 intentos
+```
 
 **Ejercicio 20: Sudoku — Verificador**
 Implementa un programa que verifique si una matriz `int[9,9]` es un Sudoku válido: cada fila, cada columna y cada subcuadrante 3×3 contiene los números del 1 al 9 sin repetirse.
@@ -79,19 +92,46 @@ Implementa un programa que verifique si una matriz `int[9,9]` es un Sudoku váli
 ### Bloque IV: Simulación con Doble Búfer (Ejercicios 21-25)
 
 **Ejercicio 21: Simulación de Onda (Piedra en el Lago — Versión A)**
-Simula el lanzamiento de una piedra a un lago (matriz). La ola se **expande en todas las direcciones** (horizontales, verticales y diagonales). La simulación se detiene cuando el lago vuelve a estar en calma (todo a cero).
+Simula el lanzamiento de una piedra a un lago (matriz cuadrada inicializada a 0). La ola se **expande en todas las direcciones** (horizontales, verticales y diagonales) desde el punto de impacto. En cada paso, cada celda adyacente recibe la intensidad de su vecina decreciendo en 1 unidad. La simulación se detiene cuando el lago vuelve a estar en calma (todo a cero). Ejemplo visual con matriz 7×7 e impacto en (3,3) con intensidad 4:
+
+```
+Paso 0:          Paso 1:          Paso 2:
+. . . . . . .    . . . . . . .    . . . 1 . . .
+. . . . . . .    . . 1 1 1 . .    . 1 1 1 1 1 .
+. . . . . . .    . . 1 4 1 . .    1 1 1 4 1 1 1
+. . . 4 . . . →  . . 1 4 1 . . →  . 1 1 4 1 1 .
+. . . . . . .    . . 1 4 1 . .    . . 1 4 1 . .
+. . . . . . .    . . 1 1 1 . .    . . 1 1 1 . .
+. . . . . . .    . . . . . . .    . . . 1 . . .
+```
 
 **Ejercicio 22: Simulación de Onda (Piedra en el Lago — Versión B)**
-Versión alternativa: la ola se genera en **circunvalaciones** concéntricas desde el punto de impacto. Usa Doble Búfer para garantizar consistencia.
+Versión alternativa: la ola se genera en **circunferencias concéntricas** desde el punto de impacto. A diferencia de la versión A, aquí solo se propaga por las celdas que están exactamente a la misma distancia del centro (formando anillos). Usa Doble Búfer para garantizar consistencia en cada ciclo. Ejemplo con matriz 7×7 e impacto en (3,3):
+
+```
+Paso 0:  Paso 1:  Paso 2:  Paso 3:
+. . .    . . .    . . 1    . 1 .
+. . .    . 1 .    1 . 1    1 . 1
+. 4 .    . . .    . . .    . 1 .
+```
 
 **Ejercicio 23: Propagación de Fuego en un Bosque (Doble Búfer)**
-Simula la propagación de un incendio en un bosque representado como una matriz. Cada celda puede estar: vacía (0), con árbol vivo (1), en llamas (2), o quemada (3). Implementa Doble Búfer con Swap de referencias.
+Simula la propagación de un incendio en un bosque representado como una matriz. Cada celda puede estar: vacía (0), con árbol vivo (1), en llamas (2), o quemada (3). Un árbol se incendia si tiene un vecino en llamas. Las llamas se apagan al siguiente ciclo y dejan la celda quemada. Usa Doble Búfer para que las modificaciones no afecten al estado que se está leyendo. El bosque inicial se genera aleatoriamente con un 70% de árboles.
 
 **Ejercicio 24: Brote Viral — Z-Virus (Doble Búfer)**
-Simula la propagación de un virus en una ciudad `int[20,20]`. Estados: Vacío (0), Humano sano (1), Infectado nuevo (2), Infectado viejo (3, muere en el siguiente ciclo). Implementa Doble Búfer y ejecuta 10 ciclos.
+Simula la propagación de una infección en una ciudad representada como una matriz `int[20,20]`. Estados: Vacío (0), Humano sano (1), Infectado nuevo (2), Infectado viejo (3). La regla es: un humano sano se infecta si tiene un vecino infectado. Un infectado nuevo pasa a ser infectado viejo en el siguiente ciclo. Un infectado viejo muere (se convierte en vacío). Ejemplo de un ciclo:
+
+```
+Estado actual:        Siguiente estado:
+1 1 2 1 1            1 2 3 2 1
+1 1 1 1 1    →       1 1 2 1 1
+1 1 1 1 1            1 1 1 1 1
+```
+
+Usa Doble Búfer y ejecuta 10 ciclos, mostrando la matriz en cada paso.
 
 **Ejercicio 25: Pokémon — Expedición al Bosque de Viridian**
-Simula un recorido por un bosque `int[15,15]` durante 20 ciclos. Estados: Pasto vacío (0), Pokémon raro nuevo (1), Pokémon raro viejo (10, huye), Pokémon común (2, huye), Trampa (-1). El entrenador se mueve y captura Pokémon con 70% de probabilidad.
+Simula un recorrido por un bosque `int[15,15]` durante 20 ciclos. Estados del bosque: Pasto vacío (0), Pokémon raro nuevo (1), Pokémon raro viejo (10, huye si no lo capturas), Pokémon común (2, huye en el siguiente ciclo), Trampa (-1). El entrenador empieza en el centro y se mueve aleatoriamente. Si cae en una casilla con Pokémon, tiene 70% de probabilidad de capturarlo. Muestra el mapa en cada ciclo con el entrenador `T`, los Pokémon `P` y las trampas `X`.
 
 ---
 

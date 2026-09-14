@@ -22,7 +22,7 @@ Implementa un programa que determine si un array de 5 enteros es **capicúa** (s
 Implementa una función que reciba un array de enteros y un valor objetivo. Devuelve el índice donde se encuentra el valor, o `-1` si no existe. Prueba con al menos 3 casos.
 
 **Ejercicio 6: Búsqueda Binaria**
-Implementa la búsqueda binaria sobre un array **ordenado**. Compara el resultado con la búsqueda lineal: ¿cuántas comparaciones se ahorran con 1000 elementos?
+Implementa la búsqueda binaria sobre un array **ordenado** de 1000 elementos. La búsqueda binaria funciona descartando la mitad del rango en cada paso, algo así como "adivinar un número del 1 al 1000 preguntando si es mayor o menor". Compara cuántas comparaciones hace la búsqueda binaria frente a la búsqueda lineal con el mismo array.
 
 **Ejercicio 7: Ordenación por Burbuja**
 Implementa el algoritmo de ordenación por burbuja sobre un array de 10 números. Muestra el array en cada pasada para visualizar cómo los elementos "burbujean" hacia su posición.
@@ -44,7 +44,7 @@ Implementa una función que reciba un array y devuelva un **nuevo array** sin el
 Implementa un programa que **rote** todos los elementos de un array una posición a la derecha (el último pasa a ser el primero). Ejemplo: `[1, 2, 3, 4]` → `[4, 1, 2, 3]`.
 
 **Ejercicio 12: Generación de Secuencia**
-Implementa un programa que pida un valor entero, lo coloque en la primera posición de un array y genere el resto sumando el índice actual al anterior. Ejemplo: si introduces `2`, el array es `[2, 3, 5, 8, 12, 17...]`.
+Implementa un programa que pida un valor entero, lo coloque en la primera posición de un array de 10 elementos y genere el resto. La regla es: cada posición se calcula sumando el valor anterior con la posición que ocupa. Por ejemplo, si introduces `2`, la secuencia sería: `[2, 3, 5, 8, 12, 17, 23, 30, 38, 47]`. Observa cómo crece cada elemento.
 
 **Ejercicio 13: Mezclar Dos Arrays**
 Implementa una función que reciba dos arrays de la misma longitud y cree un tercero **intercalando** sus elementos. Ejemplo: `[1, 3, 5]` + `[2, 4, 6]` → `[1, 2, 3, 4, 5, 6]`.
@@ -56,7 +56,7 @@ Implementa un programa que genere 6 números aleatorios del 1 al 49 **sin repeti
 Implementa un programa que, dado un array de 0s y 1s (1 = éxito, 0 = fallo), encuentre la **longitud de la racha máxima** de 1s consecutivos. Ejemplo: `[0, 1, 1, 1, 0, 1, 1]` → racha máxima = 3.
 
 **Ejercicio 16: Intercalar Tareas Prioritarias y Secundarias**
-Implementa un programa que reciba dos arrays: tareas prioritarias (`string[]`) y secundarias (`string[]`). Crea un tercero intercalando 2 prioritarias por 1 secundaria.
+Implementa un programa que reciba dos arrays: tareas prioritarias (`string[]`) y secundarias (`string[]`). Crea un tercero intercalando **2 prioritarias por 1 secundaria**. Si se acaban las de un tipo, continúan las del otro. Ejemplo: `["A","B","C"]` + `["X","Y"]` → `["A","B","X","C","Y"]`.
 
 ---
 
@@ -78,26 +78,74 @@ Implementa un programa que compare dos arrays: uno asignado con `=` (misma refer
 Implementa un programa que demuestre los peligros del paso por referencia: pasa un array de presupuesto a una función que modifica el último elemento. Compara el resultado con una copia profunda.
 
 **Ejercicio 22: Historial de Errores con Nulos**
-Implementa un programa con un array `string?[]` donde `null` = sin inspeccionar, `""` = rechazado, y cualquier otro texto = válido. Cuenta cuántos hay de cada tipo y muestra un informe con `??` para los nulos.
+Implementa un programa con un array `string?[]` donde `null` = sin inspeccionar, `""` = rechazado, y cualquier otro texto = válido. Cuenta cuántos hay de cada tipo y muestra un informe. Ejemplo de salida:
+
+```
+=== Informe de Errores ===
+Total de entradas: 8
+Válidos: 3
+Rechazados: 2
+Sin inspeccionar: 3
+```
 
 ---
 
 ### Bloque IV: Juegos y Simulación (Ejercicios 23-27)
 
 **Ejercicio 23: ¿Dónde está la Mosca?**
-Implementa el juego de la mosca con un array de 20 casillas. La mosca está oculta en una posición. Si el jugador golpea una casilla adyacente, la mosca "revolotea" a otra posición. Si no es adyacente, permanece.
+Implementa el juego de la mosca con un array de 20 casillas (índices 0-19). La mosca está oculta en una posición aleatoria. El jugador introduce una posición y el programa responde: "¡Tocada!" si acierta, "¡Casi! La mosca revolotea" si está en una casilla adyacente (la casilla ±1), o "Agua" si está lejos. Cuando la mosca revolotea, se mueve a una posición adyacente aleatoria. Ejemplo de partida:
+
+```
+=== ¿Dónde está la mosca? (0-19) ===
+Tu tiro: 5 → Agua
+Tu tiro: 10 → ¡Casi! La mosca revolotea
+Tu tiro: 11 → ¡Tocada! Has dado en la mosca en 3 intentos
+```
 
 **Ejercicio 24: El Buscaminas (Versión Vector)**
-Implementa el Buscaminas con un vector de 20 casillas. Coloca 6 minas aleatoriamente y genera las pistas (cada casilla sin mina indica cuántas minas hay adyacentes).
+Implementa el Buscaminas con un vector de 20 casillas. El ordenador coloca 6 minas aleatoriamente y genera las pistas: cada casilla sin mina muestra cuántas minas hay en las casillas adyacentes (izquierda y derecha). La primera y última casilla solo tienen un vecino. Ejemplo:
+
+```
+Posiciones:  0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19
+Minas:       .  M  .  .  M  .  .  M  .  .  .  M  .  .  M  .  .  M  .  .
+Pistas:      1  *  2  2  *  3  2  *  2  1  2  *  3  2  *  3  2  *  1  0
+```
 
 **Ejercicio 25: El Número de Pivote**
-Genera un array de 20 números aleatorios. Pide al usuario una posición de pivote. Calcula la suma de elementos a la izquierda y derecha del pivote, y cuenta cuántos son mayores/menores que el pivote.
+Genera un array de 20 números aleatorios. Pide al usuario una posición de pivote. El programa calcula la suma de todos los elementos a la izquierda del pivote, la suma de los de la derecha, y cuenta cuántos son mayores y cuántos menores que el valor del pivote. Ejemplo:
+
+```
+Array: [3, 8, 1, 5, 9, 2, 7, 4, 6, 1, 8, 3, 5, 2, 9, 7, 4, 1, 6, 8]
+Pivote: posición 5 (valor 2)
+Izquierda: [3, 8, 1, 5, 9] → Suma: 26, Mayores que 2: 4, Menores que 2: 0
+Derecha:   [7, 4, 6, 1, 8, 3, 5, 2, 9, 7, 4, 1, 6, 8] → Suma: 65, Mayores: 10, Menores: 0
+```
 
 **Ejercicio 26: Juego de las Parejas (Vector)**
-Implementa el juego de las parejas con un vector de 12 casillas (6 parejas). Coloca los números aleatoriamente, oculta el panel y deja al jugador destapar de 2 en 2 buscando coincidencias.
+Implementa el juego de las parejas con un vector de 12 casillas (6 parejas de números del 1 al 6). El ordenador coloca los números aleatoriamente y oculta el panel. El jugador destapa de 2 en 2 casillas buscando coincidencias. Si acierta, esas casillas permanecen destapadas. El juego termina cuando se encuentran todas las parejas. Ejemplo de una jugada:
+
+```
+Panel oculto: [?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?]
+Tu tiro 1: casilla 3 →_sale el 4
+Tu tiro 2: casilla 7 →_sale el 2  → No coinciden, se vuelven a ocultar
+Tu tiro 1: casilla 3 →_sale el 4
+Tu tiro 2: casilla 11 →_sale el 4 → ¡Pareja! Quedan destapadas
+```
 
 **Ejercicio 27: Simulación de Onda (Piedra en el Río)**
-Simula el lanzamiento de una piedra a un río (vector de 15 posiciones). Pide posición e intensidad. La intensidad se almacena en esa casilla y las adyacentes van simulando las ondas decrementando hasta volver a cero.
+Simula el lanzamiento de una piedra a un río (vector de 15 posiciones inicializadas a 0). El usuario elige la posición de impacto y la intensidad (un valor entero). La intensidad se almacena en esa casilla y en cada paso la onda se propaga: cada casilla adyacente recibe la mitad de la intensidad de su vecina (redondeando hacia abajo). La onda se propaga hasta que todas las casillas vuelven a 0. Ejemplo:
+
+```
+Lanzamiento en posición 7 con intensidad 16:
+
+Paso 0: [0, 0, 0, 0, 0, 0, 0,16, 0, 0, 0, 0, 0, 0, 0]
+Paso 1: [0, 0, 0, 0, 0, 0, 8,16, 8, 0, 0, 0, 0, 0, 0]
+Paso 2: [0, 0, 0, 0, 0, 4, 8,16, 8, 4, 0, 0, 0, 0, 0]
+Paso 3: [0, 0, 0, 0, 2, 4, 8,16, 8, 4, 2, 0, 0, 0, 0]
+...
+Paso 6: [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0]
+Paso 7: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+```
 
 ---
 
