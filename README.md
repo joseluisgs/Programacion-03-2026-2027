@@ -17,10 +17,11 @@ UD03. Almacenamiento estático y cadenas. 1DAW. Curso 2026-2027.
 
 ## Contenido en YouTube
 
-- [Resumen]()
-- [Arrays]()
-- [Strings](https://youtu.be/fTFaNeDxgvU)
-- [Algoritmos de Ordenación y Búsqueda]()
+- [Resumen](https://youtu.be/wRtvkIRxh64)
+- [Arrays Unidimensionales](https://youtu.be/FsUalKrvYac)
+- [Arrays Multidimensionales y Matrices](https://youtu.be/KQHkaUYh_2Y)
+- [Cadenas de Texto y Expresiones Regulares](https://youtu.be/BQekKuG0R0c)
+- [Algoritmos de Ordenación y Búsqueda](https://youtu.be/yef8ero1MLk)
 - [Lista de Reproducción](https://www.youtube.com/playlist?list=PLK1PMlIrqj3c)
 
 ## Resultados de Aprendizaje y Criterios de Evaluación
