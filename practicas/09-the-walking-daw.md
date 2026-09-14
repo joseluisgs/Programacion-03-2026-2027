@@ -1,65 +1,70 @@
-# 🧟‍♂️ The Walking DAW: La Amenaza del Virus Prog-JL 💻
+# Práctica: The Walking DAW — Simulación de Propagación con Doble Búfer
 
-## 📜 Historia: El Último Cierre de Paréntesis
+**Instrucciones:** Implementa en C# una simulación de propagación de un virus en una cuadrícula, usando la técnica de **Doble Búfer**. Recuerda: **primero el diseño en papel, luego la codificación**.
 
-El año es 2025. El IES Luis Vives era un faro de conocimiento, hasta que un error de compilación fatal liberó el **Virus Prog-JL**. No es un virus de la gripe, ni un *malware* común. Es una pesadilla biológica que se propaga por la superficie del instituto, transformando a profesores y alumnos en lo que ahora conocemos como **Zombies del Código (ZC)**, con una sed insaciable por código limpio y mentes sin compilar.
+---
 
-**Tú eres el último programador sano.** Tu misión: ejecutar la simulación que predecirá el destino del instituto y de la humanidad. El campo de batalla es la **Matriz del Instituto**, donde cada celda es un aula, un pasillo o una mente en peligro.
+## 1. Historia
 
-**¿Podrás compilar el futuro antes de que se corrompa por completo?**
+El IES Luis Vives era un faro de conocimiento, hasta que un error de compilación fatal liberó el **Virus Prog-JL**. No es un virus común. Es una pesadilla biológica que transforma a profesores y alumnos en **Zombies del Código (ZC)**, con una sed insaciable por código limpio.
 
------
+**Tú eres el último programador sano.** Tu misión: ejecutar la simulación que predecirá el destino del instituto.
 
-## ⚙️ La Simulación: Prediciendo el Fin (o la Salvación)
+## 2. Estados de las Celdas
 
-El programa simulará la propagación del Virus Prog-JL a lo largo de ciclos de tiempo definidos por el usuario. La Matriz del Instituto se compone de celdas que pueden estar en uno de tres estados:
+La Matriz del Instituto se compone de celdas en uno de tres estados:
 
-  * **🧟 Zombie del Código (ZC)**
-  * **🙂 Persona Sana (Alumno/Profesor)**
-  * **◻️ Zona Libre (Espacio/Vacío)**
+| Estado | Símbolo | Descripción |
+| :--- | :--- | :--- |
+| **Zombie del Código (ZC)** | `Z` | Persona infectada |
+| **Persona Sana** | `S` | Alumno o profesor sano |
+| **Zona Libre** | `.` | Espacio vacío |
 
-### 🔴 Reglas de los Zombies del Código (ZC)
+## 3. Reglas de los Zombies del Código
 
-Los ZC (personas infectadas) siguen estas reglas en cada ciclo:
+Los ZC siguen estas reglas en cada ciclo:
 
-1.  **☠️ Probabilidad de Muerte (`muerte:X`):** Cada ZC tiene una probabilidad del **X%** de morir por inanición (o un error de sintaxis fatal) y desaparecer, dejando la celda **Zona Libre**.
-2.  **🏃 Movimiento Adyacente:** Si sobrevive, un ZC intentará moverse a **una de las 8 zonas adyacentes** elegida al azar, **solo si está Libre**. Si no hay Zonas Libres alrededor, el ZC permanece quieto.
-3.  \*\* contagion Contagio (`contagio:C`):\*\* Después de moverse (o quedarse quieto), el ZC intenta infectar a sus vecinos sanos. Si hay una **Persona Sana** adyacente, esta tiene una probabilidad del **C%** de ser infectada y convertirse en ZC en el siguiente ciclo.
+1. **Probabilidad de Muerte (`muerte:X`):** Cada ZC tiene una probabilidad del **X%** de morir por inanición y desaparecer, dejando la celda **Libre**.
+2. **Movimiento Adyacente:** Si sobrevive, un ZC se mueve a **una de las 8 zonas adyacentes** elegida al azar, **solo si está Libre**. Si no hay zonas libres, permanece quieto.
+3. **Contagio (`contagio:C`):** Después de moverse, el ZC intenta infectar a sus vecinos sanos. Si hay una Persona Sana adyacente, tiene una probabilidad del **C%** de ser infectada y convertirse en ZC en el siguiente ciclo.
 
-### 🟢 Reglas de las Personas Sanas (Alumnos/Profesores)
+## 4. Reglas de las Personas Sanas
 
-Las personas sanas también luchan por sobrevivir y defenderse:
+Las personas sanas también luchan por sobrevivir:
 
-1.  **🏃 Movimiento Adyacente:** Las **Personas Sanas** buscan moverse a **una de las 8 zonas adyacentes** elegida al azar, **solo si está Libre** en el siguiente estado. Si no tienen donde ir, permanecen quietas.
-2.  **⚔️ Defensa y Asesinato (`matar:K`):** Si una Persona Sana tiene uno o más ZC adyacentes, intentará combatirlos. Tiene una probabilidad del **K%** de matar a **un ZC vecino** (elegido al azar), dejando la zona de ese ZC **Libre**. Si la defensa es exitosa, la persona sana permanece en su posición.
+1. **Movimiento Adyacente:** Se mueven a **una de las 8 zonas adyacentes** elegida al azar, **solo si está Libre**. Si no tienen donde ir, permanecen quietas.
+2. **Defensa (`matar:K`):** Si tiene uno o más ZC adyacentes, tiene una probabilidad del **K%** de matar a **un ZC vecino** (elegido al azar), dejando su zona **Libre**.
 
------
+## 5. Ejecución
 
-## ⌨️ Ejecución: Compila tu Destino
-
-Para iniciar la simulación, debes ejecutar el programa (`Simulador.exe`) desde la línea de comandos, definiendo las condiciones iniciales de la simulación.
-
-**Sintaxis requerida para la ejecución:**
-
-```bash
-.\Simulador.exe dimension:X infectados:Y sanos:Z contagio:C tiempo:T muerte:M matar:K
-```
-
-| Parámetro        | Clave        | Rango   | Descripción                                             |
-| :--------------- | :----------- | :------ | :------------------------------------------------------ |
-| **Dimensión**    | `dimension`  | `> 0`   | Tamaño de la matriz (e.g., `dimension:40` para 40x40).  |
-| **Infectados**   | `infectados` | `≥ 0`   | Número inicial de **Zombies del Código (ZC)**.          |
-| **Sanos**        | `sanos`      | `≥ 0`   | Número inicial de **Personas Sanas**.                   |
-| **Contagio**     | `contagio`   | `0-100` | Probabilidad (%) de infección por ZC.                   |
-| **Tiempo**       | `tiempo`     | `> 0`   | Ciclos máximos de la simulación.                        |
-| **Muerte ZC**    | `muerte`     | `0-100` | Probabilidad (%) de que un ZC muera por ciclo.          |
-| **Matanza Sano** | `matar`      | `0-100` | Probabilidad (%) de que un sano mate a un ZC adyacente. |
-
-### Ejemplo Épico de Llamada:
+El programa se ejecuta desde la línea de comandos definiendo las condiciones iniciales:
 
 ```bash
 .\Simulador.exe dimension:40 infectados:10 sanos:300 contagio:35 tiempo:100 muerte:15 matar:5
 ```
 
-> **¡El destino del IES Luis Vives está en tus manos. Que tu código sea fuerte y tus probabilidades de supervivencia altas\!**
+| Parámetro | Clave | Rango | Descripción |
+| :--- | :--- | :--- | :--- |
+| **Dimensión** | `dimension` | `> 0` | Tamaño de la matriz (ej: `dimension:40` → 40×40) |
+| **Infectados** | `infectados` | `≥ 0` | Número inicial de Zombies del Código |
+| **Sanos** | `sanos` | `≥ 0` | Número inicial de Personas Sanas |
+| **Contagio** | `contagio` | `0-100` | Probabilidad (%) de infección por ZC |
+| **Tiempo** | `tiempo` | `> 0` | Ciclos máximos de la simulación |
+| **Muerte ZC** | `muerte` | `0-100` | Probabilidad (%) de que un ZC muera por ciclo |
+| **Matanza Sano** | `matar` | `0-100` | Probabilidad (%) de que un sano mate a un ZC adyacente |
 
+## 6. Condiciones de Finalización
+
+La simulación termina cuando se cumple alguna de estas condiciones:
+
+- **Victoria Humana:** No quedan ZC.
+- **Victoria del Virus:** No quedan Personas Sanas.
+- **Límite de Tiempo:** Se alcanza el número máximo de ciclos.
+
+## 7. Resultado Final
+
+El programa muestra:
+
+- El estado final de la matriz.
+- Quién ganó (humanos, virus, o tiempo agotado).
+- Estadísticas: ciclos totales, ZC eliminados, sanos supervivientes.
