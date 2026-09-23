@@ -1,4 +1,4 @@
-﻿- [5. Cadenas de Texto (`string`) y Manejo del Texto](#5-cadenas-de-texto-string-y-manejo-del-texto)
+- [5. Cadenas de Texto (`string`) y Manejo del Texto](#5-cadenas-de-texto-string-y-manejo-del-texto)
   - [5.1. Definición, Inmutabilidad y Tipo de Referencia](#51-definición-inmutabilidad-y-tipo-de-referencia)
   - [5.2. Acceso y Recorrido de Cadenas](#52-acceso-y-recorrido-de-cadenas)
     - [5.2.1. Propiedad `Length` y Acceso por Índice](#521-propiedad-length-y-acceso-por-índice)
@@ -8,6 +8,8 @@
     - [5.4.1. El Problema del Rendimiento (`+` vs. `StringBuilder`)](#541-el-problema-del-rendimiento--vs-stringbuilder)
     - [5.4.2. Uso Correcto de `StringBuilder`](#542-uso-correcto-de-stringbuilder)
   - [5.5. Curiosidad: String Interning (Pool de Cadenas)](#55-curiosidad-string-interning-pool-de-cadenas)
+
+
 
 # 5. Cadenas de Texto (`string`) y Manejo del Texto
 
@@ -188,4 +190,15 @@ Esto funciona porque `string` es inmutable: no hay riesgo de que un cambio en `a
 | **`StringBuilder`** | Buffer mutable para construir texto eficientemente |
 | **String Interning** | Pool de cadenas — literales iguales comparten memoria |
 
+## ¿Qué viene después?
+
 En el siguiente punto veremos las Expresiones Regulares (Regex): patrones de búsqueda y validación de texto, una herramienta poderosa para manipular cadenas de forma avanzada.
+
+## Buenas Prácticas
+
+- [ ] Recordar que `string` es inmutable — cada cambio crea una nueva cadena
+- [ ] Usar `StringBuilder` cuando concatenes más de 3 veces en un bucle
+- [ ] Usar interpolación de cadenas (`$"{variable}"`) en lugar de concatenación
+- [ ] Usar `@""` (verbatim string) para expresiones regulares en C#
+- [ ] Usar `.ToCharArray()` si necesitas modificar caracteres de una cadena
+- [ ] Usar ToCharArray() si necesitas modificar caracteres de una cadena

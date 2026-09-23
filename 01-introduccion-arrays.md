@@ -7,6 +7,8 @@
     - [1.3.1. El primer array que ya estás usando: `string[] args`](#131-el-primer-array-que-ya-estás-usando-string-args)
   - [1.4. El Secreto de la Velocidad: Localidad de Referencia](#14-el-secreto-de-la-velocidad-localidad-de-referencia)
 
+
+
 # 1. Arrays. Introducción
 
 > 💡 **Punto de partida:** ¿Alguna vez has abierto Netflix y has visto que te muestra 50 thumbnails de películas en una fila? ¿O Spotify que carga tu lista de 200 canciones favoritas? Detrás de todas esas colecciones de datos hay una estructura que las almacena de forma eficiente: el **array**.
@@ -212,3 +214,15 @@ graph TB
 | **`IndexOutOfRangeException`** | Error al acceder a un índice fuera de límites |
 
 En el siguiente punto veremos cómo se crean y manipulan los arrays unidimensionales en C#: definición, creación, recorrido y paso por referencia.
+
+
+## ¿Qué viene después?
+
+En el siguiente punto veremos cómo se crean y manipulan los arrays unidimensionales en C#: definición, creación, recorrido y paso por referencia.
+
+## Buenas Prácticas
+
+- [ ] Usar arrays cuando conozcas el tamaño exacto y necesites acceso rápido por índice
+- [ ] Usar `List<T>` cuando necesites añadir/quitar elementos frecuentemente
+- [ ] Recordar que los arrays se indexan desde 0, no desde 1
+- [ ] Verificar siempre `null` antes de acceder a un array de tipos anulables

@@ -17,6 +17,8 @@
   - [2.7. La Trampa del Alias](#27-la-trampa-del-alias)
   - [2.8. Arrays de Tipos Compuestos](#28-arrays-de-tipos-compuestos)
 
+
+
 # 2. Arrays Unidimensionales
 
 > 💡 **Punto de partida:** Cuando abres tu lista de reproducción de Spotify, ¿te has fijado en que cada canción tiene un número de posición? La canción 0, la 1, la 2... Eso es un array: una lista ordenada donde cada elemento tiene una posición fija. Pero, ¿cómo se crea? ¿Cómo se recorre? ¿Qué pasa si quieres hacer una copia?
@@ -553,4 +555,14 @@ Alumno[] clase2 =
 | **Enums** | `DiaSemana[]` — arrays de enumeraciones |
 | **Structs** | `Alumno[]` — arrays de tipos de valor compuestos |
 
+## ¿Qué viene después?
+
 En el siguiente punto veremos cómo funcionan los arrays multidimensionales (matrices): su creación, recorrido y las diferencias clave con los unidimensionales.
+
+## Buenas Prácticas
+
+- [ ] Usar `for` cuando necesites modificar o conocer el índice
+- [ ] Usar `foreach` cuando solo necesites leer los valores
+- [ ] Verificar `null` antes de acceder a `.Length` o a un índice
+- [ ] No confundir identidad (`==`) con igualdad (contenido) en arrays
+- [ ] Clonar cada fila manualmente en matrices escalonadas

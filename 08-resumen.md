@@ -1,4 +1,4 @@
-﻿- [8. Resumen y Conclusiones UD03](#8-resumen-y-conclusiones-ud03)
+- [8. Resumen y Conclusiones UD03](#8-resumen-y-conclusiones-ud03)
   - [8.1. Mapa Conceptual de la Unidad](#81-mapa-conceptual-de-la-unidad)
   - [8.2. Conceptos Clave](#82-conceptos-clave)
     - [Introducción a los Arrays](#introducción-a-los-arrays)
@@ -15,6 +15,8 @@
   - [8.7. Ejercicios de Repaso](#87-ejercicios-de-repaso)
   - [8.8. ¿Qué viene después?](#88-qué-viene-después)
   - [8.9. Mapa de Conexiones entre Temas](#89-mapa-de-conexiones-entre-temas)
+
+
 
 # 8. Resumen y Conclusiones UD03
 
@@ -315,3 +317,11 @@ graph LR
     style UD10 fill:#f44336,color:#fff
     style UD11 fill:#607D8B,color:#fff
 ```
+
+## Buenas Prácticas
+
+- [ ] Repasar los conceptos clave antes de empezar la práctica
+- [ ] Seguir el patrón Análisis → Diseño → Codificación
+- [ ] Usar el resumen como referencia rápida durante el examen
+- [ ] Practicar los ejercicios de repaso hasta dominarlos
+- [ ] Revisar el checklist de supervivencia antes de la evaluacion

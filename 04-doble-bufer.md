@@ -1,10 +1,12 @@
-﻿- [4. Doble Búfer (Double Buffering)](#4-doble-búfer-double-buffering)
+- [4. Doble Búfer (Double Buffering)](#4-doble-búfer-double-buffering)
   - [4.1. Teoría de la Técnica](#41-teoría-de-la-técnica)
   - [4.2. La Analogía del Pintor](#42-la-analogía-del-pintor)
   - [4.3. Mecanismo de Intercambio (Swap)](#43-mecanismo-de-intercambio-swap)
   - [4.4. Aplicación Didáctica: Propagación de Estado](#44-aplicación-didáctica-propagación-de-estado)
   - [4.5. ¿Por qué es vital en Desarrollo Web? El Problema del Tearing](#45-por-qué-es-vital-en-desarrollo-web-el-problema-del-tearing)
   - [4.6. Código en C#](#46-código-en-c)
+
+
 
 # 4. Doble Búfer (Double Buffering)
 
@@ -149,4 +151,13 @@ for (int frame = 0; frame < 5; frame++)
 | **Tearing** | Imagen rota por mostrar frames a medio pintar |
 | **Propagación de estado** | Calcular siguiente estado sin modificar el actual |
 
+## ¿Qué viene después?
+
 En el siguiente punto veremos las cadenas de texto en C#: su inmutabilidad, métodos esenciales y cómo construir textos eficientemente con `StringBuilder`.
+
+## Buenas Prácticas
+
+- [ ] Usar Swap (intercambio de referencias) en lugar de copiar datos
+- [ ] Calcular el siguiente estado basándose en el actual, sin modificarlo
+- [ ] Recordar que el Doble Búfer es O(1) porque solo intercambia referencias
+- [ ] Aplicar esta técnica en animaciones, juegos y desarrollo web

@@ -1,4 +1,4 @@
-﻿- [7. Algoritmos de Ordenación y Búsqueda](#7-algoritmos-de-ordenación-y-búsqueda)
+- [7. Algoritmos de Ordenación y Búsqueda](#7-algoritmos-de-ordenación-y-búsqueda)
   - [7.1. ¿Qué es la Notación Big O?](#71-qué-es-la-notación-big-o)
   - [7.2. Algoritmos de Ordenación (Sorting)](#72-algoritmos-de-ordenación-sorting)
     - [7.2.1. Burbuja (Bubble Sort)](#721-burbuja-bubble-sort)
@@ -11,6 +11,8 @@
     - [7.3.2. Búsqueda Binaria](#732-búsqueda-binaria)
   - [7.4. Tabla Comparativa de Complejidad](#74-tabla-comparativa-de-complejidad)
   - [7.5. Cuándo Usar Cada Algoritmo](#75-cuándo-usar-cada-algoritmo)
+
+
 
 # 7. Algoritmos de Ordenación y Búsqueda
 
@@ -444,4 +446,14 @@ int BuscarBinaria(int[] arr, int objetivo)
 | **Búsqueda Lineal** | Recorre todo, $O(n)$ |
 | **Búsqueda Binaria** | Divide por la mitad, $O(\log n)$, requiere ordenación |
 
+## ¿Qué viene después?
+
 En el siguiente punto cerraremos la unidad con un resumen completo: mapa conceptual, errores comunes, checklist de supervivencia y glosario de términos clave.
+
+## Buenas Prácticas
+
+- [ ] Usar `Array.Sort()` y `Array.BinarySearch()` en producción (más optimizados)
+- [ ] Conocer la complejidad Big O de cada algoritmo
+- [ ] Usar Inserción para arrays pequeños o casi ordenados
+- [ ] Usar QuickSort para arrays grandes sin requisitos de estabilidad
+- [ ] Recordar que Búsqueda Binaria requiere array ordenado

@@ -1,4 +1,4 @@
-﻿- [3. Arrays Multidimensionales](#3-arrays-multidimensionales)
+- [3. Arrays Multidimensionales](#3-arrays-multidimensionales)
   - [3.1. Conceptos Fundamentales](#31-conceptos-fundamentales)
     - [3.1.1. Tipos de Matrices](#311-tipos-de-matrices)
     - [3.1.2. Mecanismos de Almacenamiento](#312-mecanismos-de-almacenamiento)
@@ -16,6 +16,8 @@
   - [3.6. Copias, Clonación Profunda y Cambio de Tamaño](#36-copias-clonación-profunda-y-cambio-de-tamaño)
   - [3.7. Rendimiento: El Orden de los Índices](#37-rendimiento-el-orden-de-los-índices)
   - [3.8. Matrices de Structs y Enums](#38-matrices-de-structs-y-enums)
+
+
 
 # 3. Arrays Multidimensionales
 
@@ -557,4 +559,14 @@ for (int f = 0; f < notas.GetLength(0); f++)
 | **Enums** | `EstadoCasilla[,]` — matrices de enumeraciones |
 | **Structs** | `Alumno[,]` — matrices de tipos de valor compuestos |
 
+## ¿Qué viene después?
+
 En el siguiente punto veremos la técnica del Doble Búfer (Double Buffering), un patrón de diseño que utiliza arrays para evitar el parpadeo en animaciones y juegos.
+
+## Buenas Prácticas
+
+- [ ] Usar matrices rectangulares cuando todas las filas tengan el mismo tamaño
+- [ ] Usar matrices escalonadas cuando las filas tengan tamaños diferentes
+- [ ] Recorrer siempre por filas (índice `i` externo) para optimizar caché
+- [ ] Clonar cada fila manualmente en matrices escalonadas
+- [ ] No usar Clone() en matrices escalonadas sin clonar las filas

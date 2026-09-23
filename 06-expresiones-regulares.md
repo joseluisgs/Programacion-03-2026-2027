@@ -1,4 +1,4 @@
-﻿- [6. Expresiones Regulares (`Regex`)](#6-expresiones-regulares-regex)
+- [6. Expresiones Regulares (`Regex`)](#6-expresiones-regulares-regex)
   - [6.1. ¿Qué es una Expresión Regular?](#61-qué-es-una-expresión-regular)
   - [6.2. Metacaracteres Esenciales](#62-metacaracteres-esenciales)
   - [6.3. Uso de Regex en C#](#63-uso-de-regex-en-c)
@@ -8,6 +8,8 @@
     - [6.3.4. Sustitución (`Replace`)](#634-sustitución-replace)
   - [6.4. Tabla Maestra de Validaciones Comunes](#64-tabla-maestra-de-validaciones-comunes)
   - [6.5. El Concepto de Codicia (Greediness)](#65-el-concepto-de-codicia-greediness)
+
+
 
 # 6. Expresiones Regulares (`Regex`)
 
@@ -184,4 +186,15 @@ Console.WriteLine(lazy);  // "<div>"
 | **Greediness** | `+`/`*` son codiciosos; añade `?` para hacerlos lazy |
 | **Verbatim string** | Siempre usa `@""` para regex en C# |
 
+## ¿Qué viene después?
+
 En el siguiente punto veremos los algoritmos de ordenación y búsqueda: Burbuja, Selección, Inserción, Shell Sort, QuickSort y búsqueda lineal/binaria, analizando su eficiencia con la notación Big O.
+
+## Buenas Prácticas
+
+- [ ] Siempre usar `@""` (verbatim string) para patrones regex
+- [ ] Anclar patrones con `^` y `$` para evitar coincidencias parciales
+- [ ] Usar `?` después de `+` o `*` para hacer la regex lazy (no codiciosa)
+- [ ] Probar las regex con casos válidos e inválidos
+- [ ] No abusar de regex para validaciones simples — usar `.Contains()`, `.StartsWith()` cuando sea suficiente
+- [ ] No abusar de regex para validaciones simples
