@@ -6,23 +6,23 @@ UD03. Almacenamiento estático y cadenas. 1DAW. Curso 2026-2027.
 
 ## Contenidos
 
-1. [Introducción a los Arrays](01-introduccion-arrays.md)
-2. [Arrays Unidimensionales](02-arrays-unidimensionales.md)
-3. [Arrays Multidimensionales](03-arrays-multidimensionales.md)
-4. [Técnica de Doble Búfer](04-doble-bufer.md)
-5. [Cadenas de Texto (String)](05-cadenas-texto.md)
-6. [Expresiones Regulares (Regex)](06-expresiones-regulares.md)
-7. [Algoritmos de Ordenación y Búsqueda](07-ordenacion-busqueda.md)
-8. [Resumen y Conclusiones](08-resumen.md)
+1. [Introducción a los arrays](01-introduccion-arrays.md)
+2. [Arrays unidimensionales](02-arrays-unidimensionales.md)
+3. [Arrays multidimensionales](03-arrays-multidimensionales.md)
+4. [Técnica de doble búfer](04-doble-bufer.md)
+5. [Cadenas de texto (string)](05-cadenas-texto.md)
+6. [Expresiones regulares (Regex)](06-expresiones-regulares.md)
+7. [Algoritmos de ordenación y búsqueda](07-ordenacion-busqueda.md)
+8. [Resumen y conclusiones](08-resumen.md)
 
 ## Contenido en YouTube
 
 - [Resumen](https://youtu.be/wRtvkIRxh64)
-- [Arrays Unidimensionales](https://youtu.be/FsUalKrvYac)
-- [Arrays Multidimensionales y Matrices](https://youtu.be/KQHkaUYh_2Y)
-- [Cadenas de Texto y Expresiones Regulares](https://youtu.be/BQekKuG0R0c)
-- [Algoritmos de Ordenación y Búsqueda](https://youtu.be/yef8ero1MLk)
-- [Lista de Reproducción](https://www.youtube.com/playlist?list=PLK1PMlIrqj3c)
+- [Arrays unidimensionales](https://youtu.be/FsUalKrvYac)
+- [Arrays multidimensionales y matrices](https://youtu.be/KQHkaUYh_2Y)
+- [Cadenas de texto y expresiones regulares](https://youtu.be/BQekKuG0R0c)
+- [Algoritmos de ordenación y búsqueda](https://youtu.be/yef8ero1MLk)
+- [Lista de reproducción](https://www.youtube.com/playlist?list=PLK1PMlIrqj3c)
 
 ## Resultados de aprendizaje y criterios de evaluación
 
