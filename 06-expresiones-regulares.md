@@ -1,17 +1,17 @@
-- [6. Expresiones Regulares (`Regex`)](#6-expresiones-regulares-regex)
-  - [6.1. ¿Qué es una Expresión Regular?](#61-qué-es-una-expresión-regular)
-  - [6.2. Metacaracteres Esenciales](#62-metacaracteres-esenciales)
+- [6. Expresiones regulares (`Regex`)](#6-expresiones-regulares-regex)
+  - [6.1. ¿Qué es una expresión regular?](#61-qué-es-una-expresión-regular)
+  - [6.2. Metacaracteres esenciales](#62-metacaracteres-esenciales)
   - [6.3. Uso de Regex en C#](#63-uso-de-regex-en-c)
     - [6.3.1. Validación (`IsMatch`)](#631-validación-ismatch)
     - [6.3.2. Búsqueda (`Match` y `Matches`)](#632-búsqueda-match-y-matches)
-    - [6.3.3. Extracción de Datos](#633-extracción-de-datos)
+    - [6.3.3. Extracción de datos](#633-extracción-de-datos)
     - [6.3.4. Sustitución (`Replace`)](#634-sustitución-replace)
-  - [6.4. Tabla Maestra de Validaciones Comunes](#64-tabla-maestra-de-validaciones-comunes)
-  - [6.5. El Concepto de Codicia (Greediness)](#65-el-concepto-de-codicia-greediness)
+  - [6.4. Tabla maestra de validaciones comunes](#64-tabla-maestra-de-validaciones-comunes)
+  - [6.5. El concepto de codicia (Greediness)](#65-el-concepto-de-codicia-greediness)
 
 
 
-# 6. Expresiones Regulares (`Regex`)
+# 6. Expresiones regulares (`Regex`)
 
 > 💡 **Punto de partida:** ¿Alguna vez has tenido que validar si un email es correcto, si un teléfono tiene 9 dígitos o si un DNI tiene el formato adecuado? Hacerlo con `if` y `.Contains()` es tedioso y propenso a errores. Las **expresiones regulares** resuelven esto con un solo patrón.
 
@@ -24,7 +24,7 @@ En este punto aprenderás a crear patrones de búsqueda y validación de texto u
 - Usar `Regex` para validar, buscar, extraer y sustituir texto
 - Crear patrones comunes (email, teléfono, DNI, fecha)
 
-## 6.1. ¿Qué es una Expresión Regular?
+## 6.1. ¿Qué es una expresión regular?
 
 Una **expresión regular** (regex) es un **patrón de búsqueda** que describe un conjunto de cadenas de texto. Se usa para validar, buscar, extraer y sustituir texto de forma declarativa.
 
@@ -43,7 +43,7 @@ graph LR
 
 📌 **Ejemplo real:** Instagram usa expresiones regulares para validar usernames. Cuando escribes un nombre de usuario, la app verifica con una regex que solo contenga letras, números, puntos y guiones bajos, y que tenga entre 3 y 30 caracteres.
 
-## 6.2. Metacaracteres Esenciales
+## 6.2. Metacaracteres esenciales
 
 | Metacaracter | Significado | Ejemplo |
 | :--- | :--- | :--- |
@@ -106,7 +106,7 @@ foreach (Match m in todas)
     Console.WriteLine($"Encontrado: {m.Value}");
 ```
 
-### 6.3.3. Extracción de Datos (Grupos de Captura)
+### 6.3.3. Extracción de datos (grupos de captura)
 
 Los **paréntesis** `()` en una regex definen **grupos de captura**. Cada paréntesis captura una parte del texto y se accede a ella con `Groups[1]`, `Groups[2]`, etc. (el grupo 0 es la coincidencia completa).
 
@@ -140,7 +140,7 @@ string conMascara = Regex.Replace("612345678", @"(\d{3})(\d{3})(\d{3})", "$1-$2-
 Console.WriteLine(conMascara);  // "612-345-678"
 ```
 
-## 6.4. Tabla Maestra de Validaciones Comunes
+## 6.4. Tabla maestra de validaciones comunes
 
 | Objetivo | Patrón | Explicación |
 | :--- | :--- | :--- |
@@ -155,7 +155,7 @@ Console.WriteLine(conMascara);  // "612-345-678"
 
 📌 **Ejemplo real:** Amazon usa regex para validar direcciones de envío. Cuando escribes un código postal, la app verifica que tenga exactamente 5 dígitos antes de aceptarlo.
 
-## 6.5. El Concepto de Codicia (Greediness)
+## 6.5. El concepto de codicia (Greediness)
 
 Por defecto, los cuantificadores (`+`, `*`) son **codiciosos**: intentan capturar la mayor cantidad de texto posible.
 
@@ -190,7 +190,7 @@ Console.WriteLine(lazy);  // "<div>"
 
 En el siguiente punto veremos los algoritmos de ordenación y búsqueda: Burbuja, Selección, Inserción, Shell Sort, QuickSort y búsqueda lineal/binaria, analizando su eficiencia con la notación Big O.
 
-## Buenas Prácticas
+## Buenas prácticas
 
 - [ ] Siempre usar `@""` (verbatim string) para patrones regex
 - [ ] Anclar patrones con `^` y `$` para evitar coincidencias parciales

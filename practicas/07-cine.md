@@ -1,12 +1,12 @@
-# Práctica CINE-DAW: Gestión Modular de Sala de Cine
+# Práctica CINE-DAW: gestión modular de sala de cine
 
 **Instrucciones:** Implementa un programa en C# que gestione una sala de cine mediante matrices. El programa debe validar estrictamente todas las entradas del usuario. Recuerda: **primero el diseño en papel, luego la codificación**.
 
 ---
 
-## 1. Configuración Inicial
+## 1. Configuración inicial
 
-### 1.1. Parámetros de la Sala
+### 1.1. Parámetros de la sala
 
 La dimensión de la sala (`Filas:Columnas`) **debe intentarse leer primero** de los argumentos de línea de comandos. Si faltan o son inválidos, el programa inicia un **bucle de solicitud en consola**.
 
@@ -24,7 +24,7 @@ La dimensión de la sala (`Filas:Columnas`) **debe intentarse leer primero** de 
 | **Error de rango** | `3:5` | `ERROR: Rango inválido. Filas: [4-7], Columnas: [5-9].` |
 | **Éxito** | `5:8` | `Sala configurada: 5 filas x 8 columnas.` |
 
-### 1.2. Estados de una Butaca
+### 1.2. Estados de una butaca
 
 | Concepto | Código Interno | Símbolo | Precio |
 | :--- | :--- | :--- | :--- |
@@ -34,7 +34,7 @@ La dimensión de la sala (`Filas:Columnas`) **debe intentarse leer primero** de 
 
 Al iniciar, la sala debe estar toda `Libre`, con **1 a 3 butacas** elegidas aleatoriamente como `Fuera de Servicio`.
 
-## 2. Visualización y Coordenadas
+## 2. Visualización y coordenadas
 
 La sala se muestra con coordenadas **mixtas**: filas con letras (A, B, C...) y columnas con números (1, 2, 3...).
 
@@ -47,7 +47,7 @@ C  [L] [L] [O] [X] [L]
 
 Las operaciones de `Comprar` y `Devolver` solicitan la coordenada en formato **`Letra:Numero`** (ej: `B:3`). El programa valida formato y rango en un bucle de reintento.
 
-## 3. Menú Principal
+## 3. Menú principal
 
 | Opción | Título | Funcionalidad |
 | :--- | :--- | :--- |
@@ -62,7 +62,7 @@ Las operaciones de `Comprar` y `Devolver` solicitan la coordenada en formato **`
 - Comprar butaca ocupada: `ERROR: La butaca A:3 ya está OCUPADA o FUERA DE SERVICIO.`
 - Devolver butaca libre: `ERROR: La butaca B:1 no puede devolverse. No está OCUPADA.`
 
-## 4. Informe (Opción 5)
+## 4. Informe (opción 5)
 
 | Estadística | Cálculo |
 | :--- | :--- |

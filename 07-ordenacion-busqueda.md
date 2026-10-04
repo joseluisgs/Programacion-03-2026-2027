@@ -1,20 +1,20 @@
-- [7. Algoritmos de Ordenación y Búsqueda](#7-algoritmos-de-ordenación-y-búsqueda)
-  - [7.1. ¿Qué es la Notación Big O?](#71-qué-es-la-notación-big-o)
-  - [7.2. Algoritmos de Ordenación (Sorting)](#72-algoritmos-de-ordenación-sorting)
+- [7. Algoritmos de ordenación y búsqueda](#7-algoritmos-de-ordenación-y-búsqueda)
+  - [7.1. ¿Qué es la notación Big O?](#71-qué-es-la-notación-big-o)
+  - [7.2. Algoritmos de ordenación (Sorting)](#72-algoritmos-de-ordenación-sorting)
     - [7.2.1. Burbuja (Bubble Sort)](#721-burbuja-bubble-sort)
     - [7.2.2. Selección (Selection Sort)](#722-selección-selection-sort)
     - [7.2.3. Inserción (Insertion Sort)](#723-inserción-insertion-sort)
     - [7.2.4. Shell Sort](#724-shell-sort)
     - [7.2.5. QuickSort](#725-quicksort)
-  - [7.3. Algoritmos de Búsqueda (Searching)](#73-algoritmos-de-búsqueda-searching)
-    - [7.3.1. Búsqueda Lineal](#731-búsqueda-lineal)
-    - [7.3.2. Búsqueda Binaria](#732-búsqueda-binaria)
-  - [7.4. Tabla Comparativa de Complejidad](#74-tabla-comparativa-de-complejidad)
-  - [7.5. Cuándo Usar Cada Algoritmo](#75-cuándo-usar-cada-algoritmo)
+  - [7.3. Algoritmos de búsqueda (Searching)](#73-algoritmos-de-búsqueda-searching)
+    - [7.3.1. Búsqueda lineal](#731-búsqueda-lineal)
+    - [7.3.2. Búsqueda binaria](#732-búsqueda-binaria)
+  - [7.4. Tabla comparativa de complejidad](#74-tabla-comparativa-de-complejidad)
+  - [7.5. Cuándo usar cada algoritmo](#75-cuándo-usar-cada-algoritmo)
 
 
 
-# 7. Algoritmos de Ordenación y Búsqueda
+# 7. Algoritmos de ordenación y búsqueda
 
 > 💡 **Punto de partida:** ¿Alguna vez has abierto Netflix y has visto que las películas están ordenadas por "Más populares", "Estrenos recientes" o "Mi lista"? Detrás de ese orden hay algoritmos. Pero, ¿cuál es el mejor? ¿El más rápido siempre es el mejor?
 
@@ -27,7 +27,7 @@ En este punto aprenderás los algoritmos de ordenación más importantes (Burbuj
 - Implementar búsqueda lineal y binaria
 - Saber cuándo usar cada algoritmo según el contexto
 
-## 7.1. ¿Qué es la Notación Big O?
+## 7.1. ¿Qué es la notación Big O?
 
 Antes de ver algoritmos, necesitamos una forma de **comparar** cuán rápido es cada uno. La **notación Big O** describe cómo crece el tiempo de ejecución cuando aumentan los datos de entrada.
 
@@ -51,7 +51,7 @@ Antes de ver algoritmos, necesitamos una forma de **comparar** cuán rápido es 
 
 📌 **Ejemplo real:** Netflix usa algoritmos estables para ordenar tu lista de favoritos: si dos películas tienen la misma prioridad, mantiene el orden en que las añadiste.
 
-## 7.2. Algoritmos de Ordenación (Sorting)
+## 7.2. Algoritmos de ordenación (Sorting)
 
 De todos los algoritmos de ordenación, puedes visualizarlos interactivamente [aquí](https://www.cs.usfca.edu/~galles/visualization/Algorithms.html), [aquí](https://visualgo.net/en/sorting) y [aquí](https://algorithm-visualizer.org/).
 
@@ -308,9 +308,9 @@ int Partition(int[] arr, int bajo, int alto)
 
 > 💡 **Consejo:** En la práctica, los lenguajes modernos usan variantes optimizadas de QuickSort en sus métodos de ordenación estándar. No necesitas implementarlo a mano, pero entenderlo te ayuda a elegir el mejor algoritmo.
 
-## 7.3. Algoritmos de Búsqueda (Searching)
+## 7.3. Algoritmos de búsqueda (Searching)
 
-### 7.3.1. Búsqueda Lineal
+### 7.3.1. Búsqueda lineal
 
 **Idea:** Es como buscar una palabra en un diccionario **sin** usar el índice: abres la primera página, miras si está. Si no, pasas a la siguiente. Repites hasta encontrarla o llegar al final.
 
@@ -353,7 +353,7 @@ int BuscarLineal(int[] arr, int objetivo)
 | **Requiere ordenación** | ❌ No |
 | **Uso** | Arrays pequeños o no ordenados |
 
-### 7.3.2. Búsqueda Binaria
+### 7.3.2. Búsqueda binaria
 
 **Idea:** Es como buscar una palabra en un diccionario **usando** el índice: abres por la mitad. Si la palabra que buscas va antes, miras en la primera mitad. Si va después, en la segunda. Cada paso elimina la mitad de opciones.
 
@@ -407,7 +407,7 @@ int BuscarBinaria(int[] arr, int objetivo)
 > - **Búsqueda Lineal** = Revisar cada estantería una por una
 > - **Búsqueda Binaria** = Abrir el libro por la mitad y decidir si buscar en la primera o segunda parte
 
-## 7.4. Tabla Comparativa de Complejidad
+## 7.4. Tabla comparativa de complejidad
 
 | Algoritmo | Mejor Caso | Promedio | Peor Caso | Estable |
 | :--- | :---: | :---: | :---: | :---: |
@@ -421,7 +421,7 @@ int BuscarBinaria(int[] arr, int objetivo)
 
 > 📝 **Nota:** En C# puedes usar `Array.Sort(arr)` (usa Introsort, una variante de QuickSort) y `Array.BinarySearch(arr, valor)` (Búsqueda Binaria). En la práctica, usa estos métodos estándar en lugar de implementar los algoritmos a mano.
 
-## 7.5. Cuándo Usar Cada Algoritmo
+## 7.5. Cuándo usar cada algoritmo
 
 | Situación | Algoritmo Recomendado |
 | :--- | :--- |
@@ -450,7 +450,7 @@ int BuscarBinaria(int[] arr, int objetivo)
 
 En el siguiente punto cerraremos la unidad con un resumen completo: mapa conceptual, errores comunes, checklist de supervivencia y glosario de términos clave.
 
-## Buenas Prácticas
+## Buenas prácticas
 
 - [ ] Usar `Array.Sort()` y `Array.BinarySearch()` en producción (más optimizados)
 - [ ] Conocer la complejidad Big O de cada algoritmo

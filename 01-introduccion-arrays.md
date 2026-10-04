@@ -1,11 +1,11 @@
 - [1. Arrays. Introducción](#1-arrays-introducción)
-  - [1.1. Características Clave](#11-características-clave)
-  - [1.2. El Problema de la Indexación (Índice Cero vs. Índice Uno)](#12-el-problema-de-la-indexación-índice-cero-vs-índice-uno)
-    - [1.2.1. Indexación Basada en Cero](#121-indexación-basada-en-cero)
-    - [1.2.2. Indexación Basada en Uno](#122-indexación-basada-en-uno)
+  - [1.1. Características clave](#11-características-clave)
+  - [1.2. El problema de la indexación (índice cero vs. índice uno)](#12-el-problema-de-la-indexación-índice-cero-vs-índice-uno)
+    - [1.2.1. Indexación basada en cero](#121-indexación-basada-en-cero)
+    - [1.2.2. Indexación basada en uno](#122-indexación-basada-en-uno)
   - [1.3. Arrays en C#](#13-arrays-en-c)
     - [1.3.1. El primer array que ya estás usando: `string[] args`](#131-el-primer-array-que-ya-estás-usando-string-args)
-  - [1.4. El Secreto de la Velocidad: Localidad de Referencia](#14-el-secreto-de-la-velocidad-localidad-de-referencia)
+  - [1.4. El secreto de la velocidad: localidad de referencia](#14-el-secreto-de-la-velocidad-localidad-de-referencia)
 
 
 
@@ -22,7 +22,7 @@ En este punto aprenderás qué es un array, por qué es tan rápido, cómo se or
 - Comprender la ventaja de rendimiento de los arrays (localidad de referencia)
 - Conocer cuándo usar arrays frente a otras estructuras
 
-## 1.1. Características Clave
+## 1.1. Características clave
 
 Un **array** es una estructura de datos estática que almacena una colección ordenada de elementos del **mismo tipo**. Es como una cajonera: todos los cajones son del mismo tamaño y están pegados unos a otros.
 
@@ -50,11 +50,11 @@ graph LR
 
 📌 **Ejemplo real:** Spotify almacena tu lista de reproducción como un array de canciones. Cada canción tiene un índice (posición 0, 1, 2...) y todas son del mismo tipo. Cuando pulsas "siguiente", simplemente accede al siguiente índice.
 
-## 1.2. El Problema de la Indexación (Índice Cero vs. Índice Uno)
+## 1.2. El problema de la indexación (índice cero vs. índice uno)
 
 Uno de los principales problemas al trabajar con arrays es la **indexación**: ¿cómo se numeran las posiciones? ¿La primera posición es la 0 o la 1?
 
-### 1.2.1. Indexación Basada en Cero
+### 1.2.1. Indexación basada en cero
 
 El primer elemento está en el **índice 0**. Esta convención se basa en el cálculo directo de la dirección de memoria.
 
@@ -86,7 +86,7 @@ Donde:
 
 Este enfoque lo siguen C, C++, Java, JavaScript, Python, Kotlin y **C#**.
 
-### 1.2.2. Indexación Basada en Uno
+### 1.2.2. Indexación basada en uno
 
 En algunos lenguajes (Fortran, MATLAB, Lua, Pascal) el primer elemento está en el **índice 1**.
 
@@ -153,7 +153,7 @@ Entonces `args` contiene `{ "Hola", "Mundo" }` y `args.Length` es `2`.
 
 > 💡 **Consejo:** `string[] args` es tu primer contacto real con un array. Aprovéchalo para entender cómo se accede a los elementos por índice y cómo se recorre con `for`.
 
-## 1.4. El Secreto de la Velocidad: Localidad de Referencia
+## 1.4. El secreto de la velocidad: localidad de referencia
 
 ¿Por qué usamos arrays si son tan rígidos? Por el **hardware**. Al estar los datos contiguos en memoria, cuando el procesador lee `[0]`, el sistema carga también los siguientes en la **Memoria Caché**. El procesador carga datos en bloques: si accedes a datos cercanos, ya están en caché. Si saltas a posiciones lejanas, ese bloque ya no sirve y hay que volver a cargarlo desde la RAM, que es más lenta.
 
@@ -220,7 +220,7 @@ En el siguiente punto veremos cómo se crean y manipulan los arrays unidimension
 
 En el siguiente punto veremos cómo se crean y manipulan los arrays unidimensionales en C#: definición, creación, recorrido y paso por referencia.
 
-## Buenas Prácticas
+## Buenas prácticas
 
 - [ ] Usar arrays cuando conozcas el tamaño exacto y necesites acceso rápido por índice
 - [ ] Usar `List<T>` cuando necesites añadir/quitar elementos frecuentemente

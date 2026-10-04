@@ -1,4 +1,4 @@
-### **Cuestionario de Investigación y Desarrollo: Almacenamiento Estático y Cadenas en C#**
+### **Cuestionario de investigación y desarrollo: almacenamiento estático y cadenas en C#**
 
 **Instrucciones:** Lee cada pregunta con atención y proporciona una respuesta detallada, justificando tus afirmaciones con los conceptos aprendidos.
 

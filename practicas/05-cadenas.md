@@ -1,10 +1,10 @@
-# Batería de Ejercicios: Cadenas de Texto y Expresiones Regulares en C# 14
+# Batería de ejercicios: cadenas de texto y expresiones regulares en C# 14
 
 **Instrucciones:** Para cada ejercicio, implementa el código en C# usando Top-Level Statements. Puedes usar C# scripting (`dotnet run ejercicio.cs`) o crear un proyecto. Recuerda: **primero el diseño en papel, luego la codificación**.
 
 ---
 
-### Bloque I: Fundamentos de Cadenas (Ejercicios 1-8)
+### Bloque I: Fundamentos de cadenas (ejercicios 1-8)
 
 **Ejercicio 1: Ficha de Perfil de TikTok**
 Implementa un programa que pida al usuario nombre de usuario, biografía y correo. Muestra: longitud del nombre, si contiene arroba en la biografía, el nombre en mayúsculas y el correo en minúsculas.
@@ -32,7 +32,7 @@ Implementa un programa que pida un nombre de usuario. Aplique `.Trim()` para qui
 
 ---
 
-### Bloque II: Métodos de String (Ejercicios 9-16)
+### Bloque II: Métodos de string (ejercicios 9-16)
 
 **Ejercicio 9: Palabra Más Larga**
 Implementa un programa que, dada una frase, encuentre la **palabra de mayor longitud** usando `.Split()`.
@@ -60,7 +60,7 @@ Implementa el ejercicio del palíndromo pero usando `StringBuilder` para inverti
 
 ---
 
-### Bloque III: Juegos con Cadenas (Ejercicios 17-22)
+### Bloque III: Juegos con cadenas (ejercicios 17-22)
 
 **Ejercicio 17: Juego del Ahorcado**
 Implementa el juego del ahorcado: pide una palabra secreta y permite al jugador adivinar letras con un máximo de **7 intentos**. Muestra los aciertos y fallos.
@@ -115,7 +115,7 @@ Intento 6: L → ¡Enhorabuena! PALABRA (4 intentos restantes)
 
 ---
 
-### Bloque IV: Expresiones Regulares (Ejercicios 23-27)
+### Bloque IV: Expresiones regulares (ejercicios 23-27)
 
 **Ejercicio 23: Validación Numérica**
 Usa `Regex.IsMatch()` para comprobar que una cadena es un **número entero positivo** (solo dígitos, sin signo).
@@ -134,7 +134,7 @@ Implementa un módulo que, dado un texto, use `Regex` para extraer todas las **f
 
 ---
 
-### Bloque V: Rendimiento y Análisis (Ejercicios 28-30)
+### Bloque V: Rendimiento y análisis (ejercicios 28-30)
 
 **Ejercicio 28: Comparar Rendimiento: `+` vs `StringBuilder`**
 Implementa un programa que construya una cadena de 10.000 caracteres usando `+` y luego usando `StringBuilder`. Mide el tiempo de cada uno con `Stopwatch` y muestra la diferencia.

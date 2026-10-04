@@ -1,4 +1,4 @@
-# Práctica: The Walking DAW — Simulación de Propagación con Doble Búfer
+# Práctica: The Walking DAW — Simulación de propagación con doble búfer
 
 **Instrucciones:** Implementa en C# una simulación de propagación de un virus en una cuadrícula, usando la técnica de **Doble Búfer**. Recuerda: **primero el diseño en papel, luego la codificación**.
 
@@ -10,7 +10,7 @@ El IES Luis Vives era un faro de conocimiento, hasta que un error de compilació
 
 **Tú eres el último programador sano.** Tu misión: ejecutar la simulación que predecirá el destino del instituto.
 
-## 2. Estados de las Celdas
+## 2. Estados de las celdas
 
 La Matriz del Instituto se compone de celdas en uno de tres estados:
 
@@ -20,7 +20,7 @@ La Matriz del Instituto se compone de celdas en uno de tres estados:
 | **Persona Sana** | `S` | Alumno o profesor sano |
 | **Zona Libre** | `.` | Espacio vacío |
 
-## 3. Reglas de los Zombies del Código
+## 3. Reglas de los zombies del código
 
 Los ZC siguen estas reglas en cada ciclo:
 
@@ -28,7 +28,7 @@ Los ZC siguen estas reglas en cada ciclo:
 2. **Movimiento Adyacente:** Si sobrevive, un ZC se mueve a **una de las 8 zonas adyacentes** elegida al azar, **solo si está Libre**. Si no hay zonas libres, permanece quieto.
 3. **Contagio (`contagio:C`):** Después de moverse, el ZC intenta infectar a sus vecinos sanos. Si hay una Persona Sana adyacente, tiene una probabilidad del **C%** de ser infectada y convertirse en ZC en el siguiente ciclo.
 
-## 4. Reglas de las Personas Sanas
+## 4. Reglas de las personas sanas
 
 Las personas sanas también luchan por sobrevivir:
 
@@ -53,7 +53,7 @@ El programa se ejecuta desde la línea de comandos definiendo las condiciones in
 | **Muerte ZC** | `muerte` | `0-100` | Probabilidad (%) de que un ZC muera por ciclo |
 | **Matanza Sano** | `matar` | `0-100` | Probabilidad (%) de que un sano mate a un ZC adyacente |
 
-## 6. Condiciones de Finalización
+## 6. Condiciones de finalización
 
 La simulación termina cuando se cumple alguna de estas condiciones:
 
@@ -61,7 +61,7 @@ La simulación termina cuando se cumple alguna de estas condiciones:
 - **Victoria del Virus:** No quedan Personas Sanas.
 - **Límite de Tiempo:** Se alcanza el número máximo de ciclos.
 
-## 7. Resultado Final
+## 7. Resultado final
 
 El programa muestra:
 

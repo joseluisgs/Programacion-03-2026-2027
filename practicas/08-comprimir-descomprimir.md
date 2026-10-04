@@ -1,4 +1,4 @@
-# Práctica: Compresión y Descompresión de Arrays
+# Práctica: compresión y descompresión de arrays
 
 **Instrucciones:** Implementa dos funciones en C# para trabajar con arrays de números enteros (`int[]`). Recuerda: **primero el diseño en papel, luego la codificación**.
 
@@ -68,7 +68,7 @@ Comprimido:    1,10
 Descomprimido: 10
 ```
 
-## 3. Requisitos de Implementación
+## 3. Requisitos de implementación
 
 - Ambas funciones deben ser **genéricas**: funcionan con cualquier `int[]`.
 - La función `Comprimir` debe manejar arrays vacíos (devuelve array vacío).

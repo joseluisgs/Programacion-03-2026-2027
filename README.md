@@ -24,7 +24,7 @@ UD03. Almacenamiento estático y cadenas. 1DAW. Curso 2026-2027.
 - [Algoritmos de Ordenación y Búsqueda](https://youtu.be/yef8ero1MLk)
 - [Lista de Reproducción](https://www.youtube.com/playlist?list=PLK1PMlIrqj3c)
 
-## Resultados de Aprendizaje y Criterios de Evaluación
+## Resultados de aprendizaje y criterios de evaluación
 
 - RA 6: Escribe programas que manipulen información seleccionando y utilizando tipos avanzados de datos.
 

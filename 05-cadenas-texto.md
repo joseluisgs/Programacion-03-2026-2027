@@ -1,17 +1,17 @@
-- [5. Cadenas de Texto (`string`) y Manejo del Texto](#5-cadenas-de-texto-string-y-manejo-del-texto)
-  - [5.1. Definición, Inmutabilidad y Tipo de Referencia](#51-definición-inmutabilidad-y-tipo-de-referencia)
-  - [5.2. Acceso y Recorrido de Cadenas](#52-acceso-y-recorrido-de-cadenas)
-    - [5.2.1. Propiedad `Length` y Acceso por Índice](#521-propiedad-length-y-acceso-por-índice)
-    - [5.2.2. Recorrido con Bucles](#522-recorrido-con-bucles)
-  - [5.3. Métodos y Operadores Esenciales](#53-métodos-y-operadores-esenciales)
-  - [5.4. `StringBuilder`: Construcción Eficiente de Texto](#54-stringbuilder-construcción-eficiente-de-texto)
-    - [5.4.1. El Problema del Rendimiento (`+` vs. `StringBuilder`)](#541-el-problema-del-rendimiento--vs-stringbuilder)
-    - [5.4.2. Uso Correcto de `StringBuilder`](#542-uso-correcto-de-stringbuilder)
-  - [5.5. Curiosidad: String Interning (Pool de Cadenas)](#55-curiosidad-string-interning-pool-de-cadenas)
+- [5. Cadenas de texto (`string`) y manejo del texto](#5-cadenas-de-texto-string-y-manejo-del-texto)
+  - [5.1. Definición, inmutabilidad y tipo de referencia](#51-definición-inmutabilidad-y-tipo-de-referencia)
+  - [5.2. Acceso y recorrido de cadenas](#52-acceso-y-recorrido-de-cadenas)
+    - [5.2.1. Propiedad `Length` y acceso por índice](#521-propiedad-length-y-acceso-por-índice)
+    - [5.2.2. Recorrido con bucles](#522-recorrido-con-bucles)
+  - [5.3. Métodos y operadores esenciales](#53-métodos-y-operadores-esenciales)
+  - [5.4. `StringBuilder`: Construcción eficiente de texto](#54-stringbuilder-construcción-eficiente-de-texto)
+    - [5.4.1. El problema del rendimiento (`+` vs. `StringBuilder`)](#541-el-problema-del-rendimiento--vs-stringbuilder)
+    - [5.4.2. Uso correcto de `StringBuilder`](#542-uso-correcto-de-stringbuilder)
+  - [5.5. Curiosidad: String Interning (Pool de cadenas)](#55-curiosidad-string-interning-pool-de-cadenas)
 
 
 
-# 5. Cadenas de Texto (`string`) y Manejo del Texto
+# 5. Cadenas de texto (`string`) y manejo del texto
 
 > 💡 **Punto de partida:** ¿Alguna vez has copiado y pegado un texto largo en un editor y has notado que tarda? Eso es porque las cadenas de texto en C# son **inmutables**: cada vez que modificas una cadena, se crea una nueva en memoria. Entender esto es clave para escribir código eficiente.
 
@@ -24,7 +24,7 @@ En este punto aprenderás cómo funcionan las cadenas en C#, sus métodos esenci
 - Usar métodos esenciales (`Split`, `Join`, `Replace`, `Contains`, `Substring`)
 - Construir texto eficientemente con `StringBuilder`
 
-## 5.1. Definición, Inmutabilidad y Tipo de Referencia
+## 5.1. Definición, inmutabilidad y tipo de referencia
 
 Una **cadena** (`string`) en C# es una secuencia de caracteres. Es un **tipo de referencia** y, lo más importante, es **inmutable**: una vez creada, no puede modificarse.
 
@@ -46,9 +46,9 @@ Console.WriteLine(nuevo);     // "Mola" — es una nueva cadena
 
 📌 **Ejemplo real:** Instagram almacena los captions de las fotos como strings inmutables. Cuando editas un caption, la app no modifica el original — crea una nueva versión. Esto garantiza que los comentarios antiguos no se corrompan.
 
-## 5.2. Acceso y Recorrido de Cadenas
+## 5.2. Acceso y recorrido de cadenas
 
-### 5.2.1. Propiedad `Length` y Acceso por Índice
+### 5.2.1. Propiedad `Length` y acceso por índice
 
 Las cadenas funcionan como arrays de caracteres. Puedes acceder a cada carácter por su índice.
 
@@ -60,7 +60,7 @@ Console.WriteLine(nombre[0]);          // 'D'
 Console.WriteLine(nombre[nombre.Length - 1]);  // 'W'
 ```
 
-### 5.2.2. Recorrido con Bucles
+### 5.2.2. Recorrido con bucles
 
 ```csharp
 string mensaje = "Hola, DAW!";
@@ -88,7 +88,7 @@ string resultado = new string(caracteres);
 Console.WriteLine(resultado);  // "Hola"
 ```
 
-## 5.3. Métodos y Operadores Esenciales
+## 5.3. Métodos y operadores esenciales
 
 | Método | Descripción | Ejemplo |
 | :--- | :--- | :--- |
@@ -118,9 +118,9 @@ Console.WriteLine($"Posición @: {posicionArroba}");
 
 📌 **Ejemplo real:** Spotify usa `.Split()` para separar los artistas de una canción cuando tienen varios nombres. Si el campo es `"Artista1, Artista2, Artista3"`, el `.Split(',')` crea un array de 3 artistas que se muestran por separado.
 
-## 5.4. `StringBuilder`: Construcción Eficiente de Texto
+## 5.4. `StringBuilder`: Construcción eficiente de texto
 
-### 5.4.1. El Problema del Rendimiento (`+` vs. `StringBuilder`)
+### 5.4.1. El problema del rendimiento (`+` vs. `StringBuilder`)
 
 Como `string` es inmutable, cada concatenación con `+` crea una **nueva cadena**. En bucles largos, esto es extremadamente lento.
 
@@ -138,7 +138,7 @@ for (int i = 0; i < 1000; i++)
 }
 ```
 
-### 5.4.2. Uso Correcto de `StringBuilder`
+### 5.4.2. Uso correcto de `StringBuilder`
 
 ```csharp
 using System.Text;
@@ -163,7 +163,7 @@ Console.WriteLine($"Longitud: {resultado.Length}");
 
 📌 **Ejemplo real:** Los servidores de email (Gmail, Outlook) usan `StringBuilder` para construir los headers de miles de emails por segundo. Usar `+` sería tan lento que el servidor se colapsaría.
 
-## 5.5. Curiosidad: String Interning (Pool de Cadenas)
+## 5.5. Curiosidad: String Interning (Pool de cadenas)
 
 ¿Sabías que si creas dos variables con el mismo literal, C# las hace apuntar a la **misma dirección** de memoria?
 
@@ -194,7 +194,7 @@ Esto funciona porque `string` es inmutable: no hay riesgo de que un cambio en `a
 
 En el siguiente punto veremos las Expresiones Regulares (Regex): patrones de búsqueda y validación de texto, una herramienta poderosa para manipular cadenas de forma avanzada.
 
-## Buenas Prácticas
+## Buenas prácticas
 
 - [ ] Recordar que `string` es inmutable — cada cambio crea una nueva cadena
 - [ ] Usar `StringBuilder` cuando concatenes más de 3 veces en un bucle

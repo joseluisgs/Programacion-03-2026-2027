@@ -1,10 +1,10 @@
-# Batería de Ejercicios: Arrays Multidimensionales y Doble Búfer en C# 14
+# Batería de ejercicios: arrays multidimensionales y doble búfer en C# 14
 
 **Instrucciones:** Para cada ejercicio, implementa el código en C# usando Top-Level Statements. Puedes usar C# scripting (`dotnet run ejercicio.cs`) o crear un proyecto. Recuerda: **primero el diseño en papel, luego la codificación**.
 
 ---
 
-### Bloque I: Fundamentos y Análisis (Ejercicios 1-8)
+### Bloque I: Fundamentos y análisis (ejercicios 1-8)
 
 **Ejercicio 1: Ficha de un Tablero de Videojuego**
 Implementa un programa que declare una matriz rectangular `int[4,5]` representando un inventario (4 categorías × 5 objetos). Rellénala con datos, muéstrala formateada y calcula el total de cada categoría (fila) y de cada objeto (columna).
@@ -32,7 +32,7 @@ Implementa un programa que, dada una matriz, cuente cuántas veces aparece cada 
 
 ---
 
-### Bloque II: Transformaciones y Lógica (Ejercicios 9-14)
+### Bloque II: Transformaciones y lógica (ejercicios 9-14)
 
 **Ejercicio 9: Transposición de Matriz**
 Implementa una función para **transponer** una matriz (intercambiar filas por columnas) guardando el resultado en una matriz auxiliar. Muestra la original y la transpuesta.
@@ -54,7 +54,7 @@ Implementa la **multiplicación** de dos matrices cuadradas `int[3,3]`. Recuerda
 
 ---
 
-### Bloque III: Juegos de Tablero (Ejercicios 15-20)
+### Bloque III: Juegos de tablero (ejercicios 15-20)
 
 **Ejercicio 15: Buscaminas (Matriz)**
 Implementa el Buscaminas con una matriz `int[8,8]`. El ordenador coloca 10 minas aleatoriamente y genera las pistas (cada casilla sin mina indica cuántas minas hay en sus 8 adyacentes).
@@ -89,7 +89,7 @@ Implementa un programa que verifique si una matriz `int[9,9]` es un Sudoku váli
 
 ---
 
-### Bloque IV: Simulación con Doble Búfer (Ejercicios 21-25)
+### Bloque IV: Simulación con doble búfer (ejercicios 21-25)
 
 **Ejercicio 21: Simulación de Onda (Piedra en el Lago — Versión A)**
 Simula el lanzamiento de una piedra a un lago (matriz cuadrada inicializada a 0). La ola se **expande en todas las direcciones** (horizontales, verticales y diagonales) desde el punto de impacto. En cada paso, cada celda adyacente recibe la intensidad de su vecina decreciendo en 1 unidad. La simulación se detiene cuando el lago vuelve a estar en calma (todo a cero). Ejemplo visual con matriz 7×7 e impacto en (3,3) con intensidad 4:
@@ -135,7 +135,7 @@ Simula un recorrido por un bosque `int[15,15]` durante 20 ciclos. Estados del bo
 
 ---
 
-### Bloque V: Álgebra Lineal y Análisis (Ejercicios 26-30)
+### Bloque V: Álgebra lineal y análisis (ejercicios 26-30)
 
 **Ejercicio 26: Suma y Resta de Matrices**
 Implementa un programa que, dadas dos matrices cuadradas de hasta `int[3,3]`, calcule su **suma** y su **resta**.

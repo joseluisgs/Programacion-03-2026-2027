@@ -1,10 +1,10 @@
-# Batería de Ejercicios: Arrays Unidimensionales en C# 14
+# Batería de ejercicios: arrays unidimensionales en C# 14
 
 **Instrucciones:** Para cada ejercicio, implementa el código en C# usando Top-Level Statements. Puedes usar C# scripting (`dotnet run ejercicio.cs`) o crear un proyecto. Recuerda: **primero el diseño en papel, luego la codificación**.
 
 ---
 
-### Bloque I: Fundamentos y Análisis (Ejercicios 1-8)
+### Bloque I: Fundamentos y análisis (ejercicios 1-8)
 
 **Ejercicio 1: Ficha de Tu Playlist**
 Implementa un programa que declare un array de 5 canciones favoritas (`string[]`). Muestra la lista numerada, luego pide al usuario una posición y muestra qué canción hay en esa posición. Incluye manejo de `IndexOutOfRangeException`.
@@ -32,7 +32,7 @@ Implementa el algoritmo de selección sobre un array de 10 números. En cada pas
 
 ---
 
-### Bloque II: Manipulación y Lógica (Ejercicios 9-16)
+### Bloque II: Manipulación y lógica (ejercicios 9-16)
 
 **Ejercicio 9: Suma y Media de Posiciones Pares/Impares**
 Implementa un programa que calcule la suma y media de los elementos en posiciones pares y la suma y media de los elementos en posiciones impares de un array.
@@ -60,7 +60,7 @@ Implementa un programa que reciba dos arrays: tareas prioritarias (`string[]`) y
 
 ---
 
-### Bloque III: Paso por Referencia y Clonación (Ejercicios 17-22)
+### Bloque III: Paso por referencia y clonación (ejercicios 17-22)
 
 **Ejercicio 17: Paso por Referencia vs. Copia**
 Implementa un programa que demuestre la diferencia entre pasar un array **sin modificador** (se modifica el original) y pasar con **`ref`** (se puede reasignar el array completo).
@@ -90,7 +90,7 @@ Sin inspeccionar: 3
 
 ---
 
-### Bloque IV: Juegos y Simulación (Ejercicios 23-27)
+### Bloque IV: Juegos y simulación (ejercicios 23-27)
 
 **Ejercicio 23: ¿Dónde está la Mosca?**
 Implementa el juego de la mosca con un array de 20 casillas (índices 0-19). La mosca está oculta en una posición aleatoria. El jugador introduce una posición y el programa responde: "¡Tocada!" si acierta, "¡Casi! La mosca revolotea" si está en una casilla adyacente (la casilla ±1), o "Agua" si está lejos. Cuando la mosca revolotea, se mueve a una posición adyacente aleatoria. Ejemplo de partida:
@@ -149,7 +149,7 @@ Paso 7: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
 ---
 
-### Bloque V: Rendimiento y Análisis (Ejercicios 28-30)
+### Bloque V: Rendimiento y análisis (ejercicios 28-30)
 
 **Ejercicio 28: Comparar Rendimiento de Búsquedas**
 Implementa un programa que genere un array de 10.000 números ordenados. Realiza una búsqueda lineal y una binaria del mismo elemento. Muestra cuántas comparaciones hace cada una.

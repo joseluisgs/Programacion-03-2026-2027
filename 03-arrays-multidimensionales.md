@@ -1,25 +1,25 @@
-- [3. Arrays Multidimensionales](#3-arrays-multidimensionales)
-  - [3.1. Conceptos Fundamentales](#31-conceptos-fundamentales)
-    - [3.1.1. Tipos de Matrices](#311-tipos-de-matrices)
-    - [3.1.2. Mecanismos de Almacenamiento](#312-mecanismos-de-almacenamiento)
-      - [Matriz Rectangular: Un bloque contiguo](#matriz-rectangular-un-bloque-contiguo)
-      - [Matriz Escalonada: Un array de arrays](#matriz-escalonada-un-array-de-arrays)
+- [3. Arrays multidimensionales](#3-arrays-multidimensionales)
+  - [3.1. Conceptos fundamentales](#31-conceptos-fundamentales)
+    - [3.1.1. Tipos de matrices](#311-tipos-de-matrices)
+    - [3.1.2. Mecanismos de almacenamiento](#312-mecanismos-de-almacenamiento)
+      - [Matriz rectangular: un bloque contiguo](#matriz-rectangular-un-bloque-contiguo)
+      - [Matriz escalonada: un array de arrays](#matriz-escalonada-un-array-de-arrays)
       - [Comparación rápida](#comparación-rápida)
-  - [3.2. Declaración y Creación de Matrices](#32-declaración-y-creación-de-matrices)
-    - [3.2.1. Matrices Rectangulares](#321-matrices-rectangulares)
-    - [3.2.2. Matrices Escalonadas (Jagged)](#322-matrices-escalonadas-jagged)
+  - [3.2. Declaración y creación de matrices](#32-declaración-y-creación-de-matrices)
+    - [3.2.1. Matrices rectangulares](#321-matrices-rectangulares)
+    - [3.2.2. Matrices escalonadas (Jagged)](#322-matrices-escalonadas-jagged)
   - [3.3. Recorrido con `for` y `foreach`](#33-recorrido-con-for-y-foreach)
-    - [3.3.1. Bucle `for` (Acceso por Índice)](#331-bucle-for-acceso-por-índice)
-    - [3.3.2. Bucle `foreach` (Lectura)](#332-bucle-foreach-lectura)
-  - [3.4. Identidad, Igualdad y Clonación en Matrices](#34-identidad-igualdad-y-clonación-en-matrices)
-  - [3.5. Paso por Referencia y Devolución de Matrices](#35-paso-por-referencia-y-devolución-de-matrices)
-  - [3.6. Copias, Clonación Profunda y Cambio de Tamaño](#36-copias-clonación-profunda-y-cambio-de-tamaño)
-  - [3.7. Rendimiento: El Orden de los Índices](#37-rendimiento-el-orden-de-los-índices)
-  - [3.8. Matrices de Structs y Enums](#38-matrices-de-structs-y-enums)
+    - [3.3.1. Bucle `for` (acceso por índice)](#331-bucle-for-acceso-por-índice)
+    - [3.3.2. Bucle `foreach` (lectura)](#332-bucle-foreach-lectura)
+  - [3.4. Identidad, igualdad y clonación en matrices](#34-identidad-igualdad-y-clonación-en-matrices)
+  - [3.5. Paso por referencia y devolución de matrices](#35-paso-por-referencia-y-devolución-de-matrices)
+  - [3.6. Copias, clonación profunda y cambio de tamaño](#36-copias-clonación-profunda-y-cambio-de-tamaño)
+  - [3.7. Rendimiento: el orden de los índices](#37-rendimiento-el-orden-de-los-índices)
+  - [3.8. Matrices de structs y enums](#38-matrices-de-structs-y-enums)
 
 
 
-# 3. Arrays Multidimensionales
+# 3. Arrays multidimensionales
 
 > 💡 **Punto de partida:** ¿Alguna vez has visto un tablero de ajedrez? Tiene 8 filas y 8 columnas — 64 casillas. Para acceder a una casilla concreta, necesitas dos coordenadas: fila y columna. Eso es exactamente una **matriz**: un array con dos o más dimensiones.
 
@@ -32,20 +32,20 @@ En este punto aprenderás a crear, recorrer y manipular matrices en C#: rectangu
 - Entender la diferencia entre copia superficial y copia profunda
 - Conocer el impacto del orden de los índices en el rendimiento
 
-## 3.1. Conceptos Fundamentales
+## 3.1. Conceptos fundamentales
 
-### 3.1.1. Tipos de Matrices
+### 3.1.1. Tipos de matrices
 
 | Tipo | Descripción | Ejemplo |
 | :--- | :--- | :--- |
 | **Rectangular** | Todas las filas tienen el mismo número de columnas | `int[3, 4]` — 3 filas × 4 columnas |
 | **Escalonada (Jagged)** | Cada fila puede tener distinto número de columnas | `int[3][]` — 3 filas de tamaño variable |
 
-### 3.1.2. Mecanismos de Almacenamiento
+### 3.1.2. Mecanismos de almacenamiento
 
 ¿Por qué importa saber cómo se guardan las matrices en memoria? Porque afecta directamente a la **velocidad** de acceso y a la **forma de clonar**. Vamos a ver las dos opciones que ofrece C#.
 
-#### Matriz Rectangular: Un bloque contiguo
+#### Matriz rectangular: un bloque contiguo
 
 Una matriz rectangular (`int[3, 4]`) se almacena como **un único bloque continuo** en memoria, como si fuera un vector largo. Los elementos se guardan **por filas**: primero la fila 0 completa, luego la fila 1, etc.
 
@@ -78,7 +78,7 @@ Memoria:  [1000][1004][1008][1012][1016][1020][1024][1028][1032][1036][1040][104
 
 > 📝 **Nota:** Esto es exactamente igual que en un array unidimensional, pero con un paso extra: multiplicar `i × NumColumnas` para "saltar" filas completas. La fórmula de unidimensionales era `Base + (índice × Tamaño)`, aquí el "índice lineal" es `i × NumColumnas + j`.
 
-#### Matriz Escalonada: Un array de arrays
+#### Matriz escalonada: un array de arrays
 
 Una matriz escalonada (`int[3][]`) es **un array que contiene otros arrays**. Cada fila es un array independiente que se almacena en un sitio diferente de memoria.
 
@@ -132,9 +132,9 @@ graph LR
     style J3 fill:#4CAF50,color:#fff
 ```
 
-## 3.2. Declaración y Creación de Matrices
+## 3.2. Declaración y creación de matrices
 
-### 3.2.1. Matrices Rectangulares
+### 3.2.1. Matrices rectangulares
 
 ```csharp
 // ✅ Creación con tamaño fijo (valores por defecto: 0)
@@ -156,7 +156,7 @@ Console.WriteLine($"Filas: {notas.GetLength(0)}");    // 3
 Console.WriteLine($"Columnas: {notas.GetLength(1)}");  // 4
 ```
 
-### 3.2.2. Matrices Escalonadas (Jagged)
+### 3.2.2. Matrices escalonadas (Jagged)
 
 ```csharp
 // ✅ Matriz escalonada: cada fila tiene distinto tamaño
@@ -177,7 +177,7 @@ Console.WriteLine(escalonada[1][2]);  // 5 (fila 1, columna 2)
 
 ## 3.3. Recorrido con `for` y `foreach`
 
-### 3.3.1. Bucle `for` (Acceso por Índice)
+### 3.3.1. Bucle `for` (acceso por índice)
 
 ```mermaid
 graph TD
@@ -215,7 +215,7 @@ for (int i = 0; i < matriz.GetLength(0); i++)
 // 4 5 6
 ```
 
-### 3.3.2. Bucle `foreach` (Lectura)
+### 3.3.2. Bucle `foreach` (lectura)
 
 ```csharp
 int[,] matriz = { { 1, 2, 3 }, { 4, 5, 6 } };
@@ -230,7 +230,7 @@ foreach (int elemento in matriz)
 
 > ⚠️ **Advertencia:** Con `foreach` no puedes modificar los elementos ni conocer la posición (índice). Solo sirve para lectura. Si necesitas modificar, usa `for`.
 
-## 3.4. Identidad, Igualdad y Clonación en Matrices
+## 3.4. Identidad, igualdad y clonación en matrices
 
 Al igual que los arrays unidimensionales, las matrices son **tipos de referencia**. `matrizB = matrizA` crea un alias, no una copia.
 
@@ -264,7 +264,7 @@ bool SonIguales(int[,] x, int[,] y)
 
 > 🔧 **Truco mnemotecico:** Piensa en las matrices como un edificio de apartamentos. `matrizB = matrizA` es como darle a alguien la llave del **mismo** apartamento. Si mueve los muebles, tú también lo ves.
 
-## 3.5. Paso por Referencia y Devolución de Matrices
+## 3.5. Paso por referencia y devolución de matrices
 
 Las matrices se pasan a funciones por referencia. Cualquier modificación dentro de la función afecta al original.
 
@@ -291,9 +291,9 @@ int[,] nueva = CrearMatriz(3, 4);
 Console.WriteLine($"{nueva.GetLength(0)}x{nueva.GetLength(1)}");  // 3x4
 ```
 
-## 3.6. Copias, Clonación Profunda y Cambio de Tamaño
+## 3.6. Copias, clonación profunda y cambio de tamaño
 
-### Copia Superficial vs. Copia Profunda
+### Copia superficial vs. copia profunda
 
 | Tipo de Copia | Mecanismo | Resultado |
 | :--- | :--- | :--- |
@@ -330,7 +330,7 @@ int[][] ClonarMatriz(int[][] origen)
 }
 ```
 
-### Cambio de Tamaño
+### Cambio de tamaño
 
 El tamaño de una matriz es **inmutable**. Para "cambiarlo", debes crear una nueva y copiar.
 
@@ -351,7 +351,7 @@ for (int i = 0; i < Original.GetLength(0); i++)
 
 📌 **Ejemplo real:** Cuando escalas una imagen en Photoshop, internamente el programa crea una nueva matriz de píxeles con el tamaño ampliado y copia los valores originales, rellenando los huecos con interpolación.
 
-## 3.7. Rendimiento: El Orden de los Índices
+## 3.7. Rendimiento: el orden de los índices
 
 ### Row-major vs Column-major
 
@@ -493,11 +493,11 @@ Column-major (Fortran, MATLAB, R, Julia):
 
 > 📌 **Ejemplo real:** Netflix procesa millones de calificaciones en una matriz `usuarios × películas`. Si recorre por usuarios (filas), cada bloque de caché contiene las 5-10 calificaciones de ese usuario → rápido. Si recorre por películas (columnas), salta de usuario en usuario → lento. Por eso los motores de recomendación optimizan el orden de recorrido.
 
-### Matrices de Structs y Enums
+### Matrices de structs y enums
 
 Al igual que los arrays unidimensionales, las matrices pueden almacenar **structs** y **enums**.
 
-#### Matriz de Enums
+#### Matriz de enums
 
 ```csharp
 enum EstadoCasilla { Vacía, Árbol, Ardiente }
@@ -518,7 +518,7 @@ for (int f = 0; f < 4; f++)
 }
 ```
 
-#### Matriz de Structs
+#### Matriz de structs
 
 ```csharp
 struct Alumno
@@ -563,7 +563,7 @@ for (int f = 0; f < notas.GetLength(0); f++)
 
 En el siguiente punto veremos la técnica del Doble Búfer (Double Buffering), un patrón de diseño que utiliza arrays para evitar el parpadeo en animaciones y juegos.
 
-## Buenas Prácticas
+## Buenas prácticas
 
 - [ ] Usar matrices rectangulares cuando todas las filas tengan el mismo tamaño
 - [ ] Usar matrices escalonadas cuando las filas tengan tamaños diferentes

@@ -1,25 +1,25 @@
-- [2. Arrays Unidimensionales](#2-arrays-unidimensionales)
-  - [2.1. Definición, Creación y Valores por Defecto](#21-definición-creación-y-valores-por-defecto)
-    - [2.1.1. Inmutabilidad del Tamaño y Creación](#211-inmutabilidad-del-tamaño-y-creación)
-    - [2.1.2. Valores por Defecto y Gestión de la Nulidad](#212-valores-por-defecto-y-gestión-de-la-nulidad)
-  - [2.2. Obtener el Tamaño con `.Length` y Recorrido](#22-obtener-el-tamaño-con-length-y-recorrido)
+- [2. Arrays unidimensionales](#2-arrays-unidimensionales)
+  - [2.1. Definición, creación y valores por defecto](#21-definición-creación-y-valores-por-defecto)
+    - [2.1.1. Inmutabilidad del tamaño y creación](#211-inmutabilidad-del-tamaño-y-creación)
+    - [2.1.2. Valores por defecto y gestión de la nulidad](#212-valores-por-defecto-y-gestión-de-la-nulidad)
+  - [2.2. Obtener el tamaño con `.Length` y recorrido](#22-obtener-el-tamaño-con-length-y-recorrido)
     - [2.2.1. `array.Length`](#221-arraylength)
-    - [2.2.2. Recorrido con Bucle `for`](#222-recorrido-con-bucle-for)
-    - [2.2.3. Recorrido con Bucle `foreach`](#223-recorrido-con-bucle-foreach)
-    - [2.2.4. Recorrido con Filtrado de Nulos](#224-recorrido-con-filtrado-de-nulos)
-  - [2.3. Paso por Referencia, Devolución y Clonación](#23-paso-por-referencia-devolución-y-clonación)
-    - [2.3.1. Arrays y el Paso por Referencia](#231-arrays-y-el-paso-por-referencia)
-    - [2.3.2. Clonación Manual para Romper la Referencia](#232-clonación-manual-para-romper-la-referencia)
-    - [2.3.3. Devolución de Arrays](#233-devolución-de-arrays)
-  - [2.4. Parámetros Variables (`params`) y Modificador `in`](#24-parámetros-variables-params-y-modificador-in)
-  - [2.5. Identidad vs. Igualdad (Referencia vs. Contenido)](#25-identidad-vs-igualdad-referencia-vs-contenido)
-  - [2.6. Copias, Clonación y la Inmutabilidad del Tamaño](#26-copias-clonación-y-la-inmutabilidad-del-tamaño)
-  - [2.7. La Trampa del Alias](#27-la-trampa-del-alias)
-  - [2.8. Arrays de Tipos Compuestos](#28-arrays-de-tipos-compuestos)
+    - [2.2.2. Recorrido con bucle `for`](#222-recorrido-con-bucle-for)
+    - [2.2.3. Recorrido con bucle `foreach`](#223-recorrido-con-bucle-foreach)
+    - [2.2.4. Recorrido con filtrado de nulos](#224-recorrido-con-filtrado-de-nulos)
+  - [2.3. Paso por referencia, devolución y clonación](#23-paso-por-referencia-devolución-y-clonación)
+    - [2.3.1. Arrays y el paso por referencia](#231-arrays-y-el-paso-por-referencia)
+    - [2.3.2. Clonación manual para romper la referencia](#232-clonación-manual-para-romper-la-referencia)
+    - [2.3.3. Devolución de arrays](#233-devolución-de-arrays)
+  - [2.4. Parámetros variables (`params`) y modificador `in`](#24-parámetros-variables-params-y-modificador-in)
+  - [2.5. Identidad vs. igualdad (referencia vs. contenido)](#25-identidad-vs-igualdad-referencia-vs-contenido)
+  - [2.6. Copias, clonación y la inmutabilidad del tamaño](#26-copias-clonación-y-la-inmutabilidad-del-tamaño)
+  - [2.7. La trampa del alias](#27-la-trampa-del-alias)
+  - [2.8. Arrays de tipos compuestos](#28-arrays-de-tipos-compuestos)
 
 
 
-# 2. Arrays Unidimensionales
+# 2. Arrays unidimensionales
 
 > 💡 **Punto de partida:** Cuando abres tu lista de reproducción de Spotify, ¿te has fijado en que cada canción tiene un número de posición? La canción 0, la 1, la 2... Eso es un array: una lista ordenada donde cada elemento tiene una posición fija. Pero, ¿cómo se crea? ¿Cómo se recorre? ¿Qué pasa si quieres hacer una copia?
 
@@ -34,9 +34,9 @@ En este punto aprenderás a crear, recorrer y manipular arrays unidimensionales 
 - Diferenciar identidad (`==`) de igualdad (contenido)
 - Usar los modificadores `params` e `in`
 
-## 2.1. Definición, Creación y Valores por Defecto
+## 2.1. Definición, creación y valores por defecto
 
-### 2.1.1. Inmutabilidad del Tamaño y Creación
+### 2.1.1. Inmutabilidad del tamaño y creación
 
 | Característica | Detalle | Sintaxis C# |
 | :--- | :--- | :--- |
@@ -57,7 +57,7 @@ double[] precios = new double[] { 9.99, 19.99, 29.99 };
 
 ![array](./images/arrays.jpg)
 
-### 2.1.2. Valores por Defecto y Gestión de la Nulidad
+### 2.1.2. Valores por defecto y gestión de la nulidad
 
 Cuando creas un array solo con su tamaño, C# lo rellena automáticamente:
 
@@ -91,7 +91,7 @@ else
 
 📌 **Ejemplo real:** Netflix usa arrays de perfiles. Si un usuario solo tiene 2 perfiles pero el array tiene 5 posiciones, las 3 restantes son `null`. Cuando intentas acceder a un perfil vacío, la app verifica el `null` antes de mostrar datos.
 
-## 2.2. Obtener el Tamaño con `.Length` y Recorrido
+## 2.2. Obtener el tamaño con `.Length` y recorrido
 
 ### 2.2.1. `array.Length`
 
@@ -105,7 +105,7 @@ Console.WriteLine($"Último índice: {colores.Length - 1}");  // 2
 
 > 💡 **Consejo:** El último elemento siempre está en `array.Length - 1`. Si accedes a `array[array.Length]`, obtienes `IndexOutOfRangeException`.
 
-### 2.2.2. Recorrido con Bucle `for`
+### 2.2.2. Recorrido con bucle `for`
 
 El bucle `for` se usa cuando necesitas **modificar** elementos o conocer el **índice** actual.
 
@@ -139,7 +139,7 @@ for (int i = 0; i < calificaciones.Length; i++)
 
 📌 **Ejemplo real:** YouTube usa un bucle `for` para cargar los 50 primeros comentarios de un vídeo. Cada comentario se accede por su índice y se muestra en pantalla.
 
-### 2.2.3. Recorrido con Bucle `foreach`
+### 2.2.3. Recorrido con bucle `foreach`
 
 El `foreach` se usa cuando solo necesitas **leer** los valores. Es más seguro porque no puedes equivocarte con el índice.
 
@@ -158,7 +158,7 @@ foreach (string dia in diasSemana)
 | `for` | Necesitas modificar o conocer el índice | Acceso directo por posición |
 | `foreach` | Solo necesitas leer cada elemento | Más seguro y legible |
 
-### 2.2.4. Recorrido con Filtrado de Nulos
+### 2.2.4. Recorrido con filtrado de nulos
 
 Para arrays de tipos anulables, debes verificar `null` antes de usar cada elemento.
 
@@ -183,9 +183,9 @@ foreach (string? nombre in nombres)
 }
 ```
 
-## 2.3. Paso por Referencia, Devolución y Clonación
+## 2.3. Paso por referencia, devolución y clonación
 
-### 2.3.1. Arrays y el Paso por Referencia
+### 2.3.1. Arrays y el paso por referencia
 
 Los arrays en C# son **tipos de referencia**: la variable no contiene los datos, sino una **dirección de memoria** donde están. Esto significa que, al pasar un array a un método, se pasa la dirección (no se copian los elementos). Por eso puedes modificar los elementos dentro del método y se reflejan fuera. Pero cuidado: esto es diferente de usar `ref` (que verás más abajo).
 
@@ -219,7 +219,7 @@ Console.WriteLine(arrayOriginal[0]);  // 999 — ¡También cambió!
 
 📌 **Ejemplo real:** Cuando editas una canción en una playlist de Spotify, la app modifica el array directamente. No crea una copia porque sería lento e ineficiente.
 
-### 2.3.2. Clonación Manual para Romper la Referencia
+### 2.3.2. Clonación manual para romper la referencia
 
 Para obtener un array **completamente independiente**, debes crear uno nuevo y copiar elemento por elemento (**copia profunda**).
 
@@ -242,7 +242,7 @@ Console.WriteLine(arrayA[0]);    // 10 — A no cambia
 Console.WriteLine(arrayClon[0]); // 500 — C es independiente
 ```
 
-### 2.3.3. Devolución de Arrays
+### 2.3.3. Devolución de arrays
 
 Una función que devuelve un array retorna la **referencia**. La variable que recibe el retorno apunta al mismo objeto.
 
@@ -272,7 +272,7 @@ Console.WriteLine(miArray.Length);  // 10
 > Console.WriteLine($"Suma: {total}");  // 60
 > ```
 
-## 2.4. Parámetros Variables (`params`) y Modificador `in`
+## 2.4. Parámetros variables (`params`) y modificador `in`
 
 El modificador **`params`** permite a una función aceptar un número variable de argumentos. Internamente, el compilador los convierte en un **array**.
 
@@ -292,7 +292,7 @@ Console.WriteLine(SumarTodos(1, 2, 3));          // 6
 Console.WriteLine(SumarTodos(10, 20, 30, 40));   // 100
 ```
 
-### El Modificador `in` (Solo Lectura)
+### El modificador `in` (solo lectura)
 
 El modificador `in` pasa un array por referencia pero **prohíbe modificarlo** dentro de la función. Ideal para arrays grandes donde solo necesitas leer.
 
@@ -318,7 +318,7 @@ Console.WriteLine(SumarElementos(in datos));  // 60
 | `ref` | Elementos sí, reasignar **sí** | Referencia directa | Cuando el método debe poder reemplazar el array completo |
 | `in` | **No** | Referencia (solo lectura) | Arrays grandes, solo lectura |
 
-## 2.5. Identidad vs. Igualdad (Referencia vs. Contenido)
+## 2.5. Identidad vs. igualdad (referencia vs. contenido)
 
 | Concepto | Significado | Operador en C# |
 | :--- | :--- | :--- |
@@ -347,7 +347,7 @@ Console.WriteLine(SonIguales(arrayA, arrayB));      // true (mismo contenido)
 
 > 🔧 **Truco mnemotecico:** `==` comprueba si son la **misma persona** (misma dirección). `SonIguales` comprueba si son **gemelos** (mismo contenido pero distinta persona).
 
-## 2.6. Copias, Clonación y la Inmutabilidad del Tamaño
+## 2.6. Copias, clonación y la inmutabilidad del tamaño
 
 La propiedad `.Length` es de **solo lectura**. No puedes cambiar el tamaño de un array existente. Si necesitas más espacio, debes crear uno nuevo y copiar.
 
@@ -377,7 +377,7 @@ for (int i = 0; i < arrayAntiguo.Length; i++)
 Console.WriteLine(string.Join(", ", arrayNuevo));
 ```
 
-## 2.7. La Trampa del Alias
+## 2.7. La trampa del alias
 
 Un error muy común es pensar que al hacer `int[] b = a` has creado una copia. En realidad, has creado un **alias** — dos nombres para el mismo array.
 
@@ -459,11 +459,11 @@ if (numeros != null)
 int total = numeros?.Length ?? 0;
 ```
 
-### Arrays de Tipos Compuestos
+### Arrays de tipos compuestos
 
 Los arrays no solo almacenan `int`, `string` o `bool`. También puedes guardar **tuplas**, **enums** y **structs** en un array.
 
-#### Arrays de Tuplas
+#### Arrays de tuplas
 
 ```csharp
 // Array de tuplas con nombre
@@ -479,7 +479,7 @@ for (int i = 0; i < alumnos.Length; i++)
     Console.WriteLine($"{alumnos[i].nombre}: {alumnos[i].nota}");
 ```
 
-#### Arrays de Enums
+#### Arrays de enums
 
 ```csharp
 enum DiaSemana { Lunes, Martes, Miercoles, Jueves, Viernes, Sabado, Domingo }
@@ -504,7 +504,7 @@ for (int i = 0; i < semana.Length; i++)
 }
 ```
 
-#### Arrays de Structs
+#### Arrays de structs
 
 ```csharp
 struct Alumno
@@ -559,7 +559,7 @@ Alumno[] clase2 =
 
 En el siguiente punto veremos cómo funcionan los arrays multidimensionales (matrices): su creación, recorrido y las diferencias clave con los unidimensionales.
 
-## Buenas Prácticas
+## Buenas prácticas
 
 - [ ] Usar `for` cuando necesites modificar o conocer el índice
 - [ ] Usar `foreach` cuando solo necesites leer los valores

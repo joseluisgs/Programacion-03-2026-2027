@@ -1,24 +1,24 @@
-- [8. Resumen y Conclusiones UD03](#8-resumen-y-conclusiones-ud03)
-  - [8.1. Mapa Conceptual de la Unidad](#81-mapa-conceptual-de-la-unidad)
-  - [8.2. Conceptos Clave](#82-conceptos-clave)
-    - [Introducción a los Arrays](#introducción-a-los-arrays)
-    - [Arrays Unidimensionales](#arrays-unidimensionales)
-    - [Arrays Multidimensionales](#arrays-multidimensionales)
-    - [Doble Búfer](#doble-búfer)
-    - [Cadenas de Texto](#cadenas-de-texto)
-    - [Expresiones Regulares](#expresiones-regulares)
-    - [Algoritmos de Ordenación y Búsqueda](#algoritmos-de-ordenación-y-búsqueda)
-  - [8.3. Herramientas y Perfiles](#83-herramientas-y-perfiles)
-  - [8.4. Errores Comunes a Evitar](#84-errores-comunes-a-evitar)
-  - [8.5. Checklist de Supervivencia](#85-checklist-de-supervivencia)
-  - [8.6. Glosario de Términos](#86-glosario-de-términos)
-  - [8.7. Ejercicios de Repaso](#87-ejercicios-de-repaso)
+- [8. Resumen y conclusiones UD03](#8-resumen-y-conclusiones-ud03)
+  - [8.1. Mapa conceptual de la unidad](#81-mapa-conceptual-de-la-unidad)
+  - [8.2. Conceptos clave](#82-conceptos-clave)
+    - [Introducción a los arrays](#introducción-a-los-arrays)
+    - [Arrays unidimensionales](#arrays-unidimensionales)
+    - [Arrays multidimensionales](#arrays-multidimensionales)
+    - [Doble búfer](#doble-búfer)
+    - [Cadenas de texto](#cadenas-de-texto)
+    - [Expresiones regulares](#expresiones-regulares)
+    - [Algoritmos de ordenación y búsqueda](#algoritmos-de-ordenación-y-búsqueda)
+  - [8.3. Herramientas y perfiles](#83-herramientas-y-perfiles)
+  - [8.4. Errores comunes a evitar](#84-errores-comunes-a-evitar)
+  - [8.5. Checklist de supervivencia](#85-checklist-de-supervivencia)
+  - [8.6. Glosario de términos](#86-glosario-de-términos)
+  - [8.7. Ejercicios de repaso](#87-ejercicios-de-repaso)
   - [8.8. ¿Qué viene después?](#88-qué-viene-después)
-  - [8.9. Mapa de Conexiones entre Temas](#89-mapa-de-conexiones-entre-temas)
+  - [8.9. Mapa de conexiones entre temas](#89-mapa-de-conexiones-entre-temas)
 
 
 
-# 8. Resumen y Conclusiones UD03
+# 8. Resumen y conclusiones UD03
 
 > 💡 **Punto de partida:** Has pasado de manejar variables individuales a manipular colecciones enteras de datos. Has aprendido a almacenar, recorrer, ordenar, buscar y validar información. Estas son las bases sobre las que se construye toda la programación real.
 
@@ -28,7 +28,7 @@
 - Consolidar el vocabulario técnico
 - Tener una referencia rápida para el examen
 
-## 8.1. Mapa Conceptual de la Unidad
+## 8.1. Mapa conceptual de la unidad
 
 ```mermaid
 graph TD
@@ -86,9 +86,9 @@ graph TD
     style RE3 fill:#607D8B,color:#fff
 ```
 
-## 8.2. Conceptos Clave
+## 8.2. Conceptos clave
 
-### Introducción a los Arrays
+### Introducción a los arrays
 
 - **Array:** Estructura de datos estática, elementos del mismo tipo, tamaño fijo
 - **Indexación basada en cero:** Primer elemento en índice 0 (C#, Java, Python)
@@ -98,7 +98,7 @@ graph TD
 
 📌 **Ejemplo real:** Spotify almacena tu lista de reproducción como un array de canciones. Cada canción tiene un índice y todas son del mismo tipo.
 
-### Arrays Unidimensionales
+### Arrays unidimensionales
 
 - **Creación:** `int[] arr = new int[5];` o `int[] arr = { 1, 2, 3 };`
 - **Valores por defecto:** Numéricos → `0`, bool → `false`, string → `null`
@@ -114,7 +114,7 @@ graph TD
 
 📌 **Ejemplo real:** YouTube usa un bucle `for` para cargar los 50 primeros comentarios de un vídeo.
 
-### Arrays Multidimensionales
+### Arrays multidimensionales
 
 - **Rectangular:** `int[filas, columnas]` — todas las filas igual tamaño
 - **Escalonada:** `int[filas][]` — filas de tamaño variable
@@ -125,7 +125,7 @@ graph TD
 
 📌 **Ejemplo real:** Un tablero de Battleship es una matriz `char[10,10]` donde cada posición contiene `'Agua'`, `'Barco'` o `'Disparo'`.
 
-### Doble Búfer
+### Doble búfer
 
 - **Front Buffer:** El que se muestra en pantalla
 - **Back Buffer:** El que se está preparando
@@ -134,7 +134,7 @@ graph TD
 
 📌 **Ejemplo real:** Netflix usa Doble Búfer al reproducir vídeo. Mientras ves el frame actual, el siguiente se descarga en el Back Buffer.
 
-### Cadenas de Texto
+### Cadenas de texto
 
 - **Inmutabilidad:** `string` no puede modificarse — cada cambio crea una nueva
 - **Acceso por índice:** `cadena[i]` devuelve el carácter en posición i
@@ -145,7 +145,7 @@ graph TD
 
 📌 **Ejemplo real:** Spotify usa `.Split()` para separar los artistas de una canción cuando tienen varios nombres.
 
-### Expresiones Regulares
+### Expresiones regulares
 
 - **Regex:** Patrón de búsqueda y validación de texto
 - **Metacaracteres:** `\d`, `\w`, `+`, `*`, `^`, `$`, `[]`
@@ -157,7 +157,7 @@ graph TD
 
 📌 **Ejemplo real:** Instagram usa regex para validar usernames — solo letras, números, puntos y guiones bajos, entre 3 y 30 caracteres.
 
-### Algoritmos de Ordenación y Búsqueda
+### Algoritmos de ordenación y búsqueda
 
 > 📝 **Nota:** Un algoritmo es **estable** si mantiene el orden original de los elementos que tienen el mismo valor. Por ejemplo, si dos películas tienen rating 5 y la primera aparece antes, después de ordenar sigue estando antes.
 
@@ -173,20 +173,20 @@ graph TD
 
 📌 **Ejemplo real:** Netflix usa Búsqueda Binaria sobre títulos ordenados. Con millones de películas, $O(\log n)$ es mucho más rápido que $O(n)$.
 
-## 8.3. Herramientas y Perfiles
+## 8.3. Herramientas y perfiles
 
-### IDE y Depuración
+### IDE y depuración
 
 - **JetBrains Rider:** IDE principal para C#. Inspección de arrays, breakpoints condicionales, vista de memoria
 - **`Array.Sort()`:** Usa Introsort (variante de QuickSort) — úsalo en lugar de implementar a mano
 - **`Array.BinarySearch()`:** Búsqueda Binaria integrada
 
-### Paquetes Útiles
+### Paquetes útiles
 
 - **`System.Text.StringBuilder`:** Para construir texto eficientemente (viene con .NET)
 - **`System.Text.RegularExpressions`:** Para Regex (viene con .NET)
 
-### Comandos Útiles
+### Comandos útiles
 
 ```bash
 # Compilar
@@ -199,7 +199,7 @@ dotnet run
 dotnet run archivo.cs
 ```
 
-## 8.4. Errores Comunes a Evitar
+## 8.4. Errores comunes a evitar
 
 | Error | Por qué está mal | Cómo evitarlo |
 | :--- | :--- | :--- |
@@ -213,7 +213,7 @@ dotnet run archivo.cs
 | **Regex sin `^` y `$`** | Permite basura antes/después | Siempre anclar con `^` y `$` |
 | **Clonar solo array exterior en escalonadas** | Filas compartidas — dependencia parcial | Clonar cada fila manualmente |
 
-## 8.5. Checklist de Supervivencia
+## 8.5. Checklist de supervivencia
 
 Antes de dar por cerrado el tema, asegúrate de poder responder **SÍ** a estas preguntas:
 
@@ -236,7 +236,7 @@ Antes de dar por cerrado el tema, asegúrate de poder responder **SÍ** a estas 
 > - **`ref`** = **R**eferencia → puedes modificar
 > - **`in`** = **I**nmutable → solo lectura
 
-## 8.6. Glosario de Términos
+## 8.6. Glosario de términos
 
 | Término | Definición |
 | :--- | :--- |
@@ -265,7 +265,7 @@ Antes de dar por cerrado el tema, asegúrate de poder responder **SÍ** a estas 
 | **Búsqueda Lineal** | Recorre todo el array — $O(n)$ |
 | **Búsqueda Binaria** | Divide por la mitad — $O(\log n)$, requiere ordenación |
 
-## 8.7. Ejercicios de Repaso
+## 8.7. Ejercicios de repaso
 
 1. **Crea un array** de 10 enteros, rellénalo con los números del 1 al 10 y muéstralo por consola
 2. **Invierte un array** sin crear uno nuevo (usa intercambio de posiciones)
@@ -291,7 +291,7 @@ En la **UD 04: Programación Orientada a Objetos** aprenderás a organizar el c�
 | Cadenas y Regex | Validación de datos en objetos |
 | Ordenación y búsqueda | Encontrar y ordenar objetos en colecciones |
 
-## 8.9. Mapa de Conexiones entre Temas
+## 8.9. Mapa de conexiones entre temas
 
 ```mermaid
 graph LR
@@ -318,7 +318,7 @@ graph LR
     style UD11 fill:#607D8B,color:#fff
 ```
 
-## Buenas Prácticas
+## Buenas prácticas
 
 - [ ] Repasar los conceptos clave antes de empezar la práctica
 - [ ] Seguir el patrón Análisis → Diseño → Codificación

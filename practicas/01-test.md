@@ -1,18 +1,18 @@
-- [Práctica 1: Test de Conocimientos](#práctica-1-test-de-conocimientos)
-  - [Bloque 1: Arrays — Introducción y Unidimensionales (Preguntas 1-12)](#bloque-1-arrays--introducción-y-unidimensionales-preguntas-1-12)
-  - [Bloque 2: Arrays Multidimensionales y Doble Búfer (Preguntas 13-25)](#bloque-2-arrays-multidimensionales-y-doble-búfer-preguntas-13-25)
-  - [Bloque 3: Cadenas de Texto (Preguntas 26-36)](#bloque-3-cadenas-de-texto-preguntas-26-36)
-  - [Bloque 4: Expresiones Regulares (Preguntas 37-41)](#bloque-4-expresiones-regulares-preguntas-37-41)
-  - [Bloque 5: Algoritmos de Ordenación y Búsqueda (Preguntas 42-50)](#bloque-5-algoritmos-de-ordenación-y-búsqueda-preguntas-42-50)
+- [Práctica 1: Test de conocimientos](#práctica-1-test-de-conocimientos)
+  - [Bloque 1: Arrays — Introducción y unidimensionales (preguntas 1-12)](#bloque-1-arrays--introducción-y-unidimensionales-preguntas-1-12)
+  - [Bloque 2: Arrays multidimensionales y doble búfer (preguntas 13-25)](#bloque-2-arrays-multidimensionales-y-doble-búfer-preguntas-13-25)
+  - [Bloque 3: Cadenas de texto (preguntas 26-36)](#bloque-3-cadenas-de-texto-preguntas-26-36)
+  - [Bloque 4: Expresiones regulares (preguntas 37-41)](#bloque-4-expresiones-regulares-preguntas-37-41)
+  - [Bloque 5: Algoritmos de ordenación y búsqueda (preguntas 42-50)](#bloque-5-algoritmos-de-ordenación-y-búsqueda-preguntas-42-50)
 
 
-# Práctica 1: Test de Conocimientos
+# Práctica 1: Test de conocimientos
 
 **Instrucciones:** Lee atentamente cada pregunta y selecciona la opción que consideres correcta.
 
 ---
 
-### Bloque 1: Arrays — Introducción y Unidimensionales (Preguntas 1-12)
+### Bloque 1: Arrays — Introducción y unidimensionales (preguntas 1-12)
 
 1.  **¿Cuál de las siguientes NO es una característica clave de los arrays en C#?**
     a) Contigüidad en memoria.
@@ -88,7 +88,7 @@
 
 ---
 
-### Bloque 2: Arrays Multidimensionales y Doble Búfer (Preguntas 13-25)
+### Bloque 2: Arrays multidimensionales y doble búfer (preguntas 13-25)
 
 13. **En un array bidimensional (matriz) en C#, ¿cuántos índices se necesitan para identificar un elemento?**
     a) Uno (la posición lineal).
@@ -170,7 +170,7 @@
 
 ---
 
-### Bloque 3: Cadenas de Texto (Preguntas 26-36)
+### Bloque 3: Cadenas de texto (preguntas 26-36)
 
 26. **¿Qué implica la inmutabilidad de las cadenas de texto en C#?**
     a) Que la cadena original se modifica en memoria.
@@ -240,7 +240,7 @@
 
 ---
 
-### Bloque 4: Expresiones Regulares (Preguntas 37-41)
+### Bloque 4: Expresiones regulares (preguntas 37-41)
 
 37. **¿Qué es una expresión regular (regex)?**
     a) Una función para concatenar strings de forma eficiente.
@@ -274,7 +274,7 @@
 
 ---
 
-### Bloque 5: Algoritmos de Ordenación y Búsqueda (Preguntas 42-50)
+### Bloque 5: Algoritmos de ordenación y búsqueda (preguntas 42-50)
 
 42. **¿Qué significado tiene que un algoritmo sea "estable"?**
     a) Que siempre tiene la misma complejidad.

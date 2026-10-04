@@ -1,10 +1,10 @@
-# Práctica FMM (Forest-Fire Model): Algoritmos y Matrices
+# Práctica FMM (Forest-Fire Model): algoritmos y matrices
 
 **Instrucciones:** Implementa el Modelo FFM (Forest-Fire Model) en C# usando Top-Level Statements. Aplica obligatoriamente la técnica de **Doble Búfer** para el manejo consistente de las matrices. Recuerda: **primero el diseño en papel, luego la codificación**.
 
 ---
 
-## 1. El Modelo FFM: Reglas de Evolución
+## 1. El modelo FFM: reglas de evolución
 
 El sistema se basa en una cuadrícula de celdas que pueden tener tres estados. La evolución en el tiempo viene determinada por las siguientes cuatro reglas, aplicadas **simultáneamente** a cada celda:
 
@@ -13,9 +13,9 @@ El sistema se basa en una cuadrícula de celdas que pueden tener tres estados. L
 3. **Árbol → Ardiendo (Espontáneo):** Un árbol comienza a arder con una probabilidad `PARDER` incluso si no tiene ningún vecino ardiendo.
 4. **Vacía → Árbol:** Un árbol brota en un espacio vacío con una probabilidad `PCRECER`.
 
-## 2. Especificaciones Técnicas y Constantes
+## 2. Especificaciones técnicas y constantes
 
-### 2.1. Estados y Constantes
+### 2.1. Estados y constantes
 
 | Estado | Símbolo de Impresión | Constante en C# |
 | :--- | :--- | :--- |
@@ -30,12 +30,12 @@ El sistema se basa en una cuadrícula de celdas que pueden tener tres estados. L
 | `TIEMPO_MAX` | `60` | Duración máxima de la simulación en segundos |
 | `FILAS` / `COLUMNAS` | `20` | Dimensión de la cuadrícula |
 
-### 2.2. Parámetros Iniciales
+### 2.2. Parámetros iniciales
 
 - **Tamaño de la Cuadrícula:** Matriz `int[20,20]`.
 - **Árboles Iniciales:** El porcentaje de celdas con estado `ARBOL` debe ser **aleatorio**, entre el **30% y el 80%** del total.
 
-## 3. Requerimientos de Implementación
+## 3. Requerimientos de implementación
 
 La solución debe garantizar la **consistencia de datos** en cada paso utilizando **Doble Búfer**: `frontBuffer` (lectura/visualización) y `backBuffer` (escritura/cálculo).
 
@@ -47,7 +47,7 @@ La solución debe garantizar la **consistencia de datos** en cada paso utilizand
 | `step` | Realiza un paso: LEE de frontBuffer, ESCRIBE en backBuffer |
 | `printMatrix` | Muestra el estado actual del frontBuffer con los caracteres definidos |
 
-### 3.1. Estructura del Programa Principal
+### 3.1. Estructura del programa principal
 
 1. **Inicialización:** Crear frontBuffer y clonarlo para backBuffer.
 2. **Control de Tiempo:** Bucle `while` con duración máxima de 60 segundos.
@@ -55,7 +55,7 @@ La solución debe garantizar la **consistencia de datos** en cada paso utilizand
 4. **Swap:** Intercambiar referencias de frontBuffer y backBuffer (operación O(1)).
 5. **Pausa:** `Thread.Sleep(1000)` entre iteraciones.
 
-## 4. Informe Final
+## 4. Informe final
 
 El programa debe calcular y reportar:
 

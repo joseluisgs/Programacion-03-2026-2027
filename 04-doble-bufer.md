@@ -1,14 +1,14 @@
-- [4. Doble Búfer (Double Buffering)](#4-doble-búfer-double-buffering)
-  - [4.1. Teoría de la Técnica](#41-teoría-de-la-técnica)
-  - [4.2. La Analogía del Pintor](#42-la-analogía-del-pintor)
-  - [4.3. Mecanismo de Intercambio (Swap)](#43-mecanismo-de-intercambio-swap)
-  - [4.4. Aplicación Didáctica: Propagación de Estado](#44-aplicación-didáctica-propagación-de-estado)
-  - [4.5. ¿Por qué es vital en Desarrollo Web? El Problema del Tearing](#45-por-qué-es-vital-en-desarrollo-web-el-problema-del-tearing)
+- [4. Doble búfer (Double Buffering)](#4-doble-búfer-double-buffering)
+  - [4.1. Teoría de la técnica](#41-teoría-de-la-técnica)
+  - [4.2. La analogía del pintor](#42-la-analogía-del-pintor)
+  - [4.3. Mecanismo de intercambio (Swap)](#43-mecanismo-de-intercambio-swap)
+  - [4.4. Aplicación didáctica: propagación de estado](#44-aplicación-didáctica-propagación-de-estado)
+  - [4.5. ¿Por qué es vital en desarrollo web? El problema del Tearing](#45-por-qué-es-vital-en-desarrollo-web-el-problema-del-tearing)
   - [4.6. Código en C#](#46-código-en-c)
 
 
 
-# 4. Doble Búfer (Double Buffering)
+# 4. Doble búfer (Double Buffering)
 
 > 💡 **Punto de partida:** ¿Alguna vez has jugado a un videojuego y has notado que la imagen se ve "rota" o parpadea? Eso es el **tearing**: el monitor muestra parte de un frame antiguo y parte de uno nuevo al mismo tiempo. La solución es una técnica llamada Doble Búfer.
 
@@ -20,7 +20,7 @@ En este punto aprenderás qué es el Doble Búfer, cómo funciona el mecanismo d
 - Comprender el mecanismo de Swap (intercambio de referencias)
 - Conocer la aplicación en desarrollo web y videojuegos
 
-## 4.1. Teoría de la Técnica
+## 4.1. Teoría de la técnica
 
 El **Doble Búfer** es un patrón de diseño que utiliza **dos arrays** (búferes) para evitar el parpadeo. Mientras se muestra un búfer en pantalla, se prepara el siguiente en segundo plano.
 
@@ -31,7 +31,7 @@ El **Doble Búfer** es un patrón de diseño que utiliza **dos arrays** (búfere
 
 Cuando el Back Buffer está listo, se **intercambian** (swap) y el Back pasa a ser Front, y viceversa.
 
-## 4.2. La Analogía del Pintor
+## 4.2. La analogía del pintor
 
 > 💡 **Analogía:** Imagina un pintor que trabaja con **dos lienzos**. Mientras el público mira el Lienzo A (terminado), el pintor trabaja en el Lienzo B (preparando la siguiente escena). Cuando B está listo, los intercambia: el público ve B y el pintor empieza a trabajar en A de nuevo.
 
@@ -54,7 +54,7 @@ graph LR
 
 📌 **Ejemplo real:** Netflix usa Doble Búfer al reproducir vídeo. Mientras ves el frame actual (Front Buffer), el siguiente frame se descarga y prepara en el Back Buffer. Cuando llega el momento, se intercambian y la reproducción es fluida sin cortes.
 
-## 4.3. Mecanismo de Intercambio (Swap)
+## 4.3. Mecanismo de intercambio (Swap)
 
 El Swap **no copia datos** — solo intercambia las **referencias** de los dos búferes. Por eso es constante — tiempo $O(1)$, sin importar el tamaño del array (ver Punto 7).
 
@@ -81,7 +81,7 @@ Console.WriteLine($"Back: [{string.Join(", ", back)}]");
 
 > ⚠️ **Advertencia:** Si en lugar de Swap haces una **copia** de los datos (`Array.Copy`), la operación pasa de $O(1)$ a $O(n)$ — mucho más lenta. El Swap es la clave de la eficiencia.
 
-## 4.4. Aplicación Didáctica: Propagación de Estado
+## 4.4. Aplicación didáctica: propagación de estado
 
 El Doble Búfer se usa para simular la **propagación de estado**: calcular el siguiente estado basándose en el actual, sin modificarlo mientras se calcula.
 
@@ -102,7 +102,7 @@ for (int i = 1; i < actual.Length - 1; i++)
 (actual, siguiente) = (siguiente, actual);
 ```
 
-## 4.5. ¿Por qué es vital en Desarrollo Web? El Problema del Tearing
+## 4.5. ¿Por qué es vital en desarrollo web? El problema del Tearing
 
 Sin Doble Búfer, el navegador dibuja la página directamente en el buffer visible. Si el usuario hace scroll mientras se está dibujando, ve una imagen **a medio pintar** (tearing).
 
@@ -155,7 +155,7 @@ for (int frame = 0; frame < 5; frame++)
 
 En el siguiente punto veremos las cadenas de texto en C#: su inmutabilidad, métodos esenciales y cómo construir textos eficientemente con `StringBuilder`.
 
-## Buenas Prácticas
+## Buenas prácticas
 
 - [ ] Usar Swap (intercambio de referencias) en lugar de copiar datos
 - [ ] Calcular el siguiente estado basándose en el actual, sin modificarlo
