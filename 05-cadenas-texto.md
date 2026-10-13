@@ -62,6 +62,8 @@ Console.WriteLine(nombre[nombre.Length - 1]);  // 'W'
 
 ### 5.2.2. Recorrido con bucles
 
+Un string se puede recorrer como si fuera un array de chars. Aquí tienes las dos formas, con cuándo conviene cada una:
+
 ```csharp
 string mensaje = "Hola, DAW!";
 
@@ -139,6 +141,8 @@ for (int i = 0; i < 1000; i++)
 ```
 
 ### 5.4.2. Uso correcto de `StringBuilder`
+
+La alternativa rápida: `StringBuilder` mantiene un buffer interno y va añadiendo sin crear una cadena nueva en cada vuelta:
 
 ```csharp
 using System.Text;

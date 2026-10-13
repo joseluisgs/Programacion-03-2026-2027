@@ -465,6 +465,8 @@ Los arrays no solo almacenan `int`, `string` o `bool`. También puedes guardar *
 
 #### Arrays de tuplas
 
+Un array de tuplas guarda registros completos sin definir ninguna clase. Decláralo, inicialízalo y recórrelo:
+
 ```csharp
 // Array de tuplas con nombre
 (string nombre, int nota)[] alumnos = 
@@ -480,6 +482,8 @@ for (int i = 0; i < alumnos.Length; i++)
 ```
 
 #### Arrays de enums
+
+Un array de enums es la forma natural de guardar una colección de días, colores o estados. Fíjate en el recorrido y en la búsqueda secuencial:
 
 ```csharp
 enum DiaSemana { Lunes, Martes, Miercoles, Jueves, Viernes, Sabado, Domingo }
@@ -505,6 +509,8 @@ for (int i = 0; i < semana.Length; i++)
 ```
 
 #### Arrays de structs
+
+Con los structs, el array se convierte en una tabla de verdad: cada posición es un registro con todos sus campos:
 
 ```csharp
 struct Alumno

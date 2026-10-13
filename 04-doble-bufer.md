@@ -115,6 +115,8 @@ Con Doble Búfer:
 
 ## 4.6. Código en C#
 
+Llega la parte que más engancha: simular la propagación de una onda en una matriz con doble búfer. Dos arrays alternan el papel de pantalla y de trabajo:
+
 ```csharp
 // ✅ Doble Búfer completo: propagación de onda
 int[] front = { 0, 0, 0, 0, 0, 0, 0, 0 };

@@ -79,6 +79,8 @@ Console.WriteLine(Regex.IsMatch("1234", patron));  // false
 
 ### 6.3.1. Validación (`IsMatch`)
 
+Lo primero de todo: validar. `IsMatch` responde true o false a la pregunta "¿este texto cumple el patrón?", como en el email de este ejemplo:
+
 ```csharp
 using System.Text.RegularExpressions;
 
@@ -91,6 +93,8 @@ Console.WriteLine($"'{email}' es válido: {esValido}");  // true
 ```
 
 ### 6.3.2. Búsqueda (`Match` y `Matches`)
+
+Cuando el texto sí cumple el patrón y quieres sacar lo encontrado, `Match` te devuelve la primera coincidencia y `Matches`, todas:
 
 ```csharp
 string texto = "Mi número es 612-345-678 y otro es 911-222-333";

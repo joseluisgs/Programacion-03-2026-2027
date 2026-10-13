@@ -188,6 +188,8 @@ graph TD
 
 ### Comandos útiles
 
+Para que te los lleves de bolsillo, los comandos del día a día con los que se compila y se ejecuta todo lo de esta unidad:
+
 ```bash
 # Compilar
 dotnet build

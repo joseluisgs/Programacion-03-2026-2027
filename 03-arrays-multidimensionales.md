@@ -136,6 +136,8 @@ graph LR
 
 ### 3.2.1. Matrices rectangulares
 
+La matriz rectangular es la más usada: todas las filas tienen el mismo número de columnas. Este bloque cubre creación, inicialización, acceso y dimensiones:
+
 ```csharp
 // ✅ Creación con tamaño fijo (valores por defecto: 0)
 int[,] matriz = new int[3, 4];  // 3 filas × 4 columnas
@@ -157,6 +159,8 @@ Console.WriteLine($"Columnas: {notas.GetLength(1)}");  // 4
 ```
 
 ### 3.2.2. Matrices escalonadas (Jagged)
+
+Cuando cada fila necesita un tamaño distinto, se usa una matriz escalonada: un array de arrays donde cada fila se crea por separado:
 
 ```csharp
 // ✅ Matriz escalonada: cada fila tiene distinto tamaño
@@ -217,6 +221,8 @@ for (int i = 0; i < matriz.GetLength(0); i++)
 
 ### 3.3.2. Bucle `foreach` (lectura)
 
+El `foreach` recorre la matriz entera en orden de filas sin que te preocupes de los índices, pero solo sirve para leer:
+
 ```csharp
 int[,] matriz = { { 1, 2, 3 }, { 4, 5, 6 } };
 
@@ -243,6 +249,8 @@ Console.WriteLine(original[0, 0]);  // 999 — ¡También cambió!
 ```
 
 ### El problema de `==` con matrices
+
+El `==` de las matrices no compara contenido, compara referencias: dos matrices idénticas dato a dato siguen siendo distintas para C#:
 
 ```csharp
 // ❌ == NO compara matrices por contenido
@@ -474,6 +482,8 @@ graph LR
 
 ### Fórmulas de acceso
 
+Detrás de cada acceso `[i, j]` hay una operación aritmética. Estas son las fórmulas de dirección según el orden de memoria del lenguaje:
+
 ```
 Row-major (C#, Java, Python, C++):
   Dirección(A[i,j]) = Base + (i × NumColumnas + j) × Tamaño
@@ -499,6 +509,8 @@ Al igual que los arrays unidimensionales, las matrices pueden almacenar **struct
 
 #### Matriz de enums
 
+Un tablero es la matriz de enums por excelencia: cada casilla guarda un estado del dominio:
+
 ```csharp
 enum EstadoCasilla { Vacía, Árbol, Ardiente }
 
@@ -519,6 +531,8 @@ for (int f = 0; f < 4; f++)
 ```
 
 #### Matriz de structs
+
+Y una matriz de structs se comporta como una tabla con filas y columnas: cada celda es un registro completo:
 
 ```csharp
 struct Alumno
