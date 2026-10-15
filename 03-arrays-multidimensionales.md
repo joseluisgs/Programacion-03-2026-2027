@@ -123,8 +123,6 @@ graph LR
         J0 --> J2
         J0 --> J3
     end
-    style RECT fill:#2196F3,color:#fff
-    style JAGGED fill:#FF9800,color:#fff
     style R fill:#4CAF50,color:#fff
     style J0 fill:#607D8B,color:#fff
     style J1 fill:#4CAF50,color:#fff
@@ -393,8 +391,6 @@ graph TB
     R0 -->|"Fila 0 completa"| M0
     R1 -->|"Fila 1 completa"| M4
     R2 -->|"Fila 2 completa"| M8
-    style MATRIZ fill:#2196F3,color:#fff
-    style MEMORIA fill:#4CAF50,color:#fff
     style M0 fill:#FF9800,color:#fff
     style M1 fill:#FF9800,color:#fff
     style M2 fill:#FF9800,color:#fff
@@ -470,9 +466,6 @@ graph LR
         direction LR
         C0["notas[0,0]=5 → HIT"] --> C1["notas[1,0]=9 → MISS"] --> C2["notas[2,0]=6 → MISS"]
     end
-    style CACHE fill:#607D8B,color:#fff
-    style ACCESO_FILAS fill:#4CAF50,color:#fff
-    style ACCESO_COLS fill:#f44336,color:#fff
 ```
 
 | Recorrido | Bloques cargados | Hits | Misses | Velocidad |

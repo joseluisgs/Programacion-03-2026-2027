@@ -39,7 +39,6 @@ graph LR
     subgraph Memoria ["Memoria Contigua"]
         A["[0] = 10"] --- B["[1] = 20"] --- C["[2] = 30"] --- D["[3] = 40"]
     end
-    style Memoria fill:#2196F3,color:#fff
     style A fill:#4CAF50,color:#fff
     style B fill:#4CAF50,color:#fff
     style C fill:#4CAF50,color:#fff

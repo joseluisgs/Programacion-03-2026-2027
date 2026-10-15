@@ -200,8 +200,6 @@ graph LR
     subgraph HEAP ["Heap"]
         PTR --> DATA["| 1 | 2 | 3 |"]
     end
-    style STACK fill:#2196F3,color:#fff
-    style HEAP fill:#FF9800,color:#fff
     style PTR fill:#607D8B,color:#fff
     style DATA fill:#4CAF50,color:#fff
 ```
@@ -390,8 +388,6 @@ graph TD
     subgraph HEAP ["Heap"]
         PTR --> DATOS["BLOQUE ÚNICO DE DATOS"]
     end
-    style STACK fill:#2196F3,color:#fff
-    style HEAP fill:#FF9800,color:#fff
     style PTR fill:#607D8B,color:#fff
     style DATOS fill:#f44336,color:#fff
 ```
