@@ -550,7 +550,7 @@ for (int f = 0; f < notas.GetLength(0); f++)
 }
 ```
 
-> 💡 **Nota:** Cada celda de la matriz contiene una **copia** del struct. Si modificas `notas[0,0].Nota`, no afecta a其他celdas ni a其他matrices.
+> 💡 **Nota:** Cada celda de la matriz contiene una **copia** del struct. Si modificas `notas[0,0].Nota`, no afecta a otras celdas ni a otras matrices.
 
 **Resumen del punto:**
 

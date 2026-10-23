@@ -76,7 +76,7 @@ Tu intento 3: CASA → C* A* S* A*  ¡Enhorabuena! Has acertado en 3 intentos
 ```
 
 **Ejercicio 19: La Clave del César**
-Implementa el algoritmo de cifrado "Clave del César": desplaza cada letra 3 posiciones en el alfabeto (Z → C). Los números se convierten: 9 → 0. Los espacios y符号其他字符 se mantienen sin cambios. Muestra el texto original y el cifrado. Ejemplo:
+Implementa el algoritmo de cifrado "Clave del César": desplaza cada letra 3 posiciones en el alfabeto (Z → C). Los números se convierten: 9 → 0. Los espacios y otros caracteres se mantienen sin cambios. Muestra el texto original y el cifrado. Ejemplo:
 
 ```
 Texto original:  HOLA MUNDO 123
