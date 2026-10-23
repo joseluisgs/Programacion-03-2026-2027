@@ -2,6 +2,7 @@
   - [2.1. Definición, creación y valores por defecto](#21-definición-creación-y-valores-por-defecto)
     - [2.1.1. Inmutabilidad del tamaño y creación](#211-inmutabilidad-del-tamaño-y-creación)
     - [2.1.2. Valores por defecto y gestión de la nulidad](#212-valores-por-defecto-y-gestión-de-la-nulidad)
+    - [2.1.3. El array que ya usas: `string[] args`](#213-el-array-que-ya-usas-string-args)
   - [2.2. Obtener el tamaño con `.Length` y recorrido](#22-obtener-el-tamaño-con-length-y-recorrido)
     - [2.2.1. `array.Length`](#221-arraylength)
     - [2.2.2. Recorrido con bucle `for`](#222-recorrido-con-bucle-for)
@@ -33,6 +34,7 @@ En este punto aprenderás a crear, recorrer y manipular arrays unidimensionales 
 - Entender el paso por referencia y la clonación
 - Diferenciar identidad (`==`) de igualdad (contenido)
 - Usar los modificadores `params` e `in`
+- Trabajar con `string[] args` y redimensionar arrays con `ref`
 
 ## 2.1. Definición, creación y valores por defecto
 
@@ -90,6 +92,32 @@ else
 ```
 
 📌 **Ejemplo real:** Netflix usa arrays de perfiles. Si un usuario solo tiene 2 perfiles pero el array tiene 5 posiciones, las 3 restantes son `null`. Cuando intentas acceder a un perfil vacío, la app verifica el `null` antes de mostrar datos.
+
+### 2.1.3. El array que ya usas: `string[] args`
+
+Antes de declarar tu primer array, ya estás usando uno: con Top-Level Statements, **`args` existe sin que tú lo crees** — es un `string[]` con los argumentos que pasas por línea de comandos.
+
+```csharp
+// Program.cs (Top-Level Statements): args ya está declarado para ti
+Console.WriteLine($"Argumentos recibidos: {args.Length}");
+
+for (int i = 0; i < args.Length; i++)
+{
+    Console.WriteLine($"  args[{i}] = {args[i]}");
+}
+```
+
+Si ejecutas la app pasándole dos argumentos (con app por ficheros `.cs` sueltos funciona igual):
+
+```bash
+dotnet run miapp.cs -- Hola Mundo
+```
+
+`args` contiene `{ "Hola", "Mundo" }`, su `.Length` es 2 y lo recorres con `for` o `foreach` como cualquier otro array de cadenas. Si no pasas ningún argumento, `args.Length` es 0: un array **vacío**, no `null`.
+
+📌 **Ejemplo real:** Cuando ejecutas `git commit -m "mensaje"`, Git recibe `commit` y el mensaje como argumentos de línea de comandos: internamente es lo mismo — un array de cadenas que otro programa recorre.
+
+> 💡 **Consejo:** `args` es un array normal, así que puedes pasarlo a tus funciones (`ImprimirArgumentos(args)`) y procesarlo con todas las herramientas de este punto.
 
 ## 2.2. Obtener el tamaño con `.Length` y recorrido
 
@@ -216,6 +244,34 @@ Console.WriteLine(arrayOriginal[0]);  // 999 — ¡También cambió!
 ```
 
 📌 **Ejemplo real:** Cuando editas una canción en una playlist de Spotify, la app modifica el array directamente. No crea una copia porque sería lento e ineficiente.
+
+**Pero ojo: modificar los elementos NO necesita `ref`; reemplazar el array completo, SÍ.** La función de arriba solo toca posiciones (`array[0] = 999`) y por eso funciona sin `ref`. Si lo que haces dentro es **que la variable apunte a otro array** (`datos = new int[...]`), sin `ref` la reasignación se pierde: la función recibe una copia de la dirección y solo esa copia cambia.
+
+```csharp
+// ❌ Sin ref: la reasignación NO llega al llamador
+void ReiniciarSinRef(int[] datos)
+{
+    datos = new int[3];   // solo cambia la COPIA local de la dirección
+}
+
+// ✅ Con ref: el llamador ve el reemplazo
+void Reiniciar(ref int[] datos)
+{
+    datos = new int[3];   // ahora la variable DEL LLAMADOR apunta al nuevo
+}
+
+int[] serie = { 10, 20, 30 };
+
+ReiniciarSinRef(serie);
+Console.WriteLine(serie[0]);   // 10 — sigue apuntando al array viejo
+
+Reiniciar(ref serie);
+Console.WriteLine(serie[0]);   // 0 — ¡ahora apunta al array nuevo de ceros!
+```
+
+📌 **Ejemplo real:** Cuando un juego descarta la partida actual y empieza una nueva, la variable que guarda la partida debe apuntar a **otro** array: eso es un reemplazo, no una modificación, y por eso se pasa con `ref`.
+
+El caso de uso completo —redimensionar un array— está en la 2.6, en sus dos versiones: procedimiento con `ref` y función que devuelve el array nuevo.
 
 ### 2.3.2. Clonación manual para romper la referencia
 
@@ -360,20 +416,62 @@ graph TD
     style D fill:#4CAF50,color:#fff
 ```
 
-```csharp
-int[] arrayAntiguo = { 10, 20, 30 };
-int nuevoTamano = 5;
-int[] arrayNuevo = new int[nuevoTamano];
+Y si quieres que esa operación viva en su propia función, ahí aparece **`ref`**: el procedimiento no toca elementos, **reasigna la variable** (`datos = nuevo`), y solo con `ref` esa reasignación llega al llamador (la misma regla de la 2.3.1).
 
-// Copiar elementos del viejo al nuevo
-for (int i = 0; i < arrayAntiguo.Length; i++)
+```csharp
+// Procedimiento que redimensiona: crea, copia y REASIGNA — por eso ref
+void Redimensionar(ref int[] datos, int nuevoTamano)
 {
-    arrayNuevo[i] = arrayAntiguo[i];
+    int[] nuevo = new int[nuevoTamano];
+
+    for (int i = 0; i < datos.Length; i++)
+    {
+        nuevo[i] = datos[i];  // copia los elementos existentes
+    }
+
+    datos = nuevo;  // EL TRUCO: sin ref, esta línea se perdería
 }
 
-// arrayNuevo = { 10, 20, 30, 0, 0 }
-Console.WriteLine(string.Join(", ", arrayNuevo));
+int[] arrayAntiguo = { 10, 20, 30 };
+Redimensionar(ref arrayAntiguo, 5);
+
+// arrayAntiguo = { 10, 20, 30, 0, 0 }
+Console.WriteLine(string.Join(", ", arrayAntiguo));     // 10, 20, 30, 0, 0
+Console.WriteLine($"Longitud: {arrayAntiguo.Length}");  // 5
 ```
+
+**La otra forma: una función que devuelve el array redimensionado.** El procedimiento de arriba reasigna *dentro* (por eso lleva `ref`); si prefieres que la reasignación la haga *el que llama*, la función devuelve el array nuevo y tú lo asignas — en este caso **no hace falta `ref`**, porque el `return` ya trae la referencia.
+
+```csharp
+// Función que devuelve el array redimensionado (sin ref)
+int[] RedimensionarFuncion(int[] datos, int nuevoTamano)
+{
+    int[] nuevo = new int[nuevoTamano];
+
+    for (int i = 0; i < datos.Length; i++)
+    {
+        nuevo[i] = datos[i];  // copia los elementos existentes
+    }
+
+    return nuevo;   // devuelve la referencia al array nuevo
+}
+
+int[] arrayFuncion = { 10, 20, 30 };
+arrayFuncion = RedimensionarFuncion(arrayFuncion, 5);
+
+// arrayFuncion = { 10, 20, 30, 0, 0 }
+Console.WriteLine(string.Join(", ", arrayFuncion));     // 10, 20, 30, 0, 0
+Console.WriteLine($"Longitud: {arrayFuncion.Length}");  // 5
+```
+
+| Estilo | Quién reasigna | Modificador | Lectura |
+| :--- | :--- | :--- | :--- |
+| `Redimensionar(ref a, 5)` — procedimiento | El procedimiento, **desde dentro** | `ref` necesario | "hazlo tú" |
+| `a = RedimensionarFuncion(a, 5)` — función | El llamador, **desde fuera** | ninguno extra | "dámelo hecho" |
+
+En ambos estilos el efecto es idéntico y **en ambos hay una reasignación** (`datos = nuevo` dentro, `array = ...` fuera); lo que cambia es *dónde* vive esa línea y, por tanto, si hace falta `ref`.
+
+> 📝 **Nota:** La **BCL** (*Base Class Library* o Biblioteca de Clases Base: la enorme colección de clases que trae .NET de serie — `Array`, `Console`, `Math`...; la presentaste en la UD01) trae `Array.Resize(ref array, nuevoTamano)`, que hace exactamente esto por ti — y fíjate que su firma **también lleva `ref`**, por la misma razón: internamente crea un array nuevo, copia y reasigna (la BCL eligió el estilo del procedimiento con `ref`). Ojo: es un **método** estático de `Array`, no una propiedad `.Resize()`.
 
 ## 2.7. La trampa del alias
 
@@ -551,6 +649,8 @@ Alumno[] clase2 =
 | **Clonación manual** | Copia profunda: crear nuevo array + copiar valores |
 | **`params`** | Número variable de argumentos (se convierte en array) |
 | **`in`** | Paso por referencia de solo lectura |
+| **`string[] args`** | El array de argumentos que recibes de serie |
+| **Redimensionar arrays** | Dos estilos: con `ref` (procedimiento) o devolviendo el array (función) |
 | **`==`** | Compara identidad (misma dirección), no contenido |
 | **Alias** | `b = a` crea dos nombres para el mismo array |
 | **Tuplas** | `(string, int)[]` — arrays de tuplas |
@@ -567,4 +667,5 @@ En el siguiente punto veremos cómo funcionan los arrays multidimensionales (mat
 - [ ] Usar `foreach` cuando solo necesites leer los valores
 - [ ] Verificar `null` antes de acceder a `.Length` o a un índice
 - [ ] No confundir identidad (`==`) con igualdad (contenido) en arrays
+- [ ] Pasar `ref` solo cuando el procedimiento deba REEMPLAZAR el array completo (no para tocar sus elementos)
 - [ ] Clonar cada fila manualmente en matrices escalonadas
