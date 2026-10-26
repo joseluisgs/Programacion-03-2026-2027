@@ -9,9 +9,14 @@
     - [2.2.3. Recorrido con bucle `foreach`](#223-recorrido-con-bucle-foreach)
     - [2.2.4. Recorrido con filtrado de nulos](#224-recorrido-con-filtrado-de-nulos)
   - [2.3. Paso por referencia, devolución y clonación](#23-paso-por-referencia-devolución-y-clonación)
-    - [2.3.1. Arrays y el paso por referencia](#231-arrays-y-el-paso-por-referencia)
-    - [2.3.2. Clonación manual para romper la referencia](#232-clonación-manual-para-romper-la-referencia)
-    - [2.3.3. Devolución de arrays](#233-devolución-de-arrays)
+    - [2.3.1. Primero el símil: cómo se pasa un valor de tipo simple](#231-primero-el-símil-cómo-se-pasa-un-valor-de-tipo-simple)
+    - [2.3.2. Qué guarda una variable de array: una dirección](#232-qué-guarda-una-variable-de-array-una-dirección)
+    - [2.3.3. Qué se pasa al llamar a una función: la dirección, no los datos](#233-qué-se-pasa-al-llamar-a-una-función-la-dirección-no-los-datos)
+    - [2.3.4. Aclarando el mal dicho: los arrays no pasan por referencia](#234-aclarando-el-mal-dicho-los-arrays-no-pasan-por-referencia)
+    - [2.3.5. Con `ref`: cuando la función debe reemplazar el array](#235-con-ref-cuando-la-función-debe-reemplazar-el-array)
+    - [2.3.6. Con `in`: cuando la función solo lee el array](#236-con-in-cuando-la-función-solo-lee-el-array)
+    - [2.3.7. Clonación manual para romper la referencia](#237-clonación-manual-para-romper-la-referencia)
+    - [2.3.8. Devolución de arrays](#238-devolución-de-arrays)
   - [2.4. Parámetros variables (`params`) y modificador `in`](#24-parámetros-variables-params-y-modificador-in)
   - [2.5. Identidad vs. igualdad (referencia vs. contenido)](#25-identidad-vs-igualdad-referencia-vs-contenido)
   - [2.6. Copias, clonación y la inmutabilidad del tamaño](#26-copias-clonación-y-la-inmutabilidad-del-tamaño)
@@ -213,67 +218,278 @@ foreach (string? nombre in nombres)
 
 ## 2.3. Paso por referencia, devolución y clonación
 
-### 2.3.1. Arrays y el paso por referencia
+### 2.3.1. Primero el símil: cómo se pasa un valor de tipo simple
 
-Los arrays en C# son **tipos de referencia**: la variable no contiene los datos, sino una **dirección de memoria** donde están. Esto significa que, al pasar un array a un método, se pasa la dirección (no se copian los elementos). Por eso puedes modificar los elementos dentro del método y se reflejan fuera. Pero cuidado: esto es diferente de usar `ref` (que verás más abajo).
+Antes de meternos con arrays conviene fijar qué significa "pasar un valor a una función" con un tipo que ya dominas: un `int`. Los tipos de valor (`int`, `double`, `bool`, `char`) guardan **el dato dentro de la propia variable**. Al llamar a una función, C# hace una **copia literal** de ese dato: la función trabaja con su propia ficha, y lo que haga en ella no toca la del llamador.
 
-**Al pasar un array a una función:** se pasa una **copia de la dirección** (referencia). Como dos variables apuntan al mismo sitio, modificar los elementos dentro de la función **afecta al original**.
+```mermaid
+graph TB
+    subgraph LLAMADOR["Stack: llamador"]
+        A["int a = 5"]
+    end
+    subgraph FUNCION["Stack: Duplicar(int x)"]
+        B["int x = 5  (copia de a)"]
+    end
+    A -->|"se copia el valor 5"| B
+    style A fill:#2196F3,color:#fff
+    style B fill:#607D8B,color:#fff
+```
+
+```csharp
+void Duplicar(int x)
+{
+    x = x * 2;   // multiplica SU copia
+}
+
+int a = 5;
+Duplicar(a);
+Console.WriteLine(a);   // 5 — 'a' no se enteró
+```
+
+Dentro de la función `x` vale 10, pero al salir esa copia desaparece: `a` seguía con 5 todo el rato.
+
+> 💡 **Analogía:** Es como **fotocopiar** un documento y dar la copia a un compañero. Si él escribe sobre la fotocopia, tu original sigue intacto: son dos papeles distintos.
+
+📌 **Ejemplo real:** En un videojuego, cuando pasas la vida de un personaje a una función `CalcularDanño(int vida)`, la función trabaja sobre una copia: aunque devuelva 0, el personaje no muere hasta que **tú** apliques el resultado a la variable original.
+
+### 2.3.2. Qué guarda una variable de array: una dirección
+
+Un array es un **tipo de referencia**, y ahí cambia todo: la variable **no contiene los elementos**, contiene una **dirección de memoria** (algo así como `0x0040`) que indica **dónde** están guardados. Los elementos viven juntos en un bloque contiguo del **heap (montón)**; la variable que apunta a ellos vive en el **stack (pila)**.
 
 ```mermaid
 graph LR
-    subgraph STACK ["Stack"]
-        A["arrayOriginal"] --> PTR["Dir: 0x123"]
-        B["arrayEnFunción"] --> PTR
+    subgraph STACK["Stack (pila)"]
+        V["datos<br/>valor: 0x0040"]
     end
-    subgraph HEAP ["Heap"]
-        PTR --> DATA["| 1 | 2 | 3 |"]
+    subgraph HEAP["Heap (montón)"]
+        C0["índice 0<br/>10"]
+        C1["índice 1<br/>20"]
+        C2["índice 2<br/>30"]
     end
-    style PTR fill:#607D8B,color:#fff
-    style DATA fill:#4CAF50,color:#fff
+    V -->|"apunta"| C0
+    C0 --- C1
+    C1 --- C2
+    style V fill:#2196F3,color:#fff
+    style C0 fill:#4CAF50,color:#fff
+    style C1 fill:#4CAF50,color:#fff
+    style C2 fill:#4CAF50,color:#fff
 ```
+
+```csharp
+int[] datos = { 10, 20, 30 };
+// datos   → en el STACK:  la dirección 0x0040
+// 0x0040  → en el HEAP:   [10] [20] [30]
+Console.WriteLine(datos[0]);   // "sigue la dirección" hasta la celda 0 → 10
+```
+
+Cuando escribes `datos[0]`, C# hace exactamente eso: **lee la dirección de `datos`**, salta al bloque del heap y accede a la posición 0. Las direcciones de este ejemplo (`0x0040`) son de mentira —el runtime elige las reales— pero el esquema es este.
+
+> 💡 **Analogía:** La variable es **una nota con la dirección de tu casa**; el array es **la casa con los muebles**. Quien tiene la nota sabe dónde están los muebles, pero no se lleva la casa.
+
+📌 **Ejemplo real:** Tu app de música no duplica millones de canciones cada vez que las usa: guarda **una dirección** (una referencia) a la lista en memoria. La nota pesa unos bytes; la lista puede pesar gigas.
+
+### 2.3.3. Qué se pasa al llamar a una función: la dirección, no los datos
+
+Ahora ya puedes entender qué ocurre cuando haces `ModificarContenido(datos)`. **No se copian los tres elementos** —sería un coste enorme en arrays grandes—: lo que se copia, **por valor**, es **la dirección**. En el stack de la función aparece una variable nueva con **la misma dirección** que la del llamador, y por lo tanto **ambas apuntan al mismo bloque** del heap.
+
+```mermaid
+graph TB
+    subgraph STACK["Stack"]
+        M["Main: datos = 0x0040"]
+        F["Función: array = 0x0040"]
+    end
+    subgraph HEAP["Heap (un solo bloque)"]
+        C["[10] [20] [30]"]
+    end
+    M --> C
+    F --> C
+    style M fill:#2196F3,color:#fff
+    style F fill:#FF9800,color:#fff
+    style C fill:#4CAF50,color:#fff
+```
+
+De ahí la primera consecuencia: **escribir en los elementos sí se propaga** al llamador, porque se escribe en la misma caja.
 
 ```csharp
 void ModificarContenido(int[] array)
 {
-    array[0] = 999;  // Modifica el contenido apuntado
+    array[0] = 999;   // escribe en la MISMA celda que Main
 }
 
-int[] arrayOriginal = { 1, 2, 3 };
+int[] arrayOriginal = { 10, 20, 30 };
 ModificarContenido(arrayOriginal);
-Console.WriteLine(arrayOriginal[0]);  // 999 — ¡También cambió!
+Console.WriteLine(arrayOriginal[0]);   // 999 — ¡también cambió!
 ```
 
-📌 **Ejemplo real:** Cuando editas una canción en una playlist de Spotify, la app modifica el array directamente. No crea una copia porque sería lento e ineficiente.
+```mermaid
+graph LR
+    subgraph ANTES["Antes"]
+        M1["datos = 0x0040"]
+        C1["[10] [20] [30]"]
+        M1 --> C1
+    end
+    subgraph DESPUES["Después de array[0] = 999"]
+        M2["datos = 0x0040  (igual)"]
+        C2["[999] [20] [30]"]
+        M2 --> C2
+    end
+    style M1 fill:#2196F3,color:#fff
+    style C1 fill:#4CAF50,color:#fff
+    style M2 fill:#2196F3,color:#fff
+    style C2 fill:#4CAF50,color:#fff
+```
 
-**Pero ojo: modificar los elementos NO necesita `ref`; reemplazar el array completo, SÍ.** La función de arriba solo toca posiciones (`array[0] = 999`) y por eso funciona sin `ref`. Si lo que haces dentro es **que la variable apunte a otro array** (`datos = new int[...]`), sin `ref` la reasignación se pierde: la función recibe una copia de la dirección y solo esa copia cambia.
+📌 **Ejemplo real:** Cuando editas una canción en una playlist de Spotify, la app modifica la lista directamente: no crea una copia de millones de registros porque sería lento e ineficiente. Todos los sitios que apuntan a esa playlist ven el cambio.
+
+### 2.3.4. Aclarando el mal dicho: los arrays no pasan por referencia
+
+Aquí está el embrollo. De forma popular se dice *«los arrays pasan **por referencia**»*, y es un **mal dicho**: lo que se pasa es **por valor**, pero el **valor que se copia es la dirección** (una referencia). Es decir, se copia *una referencia* al array… no el array, y tampoco la variable. De esa ambigüedad nacen las dos consecuencias que ya conoces:
+
+- **Cambiar el contenido** (un elemento): **sí se ve** fuera — es la misma caja.
+- **Reasignar el array** (`array = new int[3]`): **no se ve** fuera — solo cambia la copia local de la dirección.
+
+```mermaid
+graph TB
+    subgraph STACK["Stack"]
+        M["Main: datos = 0x0040"]
+        F["Función: array = 0x0090 (solo su copia apunta al nuevo)"]
+    end
+    subgraph HEAP["Heap"]
+        OLD["0x0040 → [10] [20] [30]  (sigue siendo el de Main)"]
+        NEW["0x0090 → [0] [0] [0]  (nuevo, huérfano)"]
+    end
+    M --> OLD
+    F --> NEW
+    style M fill:#2196F3,color:#fff
+    style F fill:#FF9800,color:#fff
+    style OLD fill:#4CAF50,color:#fff
+    style NEW fill:#f44336,color:#fff
+```
 
 ```csharp
 // ❌ Sin ref: la reasignación NO llega al llamador
-void ReiniciarSinRef(int[] datos)
+void ReasignarSinRef(int[] datos)
 {
     datos = new int[3];   // solo cambia la COPIA local de la dirección
 }
 
+int[] serie = { 10, 20, 30 };
+ReasignarSinRef(serie);
+Console.WriteLine(serie[0]);   // 10 — sigue apuntando al array viejo
+```
+
+El array nuevo que creó la función **no lo usa nadie**: cuando la función termina, su copia de la dirección desaparece y el **recolector de basura (GC)** libera ese bloque. La reasignación "se pierde por el camino".
+
+| Operación dentro de la función | ¿Se ve en el llamador? | Motivo |
+| :--- | :--- | :--- |
+| Escribir un elemento: `v[0] = 9` | ✅ Sí | Ambas direcciones apuntan al mismo bloque |
+| Reasignar: `v = new int[…]` | ❌ No | Solo cambia la copia local de la dirección |
+
+📌 **Ejemplo real:** Si dentro de una función "cambias de casa" escribiendo una dirección nueva en **tu** papelito, nadie se entera en casa: en el llamador, el papelito original sigue con la dirección vieja. Para que el cambio se vea, alguien tiene que poder escribir en **el papelito del llamador** — eso es `ref` (siguiente apartado).
+
+### 2.3.5. Con `ref`: cuando la función debe reemplazar el array
+
+Si necesitas que la función **reemplace por completo** el array del llamador —p.ej. redimensionarlo o vaciarlo—, el modificador `ref` cambia lo que se pasa: no se copia la dirección, se pasa **una referencia a la propia variable** del llamador. La función, entonces, puede **reescribir la variable de Main**.
+
+```mermaid
+graph TB
+    subgraph STACK["Stack (tras la llamada con ref)"]
+        V["datos = 0x0090  ← reescrito por la función"]
+    end
+    subgraph HEAP["Heap"]
+        NEW["0x0090 → [0] [0] [0]  (visible en Main)"]
+        OLD["0x0040 → [10] [20] [30]  (huérfano, lo recoge el GC)"]
+    end
+    V --> NEW
+    style V fill:#9C27B0,color:#fff
+    style NEW fill:#4CAF50,color:#fff
+    style OLD fill:#f44336,color:#fff
+```
+
+```csharp
 // ✅ Con ref: el llamador ve el reemplazo
-void Reiniciar(ref int[] datos)
+void ReasignarConRef(ref int[] datos)
 {
     datos = new int[3];   // ahora la variable DEL LLAMADOR apunta al nuevo
 }
 
 int[] serie = { 10, 20, 30 };
-
-ReiniciarSinRef(serie);
-Console.WriteLine(serie[0]);   // 10 — sigue apuntando al array viejo
-
-Reiniciar(ref serie);
+ReasignarConRef(ref serie);
 Console.WriteLine(serie[0]);   // 0 — ¡ahora apunta al array nuevo de ceros!
 ```
 
-📌 **Ejemplo real:** Cuando un juego descarta la partida actual y empieza una nueva, la variable que guarda la partida debe apuntar a **otro** array: eso es un reemplazo, no una modificación, y por eso se pasa con `ref`.
+📌 **Ejemplo real:** Cuando un juego descarta la partida actual y empieza una nueva, la variable que guarda la partida debe apuntar a **otro** array: eso es un **reemplazo**, no una modificación, y por eso se pasa con `ref`.
 
-El caso de uso completo —redimensionar un array— está en la 2.6, en sus dos versiones: procedimiento con `ref` y función que devuelve el array nuevo.
+> 📝 **Nota:** El caso de uso completo —redimensionar un array— está en la 2.6, en sus dos versiones: procedimiento con `ref` (`Array.Resize(ref array, n)`) y función que devuelve el array nuevo. El ejemplo `05-PasoReferencia` de la unidad muestra las tres formas lado a lado con los mismos datos.
 
-### 2.3.2. Clonación manual para romper la referencia
+### 2.3.6. Con `in`: cuando la función solo lee el array
+
+Su efecto es concreto y está verificado con el compilador del curso (C# 14 / .NET 10):
+
+- **Reasignar el parámetro → error de compilación CS8331.** Dentro de una función `in`, la instrucción `datos = new int[0];` no compila: *"No se puede asignar a variable… porque es una variable de solo lectura"*.
+- **Aviso importante:** `in` protege **la variable**, no **los elementos** del array. Escribir `datos[0] = 999` **compila** —el compilador solo impide reasignar la dirección— y modificaría el array compartido. `in` es una **promesa de solo lectura** que tú debes cumplir: si la función es de lectura, no toques los elementos.
+
+```csharp
+int SumarElementos(in int[] datos)
+{
+    int suma = 0;
+    foreach (int e in datos)
+        suma += e;
+
+    // datos = new int[0];   // ❌ ERROR CS8331: la variable es de solo lectura
+    // datos[0] = 999;       // ⚠️ compila, pero rompe la intención de 'in': no lo hagas
+    return suma;
+}
+
+int[] valores = { 10, 20, 30 };
+Console.WriteLine(SumarElementos(in valores));   // 60
+```
+
+```mermaid
+graph TB
+    subgraph STACK["Stack"]
+        M["Main: datos = 0x0040"]
+        F["Función in: array = 0x0040  (variable de solo lectura)"]
+    end
+    subgraph HEAP["Heap"]
+        C["[10] [20] [30]"]
+    end
+    M --> C
+    F --> C
+    F -.->|"datos = new int[3] → ERROR CS8331"| ERR["reescribir la dirección: prohibido"]
+    style M fill:#2196F3,color:#fff
+    style F fill:#9C27B0,color:#fff
+    style C fill:#4CAF50,color:#fff
+    style ERR fill:#f44336,color:#fff
+```
+
+📌 **Ejemplo real:** Las funciones de análisis de los ejemplos de la unidad (`GenerarInforme`, `SumarPosicionesPares`…) reciben el array solo para leerlo; con `in`, la firma dejaría escrito que **nadie debe tocar los datos**.
+
+**Resumen de los tres caminos:**
+
+| Modificador | ¿La función escribe elementos? | ¿La función reemplaza el array? | Mecanismo |
+| :--- | :--- | :--- | :--- |
+| *(ninguno)* | ✅ Sí, se propaga | ❌ No (aunque compila, se pierde) | Se copia la dirección |
+| `ref` | ✅ Sí, se propaga | ✅ Sí, se propaga | Se pasa la variable del llamador |
+| `in` | ⚠️ Compila, pero no debe (solo lectura) | ❌ Error CS8331 | Dirección de solo lectura |
+
+```mermaid
+graph TB
+    P{"¿Qué necesita la función?"}
+    P -->|"Solo leer el array"| I["in<br/>variable de solo lectura"]
+    P -->|"Cambiar elementos"| N["Sin modificador<br/>se copia la dirección"]
+    P -->|"Reemplazar el array (new)"| R["ref<br/>o devolver el array nuevo"]
+    style P fill:#FF9800,color:#fff
+    style I fill:#9C27B0,color:#fff
+    style N fill:#2196F3,color:#fff
+    style R fill:#4CAF50,color:#fff
+```
+
+> ⚠️ **Advertencia:** "Pasar por referencia" y `ref` **no son lo mismo**. Sin `ref`, lo que viaja es una **copia de la dirección** (pasado por valor); con `ref`, viaja **la variable misma**. Por eso el dicho popular engaña: el contenido cambia por la copia de la dirección, no por un paso de referencia de verdad.
+
+> 💡 **Consejo: ¿se puede proteger el array de verdad?** Con los modificadores de este punto, **no**: `in` congela la **variable** —la dirección—, no la caja de datos, así que un `datos[0] = 999` dentro de la función sigue compilando y surtiendo efecto. Protecciones más fuertes existen, pero llegan con las colecciones y la POO —otros temas—, y aquí no entramos. Tu defensa en este punto es otra: **leer el contrato de la función**. La firma —`ref`, `in` o sin modificador— y su documentación te dicen qué promete hacer la función con tu array; y si la función es tuya, tu firma es el contrato que ofreces a los demás.
+
+### 2.3.7. Clonación manual para romper la referencia
 
 Para obtener un array **completamente independiente**, debes crear uno nuevo y copiar elemento por elemento (**copia profunda**).
 
@@ -296,7 +512,7 @@ Console.WriteLine(arrayA[0]);    // 10 — A no cambia
 Console.WriteLine(arrayClon[0]); // 500 — C es independiente
 ```
 
-### 2.3.3. Devolución de arrays
+### 2.3.8. Devolución de arrays
 
 Una función que devuelve un array retorna la **referencia**. La variable que recibe el retorno apunta al mismo objeto.
 
@@ -348,29 +564,9 @@ Console.WriteLine(SumarTodos(10, 20, 30, 40));   // 100
 
 ### El modificador `in` (solo lectura)
 
-El modificador `in` pasa un array por referencia pero **prohíbe modificarlo** dentro de la función. Ideal para arrays grandes donde solo necesitas leer.
+`in` se analizó a fondo en la **2.3.6** —con sus diagramas de memoria y con el matiz de qué protege y qué no—; aquí solo el resumen de la firma: la función recibe la dirección del array con la variable **de solo lectura** —puede leerlo y recorrerlo, pero **no puede reasignarla** (reasignarla sería **error CS8331**)—. Así la cabecera de la función ya funciona como una promesa legible: *«esto solo lo leo»*, y conviene usarla donde eso sea cierto: **arrays grandes de solo lectura**.
 
-```csharp
-int SumarElementos(in int[] array)
-{
-    int suma = 0;
-    foreach (int elemento in array)
-    {
-        suma += elemento;
-    }
-    // array[0] = 999;  // ❌ ERROR de compilación
-    return suma;
-}
-
-int[] datos = { 10, 20, 30 };
-Console.WriteLine(SumarElementos(in datos));  // 60
-```
-
-| Modificador | Modificable | Rendimiento | Cuándo usarlo |
-| :--- | :--- | :--- | :--- |
-| *(ninguno)* | Elementos sí, reasignar **no** | Copia la dirección (referencia) | Uso general — puedes modificar elementos |
-| `ref` | Elementos sí, reasignar **sí** | Referencia directa | Cuando el método debe poder reemplazar el array completo |
-| `in` | **No** | Referencia (solo lectura) | Arrays grandes, solo lectura |
+La tabla comparativa de los tres caminos (`in`, `ref` y sin modificador), el esquema de decisión *"¿qué necesita la función?"* y el ejemplo completo de `SumarElementos(in int[] datos)` están al final de la 2.3.6.
 
 ## 2.5. Identidad vs. igualdad (referencia vs. contenido)
 
@@ -416,7 +612,7 @@ graph TD
     style D fill:#4CAF50,color:#fff
 ```
 
-Y si quieres que esa operación viva en su propia función, ahí aparece **`ref`**: el procedimiento no toca elementos, **reasigna la variable** (`datos = nuevo`), y solo con `ref` esa reasignación llega al llamador (la misma regla de la 2.3.1).
+Y si quieres que esa operación viva en su propia función, ahí aparece **`ref`**: el procedimiento no toca elementos, **reasigna la variable** (`datos = nuevo`), y solo con `ref` esa reasignación llega al llamador (las reglas de la 2.3.4 y la 2.3.5).
 
 ```csharp
 // Procedimiento que redimensiona: crea, copia y REASIGNA — por eso ref
