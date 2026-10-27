@@ -9,8 +9,8 @@ Crea una demostración **conceptual** de cómo se pasan los arrays (vectores y m
 3. **Reasignar con `ref`**: la función recibe una referencia al puntero del llamador, así que su reasignación **sí** llega fuera.
 4. **Redimensionar un vector**: `Array.Resize(ref …)` crea un array nuevo, copia lo que cabe y reasigna con `ref`.
 5. **Redimensionar una matriz**: no existe `Resize` para `[,]`, así que se crea la matriz nueva y se copia el solape a mano.
-6. **`in` en un vector**: paso por referencia de **solo lectura**; la función lee los elementos pero no puede reasignar ni modificar.
-7. **`in` en una matriz**: mismo principio de solo lectura sobre un array bidimensional.
+6. **`in` en un vector**: la dirección viaja con la **variable de solo lectura**; la función lee los elementos, pero no puede reasignarla (error CS8331).
+7. **`in` en una matriz**: mismo principio —variable de solo lectura— sobre un array bidimensional.
 
 ## Conceptos Clave
 
@@ -19,7 +19,7 @@ Crea una demostración **conceptual** de cómo se pasan los arrays (vectores y m
 - **`ref`**: pasa una referencia al **puntero** del llamador; la reasignación de la función llega fuera
 - **`Array.Resize(ref, n)`**: necesita `ref` porque crea un array nuevo y reasigna; al ampliar, lo nuevo vale `0`; al reducir, el sobrante se pierde
 - **Redimensionar matrices a mano**: `new int[filas, columnas]` + copia del solape (`Math.Min`)
-- **`in`** (2.4): paso por referencia pero **prohíbe modificar**; ideal para arrays grandes de solo lectura
+- **`in`** (2.3.6): pasa la dirección con la **variable de solo lectura** —prohíbe **reasignarla** (CS8331), no modificar los elementos—; ideal para arrays grandes de solo lectura
 
 ## Solución
 
@@ -31,7 +31,7 @@ Crea una demostración **conceptual** de cómo se pasan los arrays (vectores y m
 
 4. **`RedimensionarMatriz()`**: crea una matriz nueva y copia solo el solape con `Math.Min` en filas y columnas.
 
-5. **`SumarContenido(in int[])` / `SumarMatriz(in int[,])`**: reciben el array con `in`; leen todo pero no pueden modificar (las líneas prohibidas quedan comentadas como referencia).
+5. **`SumarContenido(in int[])` / `SumarMatriz(in int[,])`**: reciben el array con `in`; pueden leerlo, pero **no reasignar la variable** (CS8331). Las líneas comentadas marcan lo que falla y lo que, en cambio, sí compila.
 
 ## Diagrama
 
@@ -41,7 +41,7 @@ flowchart TD
     B -->|modifica datos i| C[El original CAMBIA<br/>mismo array en memoria]
     B -->|reasigna sin ref| D[El original NO cambIA<br/>copia local del puntero]
     B -->|reasigna con ref| E[El original SÍ cambIA<br/>ref al puntero de Main]
-    B -->|recibe in| F[Solo LECTURA<br/>no modifica ni reasigna]
+    B -->|recibe in| F[Variable de solo lectura<br/>no reasigna: CS8331]
     C --> G[Salir]
     D --> G
     E --> G

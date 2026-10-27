@@ -1,5 +1,6 @@
 - [5. Cadenas de texto (`string`) y manejo del texto](#5-cadenas-de-texto-string-y-manejo-del-texto)
   - [5.1. Definición, inmutabilidad y tipo de referencia](#51-definición-inmutabilidad-y-tipo-de-referencia)
+    - [5.1.1. Pasar un string a una función: sin modificador, `ref` e `in`](#511-pasar-un-string-a-una-función-sin-modificador-ref-e-in)
   - [5.2. Acceso y recorrido de cadenas](#52-acceso-y-recorrido-de-cadenas)
     - [5.2.1. Propiedad `Length` y acceso por índice](#521-propiedad-length-y-acceso-por-índice)
     - [5.2.2. Recorrido con bucles](#522-recorrido-con-bucles)
@@ -20,6 +21,7 @@ En este punto aprenderás cómo funcionan las cadenas en C#, sus métodos esenci
 **Objetivos de aprendizaje:**
 
 - Entender la inmutabilidad de `string` y sus implicaciones
+- Pasar un string a una función (sin modificador, `ref` o `in`)
 - Acceder y recorrer caracteres de una cadena
 - Usar métodos esenciales (`Split`, `Join`, `Replace`, `Contains`, `Substring`)
 - Construir texto eficientemente con `StringBuilder`
@@ -45,6 +47,55 @@ Console.WriteLine(nuevo);     // "Mola" — es una nueva cadena
 ```
 
 📌 **Ejemplo real:** Instagram almacena los captions de las fotos como strings inmutables. Cuando editas un caption, la app no modifica el original — crea una nueva versión. Esto garantiza que los comentarios antiguos no se corrompan.
+
+### 5.1.1. Pasar un string a una función: sin modificador, `ref` e `in`
+
+Como viste en la 5.1, un `string` es un **tipo de referencia**, así que al llamar a una función pasa lo mismo que con los arrays (2.3): viaja una **copia de la dirección**, no el texto. Para decidir qué quiere hacer la función con **tu variable** están los mismos tres caminos de siempre.
+
+```csharp
+// 1) Sin modificador: la función reasigna SU copia → Main no se entera
+void ReasignarSinRef(string s) { s = "nuevo"; }
+
+// 2) Con ref: la función reescribe la variable DEL LLAMADOR → llega fuera
+void ReasignarConRef(ref string s) { s = "nuevo"; }
+
+// 3) Con in: la variable es de solo lectura → reasignar no compila
+void ReasignarIn(in string s)
+{
+    // s = "nuevo";   // ❌ ERROR CS8331: variable de solo lectura
+    Console.WriteLine(s);
+}
+
+string original = "hola";
+ReasignarSinRef(original);
+Console.WriteLine(original);   // "hola" — la reasignación se perdió
+ReasignarConRef(ref original);
+Console.WriteLine(original);   // "nuevo" — ¡ahora sí cambió!
+```
+
+> 📝 **Nota:** Aquí desaparece un matiz que sí había en los arrays: **no existe el caso "escribir en el contenido"**, porque los strings son **inmutables** (5.1). Por eso en strings `in` sí es protección completa: la función no puede reasignar la variable (CS8331) y, además, el texto no admite cambios.
+
+**Resumen de los tres caminos:**
+
+| Camino | ¿La función reasigna la variable? | ¿Puede cambiar el texto? | Mecanismo |
+| :--- | :--- | :--- | :--- |
+| *(ninguno)* | Sí, pero **se pierde** al salir | No (inmutable) | Se copia la dirección |
+| `ref` | Sí, **llega** al llamador | No (inmutable) | Se pasa la variable del llamador |
+| `in` | ❌ Error CS8331 | No (inmutable) | Dirección de solo lectura |
+
+```mermaid
+graph TB
+    P{"¿Qué necesita la función?"}
+    P -->|"Solo leer el texto"| I["in<br/>variable de solo lectura"]
+    P -->|"Reasignar su copia (no llega)"| N["Sin modificador<br/>se copia la dirección"]
+    P -->|"Reemplazar el texto"| R["ref<br/>reescribe la variable de Main"]
+    style P fill:#FF9800,color:#fff
+    style I fill:#9C27B0,color:#fff
+    style N fill:#2196F3,color:#fff
+    style R fill:#4CAF50,color:#fff
+```
+
+> 💡 **Consejo:** En strings, `in` es la opción más cómoda de las tres: al ser el texto inmutable, con `in` ya no queda nada que proteger. Y recuerda lo de arrays (2.3.6): la firma —`ref`, `in` o sin modificador— es el **contrato** que la función ofrece; léelo antes de esperar un efecto, y escríbelo tú si la función es tuya.
 
 ## 5.2. Acceso y recorrido de cadenas
 
@@ -188,6 +239,7 @@ Esto funciona porque `string` es inmutable: no hay riesgo de que un cambio en `a
 | :--- | :--- |
 | **Inmutabilidad** | `string` no puede modificarse — cada cambio crea una nueva |
 | **Tipo de referencia** | Almacena la dirección, no el valor directamente |
+| **Paso a funciones** | Sin modificador: la reasignación se pierde; `ref`: llega; `in`: error CS8331 |
 | **Acceso por índice** | `cadena[i]` devuelve el carácter en posición i |
 | **Métodos esenciales** | `Contains`, `Replace`, `Split`, `Join`, `Substring` |
 | **Interpolación** | `$"texto {variable}"` — forma moderna de concatenar |
@@ -205,4 +257,4 @@ En el siguiente punto veremos las Expresiones Regulares (Regex): patrones de bú
 - [ ] Usar interpolación de cadenas (`$"{variable}"`) en lugar de concatenación
 - [ ] Usar `@""` (verbatim string) para expresiones regulares en C#
 - [ ] Usar `.ToCharArray()` si necesitas modificar caracteres de una cadena
-- [ ] Usar ToCharArray() si necesitas modificar caracteres de una cadena
+- [ ] Pasar con `ref` solo cuando la función deba reemplazar el texto, y con `in` cuando solo lo vaya a leer

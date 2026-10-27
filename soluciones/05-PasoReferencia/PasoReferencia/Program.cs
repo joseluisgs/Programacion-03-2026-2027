@@ -15,7 +15,7 @@ using System.Text;
 //   - Con ref: la función reasigna el array del llamador — 2.3
 //   - Array.Resize(ref ...) para vectores — 2.6
 //   - Redimensionar matrices a mano (crear y copiar) — 2.6
-//   - in: paso por referencia de solo lectura — 2.4
+//   - in: la variable es de solo lectura (CS8331) — 2.3.6
 // ============================================================
 
 
@@ -164,49 +164,51 @@ int[,] RedimensionarMatriz(int[,] datos, int filas, int columnas) {
 }
 
 // ------------------------------------------------------------
-// 6. MODIFICADOR in en un vector: pasa por referencia pero SOLO
-//    LECTURA. La función puede leer los elementos, pero no
-//    reasignar el puntero ni tocar los valores.
+// 6. MODIFICADOR in en un vector: pasa la dirección con la
+//    variable de SOLO LECTURA. La función puede leer los
+//    elementos, pero no puede reasignar la variable (CS8331).
+//    Ojo: in protege la VARIABLE, no el contenido.
 // ------------------------------------------------------------
 void DemostrarInVector() {
-    Console.WriteLine("=== 6. Modificador in en un vector (solo lectura) ===");
+    Console.WriteLine("=== 6. Modificador in en un vector (variable de solo lectura) ===");
 
     var vector = new int[] { 5, 15, 25, 35 };
     Console.WriteLine($"   Vector   : {VectorATexto(vector)}");
     Console.WriteLine($"   Suma (in): {SumarContenido(in vector)}");
-    Console.WriteLine("   → in prohíbe modificar: ideal para arrays grandes de solo lectura.\n");
+    Console.WriteLine("   → in prohíbe REASIGNAR (CS8331): ideal para arrays grandes de solo lectura.\n");
 }
 
-// Recibe el vector con in: por referencia, pero NO se puede reasignar
-// el puntero ni asignar a datos[i]. Si lo intentas, el compilador
-// protesta (por eso es seguro para el llamador).
+// Recibe el vector con in: la variable es de solo lectura, así que
+// no se puede reasignar el puntero. Si lo intentas, el compilador
+// protesta con CS8331. Los elementos NO quedan protegidos: escribir
+// datos[0] compilaría (por eso hay que cumplir la promesa de lectura).
 int SumarContenido(in int[] datos) {
     var suma = 0;
 
     for (var i = 0; i < datos.Length; i++)
         suma += datos[i]; // leer SÍ está permitido
 
-    // datos = new int[0];   // ❌ ERROR: no se puede reasignar un parámetro in
-    // datos[0] = 100;       // ❌ ERROR: no se puede modificar el contenido
+    // datos = new int[0];   // ❌ ERROR CS8331: no se puede reasignar un parámetro in
+    // datos[0] = 100;       // ⚠️ compila y CAMBIA el array: in no protege los elementos
 
     return suma;
 }
 
 // ------------------------------------------------------------
-// 7. MODIFICADOR in en una matriz: mismo principio de solo
+// 7. MODIFICADOR in en una matriz: misma variable de solo
 //    lectura, aquí sobre un array bidimensional.
 // ------------------------------------------------------------
 void DemostrarInMatriz() {
-    Console.WriteLine("=== 7. Modificador in en una matriz (solo lectura) ===");
+    Console.WriteLine("=== 7. Modificador in en una matriz (variable de solo lectura) ===");
 
     var matriz = new int[,] { { 1, 2, 3 }, { 4, 5, 6 } };
     Console.WriteLine("   Matriz:");
     ImprimirMatriz(matriz);
     Console.WriteLine($"   Suma (in): {SumarMatriz(in matriz)}");
-    Console.WriteLine("   → in funciona igual con matrices: se lee todo, se modifica nada.\n");
+    Console.WriteLine("   → en matrices la misma regla: la variable es de solo lectura (CS8331).\n");
 }
 
-// Suma todos los elementos de la matriz recibida con in (solo lectura).
+// Suma todos los elementos de la matriz recibida con in (variable de solo lectura).
 int SumarMatriz(in int[,] datos) {
     var suma = 0;
 
