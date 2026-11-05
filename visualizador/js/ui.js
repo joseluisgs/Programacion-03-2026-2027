@@ -142,6 +142,7 @@ class Vista {
     this._scrollTimer = null;
     this.pasoActual = null;
     this.zoom = 1;      // 1 = 100 %: el usuario puede agrandarlo o encogerlo
+    this.ajustado = true; // por defecto el diagrama se dibuja ajustado al cuadro
     this._baseH = 0;    // alto del diagrama a zoom 100 %
 
     this.raiz = document.createElement('div');
@@ -179,6 +180,10 @@ class Vista {
           const visible = this.$diagrama.style.display !== 'none';
           this.$diagrama.style.display = visible ? 'none' : '';
           ev.currentTarget.textContent = visible ? 'Mostrar' : 'Ocultar';
+          if (!visible) { // Se vuelve a mostrar: reescalamos
+            if (this.ajustado) this.ajustarZoom();
+            else this.aplicarZoom();
+          }
         } else if (accion === 'zoom-menos') {
           this.cambiarZoom(-0.15);
         } else if (accion === 'zoom-mas') {
@@ -189,9 +194,14 @@ class Vista {
       });
     });
 
-    // Si cambia el tamaño del cuadro (ventana, modo comparar...), reescalamos
+    // Si cambia el tamaño del cuadro (ventana, modo comparar...), reescalamos:
+    // en modo ajustado se recalcula el encaje; si el usuario amplió a mano,
+    // se respeta su zoom
     if (window.ResizeObserver) {
-      this._observador = new ResizeObserver(() => this.aplicarZoom());
+      this._observador = new ResizeObserver(() => {
+        if (this.ajustado) this.ajustarZoom();
+        else this.aplicarZoom();
+      });
       this._observador.observe(this.$diagrama);
 
       // Si cambia el ancho del panel de código, reajustamos la letra
@@ -348,6 +358,10 @@ class Vista {
       this.vincularNodos();
       this.aplicarZoom();
 
+      // Se dibuja YA AJUSTADO al cuadro (sin tener que pulsar "Ajustar")
+      this.ajustado = true;
+      this.ajustarZoom();
+
       if (this.ultimaLinea !== null) this.resaltarNodo(this.ultimaLinea);
     } catch (e) {
       cont.innerHTML = '<p class="vars-vacio">No se pudo dibujar el diagrama.</p>';
@@ -397,16 +411,32 @@ class Vista {
   cambiarZoom(delta) {
     const nuevo = Math.min(3, Math.max(0.08, Math.round((this.zoom + delta) * 100) / 100));
     if (nuevo === this.zoom) return;
+    this.ajustado = false; // el usuario toma el control: ya no auto-ajustamos
     this.zoom = nuevo;
     this.aplicarZoom();
     this.recentrarActivo();
   }
 
-  /** Encoge el diagrama para que quepa COMPLETO dentro del cuadro. */
+  /**
+   * Encoge el diagrama para que quepa COMPLETO dentro del cuadro.
+   * Nunca amplía más del 100 % (el ancho está calculado a ancho de cuadro).
+   */
   ajustarZoom() {
+    // 1) Recalculamos el tamaño base con las medidas ACTUALES del cuadro
+    this.aplicarZoom();
     if (!this._baseH) return;
-    const caja = Math.max(80, this.$diagrama.clientHeight - 16);
-    this.zoom = Math.min(3, Math.max(0.08, Math.round((caja / this._baseH) * 100) / 100));
+
+    // 2) Capacidad real del cuadro: su max-height, no su altura actual.
+    //    Si midiéramos la altura actual, encoger el SVG encogería el cuadro
+    //    y entraríamos en un bucle de encogimiento continuo.
+    const maxCss = getComputedStyle(this.$diagrama).maxHeight;
+    const capacidad = maxCss.endsWith('px') ? parseFloat(maxCss) : this.$diagrama.clientHeight;
+    const caja = Math.max(80, capacidad - 16);
+
+    // 3) Encaje (máximo 100 %: a más de 100 % se saldría por el ancho)
+    const encaje = caja / this._baseH;
+    this.zoom = Math.min(1, Math.max(0.08, Math.round(encaje * 100) / 100));
+
     this.aplicarZoom();
     this.$diagrama.scrollTop = 0;
     this.$diagrama.scrollLeft = 0;
