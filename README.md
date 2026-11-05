@@ -34,7 +34,7 @@ UD03. Almacenamiento estático y cadenas. 1DAW. Curso 2026-2027.
     - a) Se han escrito programas que utilicen matrices (arrays).
     - g) Se han utilizado expresiones regulares en la búsqueda de patrones en cadenas de texto.
 
-
+## Autor
 
 Codificado con :sparkling_heart: por [José Luis González Sánchez](https://joseluisgs.dev)
 
