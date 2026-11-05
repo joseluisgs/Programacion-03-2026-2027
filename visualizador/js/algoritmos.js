@@ -825,3 +825,14 @@ const nodosDelFlujo = (flujo) => {
   while ((m = re.exec(flujo)) !== null) ids.add(m[1]);
   return ids;
 };
+
+// ------------------------------------------------------------
+// Sangría de 2 espacios: en el panel estrecho se lee mucho mejor
+// que los 4 espacios del tema, y las líneas son más cortas
+// ------------------------------------------------------------
+const conSangria2 = (lineas) =>
+  lineas.map((l) => l.replace(/^ +/, (espacios) => ' '.repeat(Math.floor(espacios.length / 2))));
+
+Object.values(ALGORITMOS).forEach((algo) => {
+  algo.codigo = conSangria2(algo.codigo);
+});

@@ -465,6 +465,10 @@ input[type="range"] {
   background: var(--codigo-fondo);
 }
 
+/* El tamaño de letra lo calcula ui.js: se encoge solo hasta que
+   la línea más larga cabe entera (sin barra ni cortes) */
+.codigo { font-size: 13px; }
+
 .linea {
   display: flex;
   gap: 10px;
@@ -472,11 +476,9 @@ input[type="range"] {
   border-left: 3px solid transparent;
   border-radius: 4px;
   font-family: var(--fuente-codigo);
-  font-size: 12.7px;
   line-height: 1.65;
   color: var(--codigo-texto);
-  white-space: pre-wrap;      /* la línea larga baja en vez de salirse */
-  overflow-wrap: anywhere;    /* por si hay un token sin espacios */
+  white-space: pre; /* una línea del tema = una línea en pantalla */
   transition: background 0.15s ease, border-color 0.15s ease;
 }
 

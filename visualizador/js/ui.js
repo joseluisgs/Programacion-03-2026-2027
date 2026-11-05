@@ -193,6 +193,13 @@ class Vista {
     if (window.ResizeObserver) {
       this._observador = new ResizeObserver(() => this.aplicarZoom());
       this._observador.observe(this.$diagrama);
+
+      // Si cambia el ancho del panel de código, reajustamos la letra
+      this._obsCodigo = new ResizeObserver(() => {
+        const cont = this.$codigo.parentElement;
+        if (cont && cont.clientWidth !== this._ultAnchoCod) this.ajustarFuente();
+      });
+      if (this.$codigo.parentElement) this._obsCodigo.observe(this.$codigo.parentElement);
     }
   }
 
@@ -229,6 +236,7 @@ class Vista {
   // Código C#
   // --------------------------------------------------------
   pintarCodigo(algo) {
+    this.lineasTexto = algo.codigo;
     this.lineasEls = algo.codigo.map((texto, idx) => {
       const div = document.createElement('div');
       div.className = 'linea';
@@ -237,6 +245,45 @@ class Vista {
       return div;
     });
     this.$codigo.replaceChildren(...this.lineasEls);
+    this.ajustarFuente();
+  }
+
+  /**
+   * Encoge la letra del código hasta que la línea más larga cabe entera.
+   * Así no hace falta barra horizontal ni partir las líneas.
+   */
+  ajustarFuente() {
+    if (!this.lineasTexto || !this.lineasTexto.length) return;
+    const cont = this.$codigo.parentElement; // .codigo-scroll
+    if (!cont) return;
+
+    this._ultAnchoCod = cont.clientWidth;
+    // Hueco útil: ancho - rellenos del scroll - números - separaciones
+    const disponible = cont.clientWidth - 60;
+    if (disponible < 60) return;
+
+    const base = 13;
+    const mide = document.createElement('span');
+    mide.style.cssText = 'position:absolute;left:-99999px;top:0;visibility:hidden;white-space:pre;';
+    // Ojo: medir con la MISMA tipografía con la que se va a pintar (monoespaciada)
+    mide.style.fontFamily = this.lineasEls.length
+      ? getComputedStyle(this.lineasEls[0]).fontFamily
+      : 'consolas, monospace';
+    mide.style.fontSize = `${base}px`;
+    document.body.appendChild(mide);
+
+    let anchoMax = 0;
+    for (const t of this.lineasTexto) {
+      mide.textContent = t.length ? t : ' ';
+      anchoMax = Math.max(anchoMax, mide.offsetWidth);
+    }
+    mide.remove();
+
+    let fuente = base;
+    if (anchoMax > disponible) {
+      fuente = Math.max(9, Math.floor((disponible / anchoMax) * base * 10) / 10);
+    }
+    this.$codigo.style.fontSize = `${fuente}px`;
   }
 
   resaltarLinea(l) {
