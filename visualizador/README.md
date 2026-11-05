@@ -12,14 +12,7 @@ Web para visualizar en animación los **7 algoritmos de ordenación y búsqueda*
 
 ## 1. Cómo abrirlo
 
-Hay **cuatro opciones** dentro de esta carpeta; elige la que más te guste y abre su `index.html` con doble clic. No hace falta instalar nada ni compilar.
-
-| Carpeta | Maqueta | Distribución |
-|---------|---------|--------------|
-| `visualizador/` | **Original** | Código · escena · lateral (variables, contadores, complejidad) |
-| `visualizador-a/` | **A — Lateral vivo** | Como la original, pero con leyenda, **historial de pasos** y atajos en el lateral; en Comparar empieza sin diagrama |
-| `visualizador-b/` | **B — Barra de estado** | Sin lateral: variables y contadores en una barra bajo las barras y la complejidad en el pie del código |
-| `visualizador-c/` | **C — Estilo editor** | Código más ancho y barra inferior a todo el ancho con variables, contadores y complejidad |
+Doble clic en `index.html`. No hace falta instalar nada ni compilar.
 
 > 📝 **Nota:** las librerías van **dentro de cada carpeta** (`js/vendor/`), así que cualquier maqueta funciona con doble clic y **sin internet**. Solo las fuentes (Ubuntu) se cargan de Google Fonts; si no hay red, se usa la tipografía del sistema. Si se borra `js/vendor/`, entra el CDN como red de seguridad.
 
@@ -38,6 +31,7 @@ npx serve .
 | **Diagrama de flujo** | Mermaid con zoom (`−` / `+` / `Ajustar` para verlo entero); el nodo activo se enciende y el diagrama lo sigue solo |
 | **Variables y contadores** | `i`, `j`, `minIdx`, `pivote`... más comparaciones e intercambios en vivo |
 | **Complejidad** | Tabla del tema junto a cada algoritmo |
+| **Historial de pasos** | Debajo de Complejidad: **todos** los pasos de la simulación, el más reciente arriba, con scroll propio para recorrerlos todos |
 
 ### Modos de uso
 
@@ -60,23 +54,17 @@ npx serve .
 ```
 visualizador/
 ├── README.md                # Este fichero
-├── visualizador/            # Maqueta original
-│   ├── index.html           # Se abre con doble clic
-│   ├── favicon.svg
-│   ├── css/estilos.css      # Tema claro y oscuro (tokens de joseluisgs.dev)
-│   └── js/
-│       ├── algoritmos.js    # Los 7 algoritmos: código, trazas y diagrama
-│       ├── motor.js         # Reproductor de pasos (play, pausa, salto)
-│       ├── ui.js            # Dibujo: código, barras y diagrama
-│       ├── quiz.js          # Modo reto
-│       ├── main.js          # Cableado general y modos
-│       └── vendor/          # Mermaid y highlight.js locales (sin internet)
-├── visualizador-a/          # Maqueta A (misma estructura)
-├── visualizador-b/          # Maqueta B (misma estructura)
-└── visualizador-c/          # Maqueta C (misma estructura)
+├── index.html               # Se abre con doble clic
+├── favicon.svg
+├── css/estilos.css          # Tema claro y oscuro (tokens de joseluisgs.dev)
+└── js/
+    ├── algoritmos.js        # Los 7 algoritmos: código, trazas y diagrama
+    ├── motor.js             # Reproductor de pasos (play, pausa, salto)
+    ├── ui.js                # Dibujo: código, barras, diagrama e historial
+    ├── quiz.js              # Modo reto
+    ├── main.js              # Cableado general y modos
+    └── vendor/              # Mermaid y highlight.js locales (sin internet)
 ```
-
-Cada maqueta es **independiente**: puedes borrar las que no elijas sin tocar la ganadora.
 
 > 💡 **Consejo:** el truco está en que los algoritmos **no dibujan nada**; solo emiten trazas (`paso(8, 'cmp', {...})`) y la web las reproduce. Para añadir un algoritmo nuevo basta con copiar el patrón de `algoritmos.js`.
 

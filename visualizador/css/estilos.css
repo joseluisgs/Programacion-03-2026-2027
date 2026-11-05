@@ -1028,37 +1028,43 @@ input[type="range"] {
   * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
 
-/* ============================================================
-   MAQUETA C - Estilo editor: codigo ancho + escena + barra
-   inferior a todo el ancho con variables, contadores y
-   complejidad
-   ============================================================ */
-.vista { grid-template-columns: minmax(430px, 560px) minmax(0, 1fr); }
-.panel-lateral { display: none; }
-
-.barra-inferior {
-  grid-column: 1 / -1;
+/* ------------------------------------------------------------
+   Historial COMPLETO de la simulación (debajo de Complejidad):
+   ocupa el hueco que sobra en el lateral y tiene scroll propio
+   para recorrer todos los pasos
+   ------------------------------------------------------------ */
+.bloque-historial {
+  flex: 1;
+  min-height: 0;
   display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 12px 30px;
-  padding: 11px 16px;
+  flex-direction: column;
 }
 
-.barra-inferior .estado-grupo { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; min-width: 0; }
-
-.barra-inferior .estado-titulo {
-  font-size: 0.65rem;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--vp-c-text-subtle);
-  white-space: nowrap;
+.historial {
+  list-style: none;
+  margin: 0;
+  padding: 2px 4px 2px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  flex: none;
+  /* Altura FIJA: ni vacío ni lleno cambia la página; el scroll es
+     SOLO de este componente */
+  height: 240px;
+  overflow-y: auto;
 }
 
-.barra-inferior .stats { flex-direction: row; gap: 18px; }
-.barra-inferior .stat { flex-direction: row; align-items: baseline; gap: 7px; background: transparent; padding: 0; }
-.barra-inferior .complejidad { flex-direction: row; flex-wrap: wrap; gap: 6px 16px; }
-.barra-inferior .uso { margin: 0; font-size: 0.72rem; }
+.historial li {
+  display: flex;
+  gap: 8px;
+  font-size: 0.74rem;
+  line-height: 1.4;
+  color: var(--vp-c-text-mute);
+  animation: aparecer 0.2s ease;
+}
 
-@media (max-width: 1280px) { .vista { grid-template-columns: minmax(340px, 420px) minmax(0, 1fr); } }
-@media (max-width: 760px) { .vista { grid-template-columns: 1fr; } .barra-inferior { grid-column: auto; } }
+.hist-icono { flex: none; }
+.hist-msg { min-width: 0; overflow-wrap: anywhere; }
+
+/* En modo comparar el lateral es una rejilla: altura fija y scroll */
+.vistas.dos .historial { flex: none; height: 210px; }

@@ -109,25 +109,29 @@ const plantillaVista = () => `
   </div>
 </div>
 
-<div class="panel barra-inferior">
-  <div class="estado-grupo">
-    <span class="estado-titulo">Variables</span>
+<aside class="panel panel-lateral">
+  <div class="bloque">
+    <h3>Variables en marcha</h3>
     <div class="vars-lista"></div>
   </div>
-  <div class="estado-grupo">
-    <span class="estado-titulo">Contadores</span>
+  <div class="bloque">
+    <h3>Contadores</h3>
     <div class="stats">
       <div class="stat"><b data-stat="pasos">0</b><span>pasos</span></div>
       <div class="stat"><b data-stat="cmp">0</b><span>comparaciones</span></div>
       <div class="stat"><b data-stat="swap">0</b><span class="lbl-swap">intercambios</span></div>
     </div>
   </div>
-  <div class="estado-grupo">
-    <span class="estado-titulo">Complejidad</span>
+  <div class="bloque">
+    <h3>Complejidad</h3>
     <div class="complejidad"></div>
     <p class="uso"></p>
   </div>
-</div>`;
+  <div class="bloque bloque-historial">
+    <h3>Historial de pasos</h3>
+    <ul class="historial"></ul>
+  </div>
+</aside>`;
 
 class Vista {
   constructor(indice) {
@@ -141,6 +145,7 @@ class Vista {
     this.tokenRender = 0;
     this._scrollTimer = null;
     this.pasoActual = null;
+    this.historial = [];
     this.zoom = 1;      // 1 = 100 %: el usuario puede agrandarlo o encogerlo
     this.ajustado = true; // por defecto el diagrama se dibuja ajustado al cuadro
     this._baseH = 0;    // alto del diagrama a zoom 100 %
@@ -167,6 +172,7 @@ class Vista {
     this.$stats = this.raiz.querySelector('.stats');
     this.$comp = this.raiz.querySelector('.complejidad');
     this.$uso = this.raiz.querySelector('.uso');
+    this.$historial = this.raiz.querySelector('.historial');
 
     // Motor propio de esta vista
     this.motor = new Motor();
@@ -236,6 +242,8 @@ class Vista {
     this.pintarMarcas({});
     this.pintarBanda({});
     this.pintarMensaje({ act: 'inicio', msg: 'Pulsa ▶ Play para animarlo, o ⏭ Paso para avanzar de uno en uno. Mira cómo se enciende la línea del código y el nodo del diagrama.' });
+    this.historial = [];
+    if (this.$historial) this.$historial.innerHTML = '';
     this.pintarVars({});
     this.pintarStats();
     this.pintarProgreso();
@@ -588,6 +596,20 @@ class Vista {
       : '<span class="vars-vacio">todavía no hay variables en marcha</span>';
   }
 
+  /**
+   * Historial COMPLETO de la simulación: se apunta cada paso con su
+   * mensaje. El más reciente arriba; el bloque tiene scroll propio
+   * para recorrer los pasos que hagan falta.
+   */
+  pintarHistorial(paso) {
+    if (!this.$historial) return;
+    const icono = ICONOS_PASO[paso.act] || 'ℹ️';
+    this.historial.unshift({ icono, msg: paso.msg || '' });
+    this.$historial.innerHTML = this.historial
+      .map((h) => `<li><span class="hist-icono">${h.icono}</span><span class="hist-msg">${escapar(h.msg)}</span></li>`)
+      .join('');
+  }
+
   pintarStats() {
     const s = this.motor.stats;
     this.$stats.querySelector('[data-stat="pasos"]').textContent = s.pasos;
@@ -614,6 +636,7 @@ class Vista {
     this.pintarBanda(paso);
     this.pintarMensaje(paso);
     this.pintarVars(paso);
+    this.pintarHistorial(paso);
     this.pintarStats();
     this.pintarProgreso();
   }
