@@ -9,6 +9,10 @@
     - [5.4.1. El problema del rendimiento (`+` vs. `StringBuilder`)](#541-el-problema-del-rendimiento--vs-stringbuilder)
     - [5.4.2. Uso correcto de `StringBuilder`](#542-uso-correcto-de-stringbuilder)
   - [5.5. Curiosidad: String Interning (Pool de cadenas)](#55-curiosidad-string-interning-pool-de-cadenas)
+  - [5.6. Formato de números y fechas](#56-formato-de-números-y-fechas)
+    - [5.6.1. Dos decimales y notación numérica](#561-dos-decimales-y-notación-numérica)
+    - [5.6.2. Moneda y cultura](#562-moneda-y-cultura)
+    - [5.6.3. Fechas con formato](#563-fechas-con-formato)
 
 
 
@@ -16,7 +20,7 @@
 
 > 💡 **Punto de partida:** ¿Alguna vez has copiado y pegado un texto largo en un editor y has notado que tarda? Eso es porque las cadenas de texto en C# son **inmutables**: cada vez que modificas una cadena, se crea una nueva en memoria. Entender esto es clave para escribir código eficiente.
 
-En este punto aprenderás cómo funcionan las cadenas en C#, sus métodos esenciales y por qué `StringBuilder` es tu mejor aliada para construir textos largos.
+En este punto aprenderás cómo funcionan las cadenas en C#, sus métodos esenciales y por qué `StringBuilder` es tu mejor aliada para construir textos largos; además, a formatear números y fechas para presentarlos como se ve en la vida real (euros, dos decimales, fechas europeas).
 
 **Objetivos de aprendizaje:**
 
@@ -25,6 +29,7 @@ En este punto aprenderás cómo funcionan las cadenas en C#, sus métodos esenci
 - Acceder y recorrer caracteres de una cadena
 - Usar métodos esenciales (`Split`, `Join`, `Replace`, `Contains`, `Substring`)
 - Construir texto eficientemente con `StringBuilder`
+- Formatear números y fechas con `F2`, `C2` y `CultureInfo`
 
 ## 5.1. Definición, inmutabilidad y tipo de referencia
 
@@ -233,6 +238,75 @@ Esto funciona porque `string` es inmutable: no hay riesgo de que un cambio en `a
 
 > 📝 **Nota:** El *String Interning* es automático para literales. Si creas cadenas con `new string(...)`, cada una tendrá su propia dirección de memoria.
 
+## 5.6. Formato de números y fechas
+
+Los datos guardados en el programa no son presentables tal cual: `6.5` no es un precio de tienda y `2026-12-25T18:30` no es cómo escribe la fecha una persona. El **formato** convierte cada tipo en su representación legible mediante **especificadores** (`F2`, `C2`, `dd/MM/yyyy`...) que se pasan a `ToString()` o directamente dentro de la interpolación.
+
+### 5.6.1. Dos decimales y notación numérica
+
+Los especificadores numéricos más usados son `F` (fijo) y `N` (con separador de miles); el número que sigue indica cuántos decimales se muestran (y redondea).
+
+```csharp
+double precio = 1234.5678;
+double nota = 7.6666;
+
+// F2: dos decimales fijos (redondea el valor)
+Console.WriteLine(precio.ToString("F2"));   // 1234,57
+Console.WriteLine($"{nota:F2}");            // 7,67
+
+// N2: dos decimales + separador de miles
+Console.WriteLine(precio.ToString("N2"));    // 1.234,57
+```
+
+> 📝 **Nota:** Los comentarios suponen la cultura `es-ES` (coma decimal, punto de miles), la habitual en España. En la siguiente subsección verás cómo fijarla para que el resultado sea idéntico en cualquier equipo.
+
+> 💡 **Consejo:** Usa `F2` cuando el número es el dato exacto (una nota, un precio) y `N2` cuando además quieras que se lean bien las cantidades grandes (facturas, estadísticas).
+
+### 5.6.2. Moneda y cultura
+
+La **cultura** (`CultureInfo`) decide el símbolo, el separador decimal y el formato de fecha: con `es-ES`, `6.5` se escribe `6,50 €`; con `en-US`, `$6.50`. Por eso, al formatear para un usuario, la cultura se pasa **de forma explícita** y no se deja al azar del equipo.
+
+```csharp
+using System.Globalization;
+
+var es = new CultureInfo("es-ES");
+
+double precio = 6.5;
+double total = 1250.8;
+
+// C (o C2): moneda según la cultura que le pases
+Console.WriteLine(precio.ToString("C2", es));   // 6,50 €
+Console.WriteLine(total.ToString("C", es));     // 1.250,80 €
+
+// La interpolación también admite el especificador
+Console.WriteLine($"El total es {total:C2}");   // usa la cultura del equipo
+```
+
+> 💡 **Consejo:** Fija siempre la cultura con `CultureInfo`. Si te la saltas, el resultado depende del ordenador donde se ejecute: en el tuyo puede salir `6,50 €` y en otro `6.50`.
+
+> 📝 **Nota:** También existe `string.Format("El precio es {0:C2}", precio)`, pero con la interpolación (`$"..."`) no hace falta: mismo resultado con menos ruido.
+
+📌 **Ejemplo real:** La práctica del cine imprime cada entrada con `precio.ToString("C2", Configuracion.Locale)`; por eso en la consola sale `6,50 €` y no `6.5`. Si mañana la ejecuta un compañero con el equipo en inglés, seguirá saliendo `6,50 €` porque la cultura va en el código.
+
+### 5.6.3. Fechas con formato
+
+Las fechas se formatean igual que los números: `ToString(formato, cultura)`, donde el formato es una plantilla de letras: `dd` (día con dos dígitos), `MM` (mes), `yyyy` (año) y `HH` (hora en24 horas).
+
+```csharp
+using System.Globalization;
+
+var es = new CultureInfo("es-ES");
+DateTime fecha = new(2026, 12, 25, 18, 30, 0);
+
+Console.WriteLine(fecha.ToString("dd/MM/yyyy", es));      // 25/12/2026
+Console.WriteLine(fecha.ToString("dd-MM-yyyy HH:mm", es)); // 25-12-2026 18:30
+Console.WriteLine(fecha.ToString("g", es));                // 25/12/2026 18:30
+```
+
+> ⚠️ **Advertencia:** Cuidado con el orden: `dd/MM/yyyy` es el formato europeo (día primero) y `MM/dd/yyyy` el americano (mes primero). Sin darse cuenta, un `05/12` puede leerse como el 5 de diciembre o como el 12 de mayo.
+
+📌 **Ejemplo real:** En la app del cine, la entrada que recibes al comprar imprime la fecha con `FechaCompra.ToString("g", ...)`: `25/12/2026 18:30`. Ese mismo formato `g` (fecha y hora abreviadas) es el que usan casi todas las aplicaciones para cabeceras y tickets.
+
 **Resumen del punto:**
 
 | Concepto | Descripción |
@@ -245,6 +319,9 @@ Esto funciona porque `string` es inmutable: no hay riesgo de que un cambio en `a
 | **Interpolación** | `$"texto {variable}"` — forma moderna de concatenar |
 | **`StringBuilder`** | Buffer mutable para construir texto eficientemente |
 | **String Interning** | Pool de cadenas — literales iguales comparten memoria |
+| **`F2` / `N2`** | Dos decimales fijos / dos decimales con separador de miles |
+| **`C2` y `CultureInfo`** | Moneda con la cultura explícita (es-ES: `6,50 €`) |
+| **Formatos de fecha** | `ToString("dd/MM/yyyy", es)`, `dd-MM-yyyy HH:mm`, `g` |
 
 ## ¿Qué viene después?
 
@@ -257,4 +334,5 @@ En el siguiente punto veremos las Expresiones Regulares (Regex): patrones de bú
 - [ ] Usar interpolación de cadenas (`$"{variable}"`) en lugar de concatenación
 - [ ] Usar `@""` (verbatim string) para expresiones regulares en C#
 - [ ] Usar `.ToCharArray()` si necesitas modificar caracteres de una cadena
+- [ ] Fijar siempre la cultura (`CultureInfo`) al formatear números y fechas
 - [ ] Pasar con `ref` solo cuando la función deba reemplazar el texto, y con `in` cuando solo lo vaya a leer
