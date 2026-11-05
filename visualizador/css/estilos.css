@@ -322,6 +322,29 @@ select, input[type="number"] {
   transition: border-color var(--transicion), box-shadow var(--transicion);
 }
 
+/* Los desplegables NATIVOS tienen que seguir el tema: sin esto, en modo
+   oscuro la lista que se despliega usa los colores del sistema y el
+   texto no se lee */
+html[data-theme="light"] { color-scheme: light; }
+html[data-theme="dark"] { color-scheme: dark; }
+
+select option {
+  background-color: var(--vp-c-bg-elv);
+  color: var(--vp-c-text);
+}
+
+/* En oscuro, fondo más sólido para que el texto del combo contraste */
+html[data-theme="dark"] select,
+html[data-theme="dark"] input[type="number"] {
+  background-color: #2b2d34;
+  color: #f4f5f8;
+}
+
+html[data-theme="dark"] select:hover,
+html[data-theme="dark"] input[type="number"]:hover {
+  background-color: #33363e;
+}
+
 select:hover, input[type="number"]:hover { background: var(--vp-c-control-hover); }
 
 select:focus, input[type="number"]:focus {
