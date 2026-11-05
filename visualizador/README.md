@@ -12,11 +12,18 @@ Web para visualizar en animación los **7 algoritmos de ordenación y búsqueda*
 
 ## 1. Cómo abrirlo
 
-Doble clic en `index.html`. No hace falta instalar nada ni compilar.
+Hay **cuatro opciones** dentro de esta carpeta; elige la que más te guste y abre su `index.html` con doble clic. No hace falta instalar nada ni compilar.
 
-> 📝 **Nota:** las librerías van **dentro de la carpeta** (`js/vendor/`), así que funciona con doble clic y **sin internet**. Solo las fuentes (Ubuntu) se cargan de Google Fonts; si no hay red, se usa la tipografía del sistema. Si se borra `js/vendor/`, entra el CDN como red de seguridad.
+| Carpeta | Maqueta | Distribución |
+|---------|---------|--------------|
+| `visualizador/` | **Original** | Código · escena · lateral (variables, contadores, complejidad) |
+| `visualizador-a/` | **A — Lateral vivo** | Como la original, pero con leyenda, **historial de pasos** y atajos en el lateral; en Comparar empieza sin diagrama |
+| `visualizador-b/` | **B — Barra de estado** | Sin lateral: variables y contadores en una barra bajo las barras y la complejidad en el pie del código |
+| `visualizador-c/` | **C — Estilo editor** | Código más ancho y barra inferior a todo el ancho con variables, contadores y complejidad |
 
-También se puede servir con cualquier servidor estático:
+> 📝 **Nota:** las librerías van **dentro de cada carpeta** (`js/vendor/`), así que cualquier maqueta funciona con doble clic y **sin internet**. Solo las fuentes (Ubuntu) se cargan de Google Fonts; si no hay red, se usa la tipografía del sistema. Si se borra `js/vendor/`, entra el CDN como red de seguridad.
+
+También se puede servir con cualquier servidor estático (desde dentro de la carpeta elegida):
 
 ```bash
 npx serve .
@@ -44,21 +51,32 @@ npx serve .
 |-------|--------|
 | `Espacio` | Play / pausa |
 | `→` | Avanzar un paso |
+| `R` | Reiniciar |
+| `F` | Ejecutar hasta el final |
 | `1` a `4` | Responder en el modo reto |
 
 ## 3. Estructura
 
 ```
 visualizador/
-├── index.html          # La página (abre con doble clic)
-├── css/estilos.css     # Tema claro y oscuro con los tokens de joseluisgs.dev
-└── js/
-    ├── algoritmos.js   # Los 7 algoritmos: código, trazas y diagrama
-    ├── motor.js        # Reproductor de pasos (play, pausa, salto)
-    ├── ui.js           # Dibujo: código, barras y diagrama
-    ├── quiz.js         # Modo reto
-    └── main.js         # Cableado general y modos
+├── README.md                # Este fichero
+├── visualizador/            # Maqueta original
+│   ├── index.html           # Se abre con doble clic
+│   ├── favicon.svg
+│   ├── css/estilos.css      # Tema claro y oscuro (tokens de joseluisgs.dev)
+│   └── js/
+│       ├── algoritmos.js    # Los 7 algoritmos: código, trazas y diagrama
+│       ├── motor.js         # Reproductor de pasos (play, pausa, salto)
+│       ├── ui.js            # Dibujo: código, barras y diagrama
+│       ├── quiz.js          # Modo reto
+│       ├── main.js          # Cableado general y modos
+│       └── vendor/          # Mermaid y highlight.js locales (sin internet)
+├── visualizador-a/          # Maqueta A (misma estructura)
+├── visualizador-b/          # Maqueta B (misma estructura)
+└── visualizador-c/          # Maqueta C (misma estructura)
 ```
+
+Cada maqueta es **independiente**: puedes borrar las que no elijas sin tocar la ganadora.
 
 > 💡 **Consejo:** el truco está en que los algoritmos **no dibujan nada**; solo emiten trazas (`paso(8, 'cmp', {...})`) y la web las reproduce. Para añadir un algoritmo nuevo basta con copiar el patrón de `algoritmos.js`.
 

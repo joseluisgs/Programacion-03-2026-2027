@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="theme-color" content="#5c92d1" />
+<title>Visualizador (maqueta B) · Ordenación y búsqueda</title>
+<meta name="description" content="Visualizador animado de los algoritmos de ordenación y búsqueda, con el paso a paso del código C# y su diagrama de flujo." />
+<meta name="author" content="José Luis González Sánchez" />
+
+<!-- Mismo mecanismo que joseluisgs.dev: elección guardada > preferencia del sistema -->
+<script>
+  (function () {
+    try {
+      const guardado = localStorage.getItem("ud03-visualizador-tema");
+      const oscuroSistema = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+      const tema = guardado === "dark" || (guardado !== "light" && oscuroSistema) ? "dark" : "light";
+      document.documentElement.setAttribute("data-theme", tema);
+    } catch (e) {
+      document.documentElement.setAttribute("data-theme", "light");
+    }
+  })();
+</script>
+
+<link rel="icon" type="image/svg+xml" href="favicon.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/estilos.css" />
+</head>
+<body>
+
+<div class="fondo" aria-hidden="true"></div>
+
+<!-- ============================================================
+     Cabecera: marca + modos + tema
+     ============================================================ -->
+<header class="cabecera">
+  <div class="marca">
+    <div class="logo">⚡</div>
+    <div class="titulo-marca">
+      <h1>Visualizador de algoritmos</h1>
+      <p>Ordenación y búsqueda · Maqueta B</p>
+    </div>
+  </div>
+
+  <nav class="modos" aria-label="Modos de uso">
+    <button class="modo activo" data-modo="practica">🎬 Práctica</button>
+    <button class="modo" data-modo="comparar">⚔️ Comparar</button>
+    <button class="modo" data-modo="reto">🧠 Reto</button>
+  </nav>
+
+  <div class="acciones">
+    <span class="atajos"><kbd>Espacio</kbd> play · <kbd>→</kbd> paso</span>
+    <button class="btn-icono" id="btn-tema" type="button" title="Cambiar entre tema claro y oscuro" aria-label="Cambiar tema">🌙</button>
+  </div>
+</header>
+
+<!-- ============================================================
+     Barra de controles
+     ============================================================ -->
+<section class="controles">
+  <div class="control">
+    <label for="sel-algo-a">Algoritmo</label>
+    <select id="sel-algo-a"></select>
+  </div>
+
+  <div class="control oculto" id="control-algo-b">
+    <label for="sel-algo-b">Compara con</label>
+    <select id="sel-algo-b"></select>
+  </div>
+
+  <div class="control oculto" id="control-objetivo">
+    <label for="inp-objetivo">Objetivo</label>
+    <input type="number" id="inp-objetivo" min="0" max="999" placeholder="nº" />
+  </div>
+
+  <div class="control">
+    <label for="sel-datos">Datos</label>
+    <select id="sel-datos">
+      <option value="aleatorio">Aleatorios</option>
+      <option value="ordenado">Ya ordenados</option>
+      <option value="inverso">Orden inverso</option>
+      <option value="casi">Casi ordenados</option>
+    </select>
+  </div>
+
+  <div class="control">
+    <label for="rng-tam">Tamaño <span class="valor-label" id="val-tam">12</span></label>
+    <input type="range" id="rng-tam" min="6" max="24" value="12" />
+  </div>
+
+  <div class="control">
+    <label for="rng-vel">Velocidad <span class="valor-label" id="val-vel">-</span></label>
+    <input type="range" id="rng-vel" min="0" max="100" value="65" />
+  </div>
+
+  <div class="botonera">
+    <button class="btn" id="btn-nuevo" type="button" title="Generar otro array">🎲 Nuevo</button>
+    <button class="btn" id="btn-reset" type="button" title="Volver al inicio">⏮ Reiniciar</button>
+    <button class="btn primario" id="btn-play" type="button" title="Reproducir o pausar (Espacio)">▶ Play</button>
+    <button class="btn" id="btn-paso" type="button" title="Avanzar un paso (Flecha derecha)">⏭ Paso</button>
+    <button class="btn" id="btn-fin" type="button" title="Ejecutar hasta el final">⏩ Fin</button>
+  </div>
+</section>
+
+<div class="aviso" id="aviso" hidden></div>
+
+<!-- ============================================================
+     Zona de vistas (práctica = 1, comparación = 2)
+     ============================================================ -->
+<main class="vistas" id="zona-vistas"></main>
+
+<div class="duelo" id="duelo" hidden></div>
+
+<footer class="pie">
+  <span class="pie-autor">J.L. González. 1DAW. Programación. I.E.S. Luis Vives (Leganés).</span>
+  <span class="pie-links">
+    <a href="https://joseluisgs.dev" target="_blank" rel="noopener noreferrer">joseluisgs.dev</a>
+    · Hecho con ❤️ para ti
+  </span>
+</footer>
+
+<!-- Modal del modo reto (lo genera js/quiz.js) -->
+<div class="quiz-fondo" id="quiz-fondo" hidden></div>
+
+<noscript>
+  <div class="noscript">Este visualizador necesita JavaScript activado para animar los algoritmos.</div>
+</noscript>
+
+<!-- Librerías locales: la web funciona con doble clic en index.html,
+     incluso sin internet. Si faltara algún fichero, se usa el CDN
+     como red de seguridad; y si no hay red tampoco, la animación
+     sigue funcionando (sin diagrama ni resaltado de sintaxis). -->
+<script src="js/vendor/mermaid.min.js"></script>
+<script src="js/vendor/highlight.min.js"></script>
+<script>
+  if (!window.mermaid) {
+    document.write('<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"><\/script>');
+  }
+  if (!window.hljs) {
+    document.write('<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.11.1/build/highlight.min.js"><\/script>');
+  }
+</script>
+
+<script src="js/algoritmos.js"></script>
+<script src="js/motor.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/quiz.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

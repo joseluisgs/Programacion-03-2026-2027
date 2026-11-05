@@ -69,6 +69,10 @@ const algoritmosActivos = () =>
   estado.modo === 'comparar' ? [estado.algoA, estado.algoB] : [estado.algoA];
 
 const velMs = () => Math.max(30, Math.round(750 - Number($('#rng-vel').value) * 7.2));
+const pintarVelocidad = () => {
+  const el = $('#val-vel');
+  if (el) el.textContent = `${velMs()} ms`;
+};
 
 const todosTerminados = () => estado.vistas.length > 0 && estado.vistas.every((v) => v.motor.terminado);
 const algunoCorriendo = () => estado.vistas.some((v) => v.motor.corriendo);
@@ -139,6 +143,14 @@ function montar() {
   for (let k = 0; k < n; k++) estado.vistas.push(new Vista(k));
 
   $('#control-algo-b').classList.toggle('oculto', estado.modo !== 'comparar');
+  // Maqueta A: en comparacion se empieza sin diagrama para ver ambas animaciones sin scroll
+  if (estado.modo === 'comparar') {
+    estado.vistas.forEach((v) => {
+      v.$diagrama.style.display = 'none';
+      const btn = v.raiz.querySelector('[data-accion="diagrama"]');
+      if (btn) btn.textContent = 'Mostrar';
+    });
+  }
 
   const eraReto = Quiz.activo;
   Quiz.activo = estado.modo === 'reto';
@@ -291,6 +303,7 @@ function registrarEventos() {
 
   $('#rng-vel').addEventListener('input', () => {
     estado.vistas.forEach((v) => { v.motor.vel = velMs(); });
+    pintarVelocidad();
   });
 
   // Transporte
@@ -315,6 +328,10 @@ function registrarEventos() {
     } else if (ev.code === 'ArrowRight') {
       ev.preventDefault();
       unPaso();
+    } else if (ev.key === 'r' || ev.key === 'R') {
+      if (!ev.ctrlKey && !ev.metaKey && !ev.altKey) reiniciar();
+    } else if (ev.key === 'f' || ev.key === 'F') {
+      if (!ev.ctrlKey && !ev.metaKey && !ev.altKey) irAlFinal();
     }
   });
 }
@@ -326,5 +343,6 @@ Quiz.init();
 rellenarSelects();
 pintarBotonTema();
 registrarEventos();
+pintarVelocidad();
 estado.arrayBase = generarArray();
 montar();
