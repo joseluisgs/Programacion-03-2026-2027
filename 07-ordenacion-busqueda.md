@@ -721,6 +721,8 @@ int BuscarBinaria(int[] arr, int objetivo)
 
 > 💡 **Analogía:** El juego del "mayor o menor". Piensas un número del 1 al 100 y tu amigo pregunta 50. Dices "mayor": a partir de ahí tu amigo **ya no vuelve a preguntar nada del 1 al 50**, se lo queda en la cabeza y sigue con el 51-100. La recursión es ese mismo juego repitiéndose consigo mismo con el rango nuevo.
 
+> 🎥 **Visualización de Búsqueda Binaria Recursiva:** https://www.youtube.com/watch?v=wz7XgKowJIg
+
 La diferencia práctica es que **ya no hay variables de estado viviendo en un bucle**: cada llamada lleva `bajo` y `alto` como parámetros, así que son dos argumentos más que en la versión iterativa.
 
 📐 **Ordinograma:** el flujo del código de abajo. Los tres terminales de este algoritmo **sí son la respuesta final**: `return -1` (no está), `return medio` (está) y los dos `return` de las líneas 9 y 10, que devuelven lo que traiga la llamada hija. Las flechas discontinuas son la recursión.
