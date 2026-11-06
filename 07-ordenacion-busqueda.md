@@ -9,6 +9,7 @@
   - [7.3. Algoritmos de búsqueda (Searching)](#73-algoritmos-de-búsqueda-searching)
     - [7.3.1. Búsqueda lineal](#731-búsqueda-lineal)
     - [7.3.2. Búsqueda binaria](#732-búsqueda-binaria)
+    - [7.3.3. Búsqueda binaria recursiva](#733-búsqueda-binaria-recursiva)
   - [7.4. Tabla comparativa de complejidad](#74-tabla-comparativa-de-complejidad)
   - [7.5. Cuándo usar cada algoritmo](#75-cuándo-usar-cada-algoritmo)
 
@@ -18,13 +19,13 @@
 
 > 💡 **Punto de partida:** ¿Alguna vez has abierto Netflix y has visto que las películas están ordenadas por "Más populares", "Estrenos recientes" o "Mi lista"? Detrás de ese orden hay algoritmos. Pero, ¿cuál es el mejor? ¿El más rápido siempre es el mejor?
 
-En este punto aprenderás los algoritmos de ordenación más importantes (Burbuja, Selección, Inserción, Shell Sort, QuickSort) y los de búsqueda (Lineal y Binaria), analizando su eficiencia con la notación Big O.
+En este punto aprenderás los algoritmos de ordenación más importantes (Burbuja, Selección, Inserción, Shell Sort, QuickSort) y los de búsqueda (Lineal, Binaria y Binaria recursiva), analizando su eficiencia con la notación Big O.
 
 **Objetivos de aprendizaje:**
 
 - Entender la notación Big O y comparar rendimientos
 - Implementar los algoritmos de ordenación básicos
-- Implementar búsqueda lineal y binaria
+- Implementar búsqueda lineal, binaria y binaria recursiva
 - Saber cuándo usar cada algoritmo según el contexto
 
 ## 7.1. ¿Qué es la notación Big O?
@@ -407,6 +408,82 @@ int BuscarBinaria(int[] arr, int objetivo)
 > - **Búsqueda Lineal** = Revisar cada estantería una por una
 > - **Búsqueda Binaria** = Abrir el libro por la mitad y decidir si buscar en la primera o segunda parte
 
+### 7.3.3. Búsqueda binaria recursiva
+
+**Idea:** Es la misma búsqueda binaria de antes, pero **sin `while`**: la función se llama a sí misma con la mitad que todavía puede contener el objetivo. Cada llamada descarta la mitad de lo que queda, exactamente igual que la versión con bucle, hasta llegar al caso base (no queda sitio) o dar con el elemento.
+
+📌 **Ejemplo real:** Es lo que hace un médico de urgencias con el triaje. Pregunta "¿dolor de cabeza o de barriga?" y, según la respuesta, deriva a un especialista que vuelve a preguntar **otra mitad de preguntas**, pero solo sobre ese trozo.
+
+> 💡 **Analogía:** El juego del "mayor o menor". Piensas un número del 1 al 100 y tu amigo pregunta 50. Dices "mayor": a partir de ahí tu amigo **ya no vuelve a preguntar nada del 1 al 50**, se lo queda en la cabeza y sigue con el 51-100. La recursión es ese mismo juego repitiéndose consigo mismo con el rango nuevo.
+
+La diferencia práctica es que **ya no hay variables de estado viviendo en un bucle**: cada llamada lleva `bajo` y `alto` como parámetros, así que son dos argumentos más que en la versión iterativa.
+
+```mermaid
+graph TD
+    S(("Inicio")) --> BASE{"¿bajo &gt; alto?"}
+    BASE -->|"Sí: no queda sitio"| KO["Devolvo -1"]
+    BASE -->|"No: queda rango"| MID["Calculo el medio"]
+    MID --> COMP{"¿arr[medio] == objetivo?"}
+    COMP -->|"Sí"| OK["¡Encontrado!"]
+    COMP -->|"No"| DIR{"¿arr[medio] &lt; objetivo?"}
+    DIR -->|"Sí: mitad derecha"| DER["Llamo con medio + 1, alto"]
+    DIR -->|"No: mitad izquierda"| IZQ["Llamo con bajo, medio - 1"]
+    DER --> S
+    IZQ --> S
+    style S fill:#4CAF50,color:#fff
+    style OK fill:#4CAF50,color:#fff
+    style KO fill:#f44336,color:#fff
+    style BASE fill:#FF9800,color:#fff
+    style COMP fill:#FF9800,color:#fff
+    style DIR fill:#FF9800,color:#fff
+    style MID fill:#2196F3,color:#fff
+    style DER fill:#9C27B0,color:#fff
+    style IZQ fill:#9C27B0,color:#fff
+```
+
+En el diagrama se ve el corazón del asunto: hay un **caso base** (`¿bajo > alto?`) que corta la recursión, y una **llamada recursiva** que vuelve a empezar con un rango más pequeño. Sin el caso base, la función se llamaría a sí misma para siempre.
+
+La implementación en C# es esta:
+
+```csharp
+int BuscarBinariaRec(int[] arr, int objetivo, int bajo, int alto)
+{
+    // Caso base: no queda sitio, el objetivo no está
+    if (bajo > alto) return -1;
+    int medio = bajo + (alto - bajo) / 2;
+    if (arr[medio] == objetivo) return medio;
+    // ¿En qué mitad puede estar?
+    if (arr[medio] < objetivo)
+        return BuscarBinariaRec(arr, objetivo, medio + 1, alto);
+    return BuscarBinariaRec(arr, objetivo, bajo, medio - 1);
+}
+```
+
+Fíjate en el `return` delante de cada llamada: **el valor devuelto vuelve subiendo** por todas las llamadas hasta la primera. Eso es lo que la versión con `while` no necesita, porque el `while` ya tiene la variable `resultado` esperando en el mismo sitio.
+
+Las dos versiones hacen exactamente lo mismo, paso a paso:
+
+| Aspecto | Iterativa (`while`) | Recursiva (se llama a sí misma) |
+| :--- | :--- | :--- |
+| **Rango** | Variables `bajo` y `alto` que se actualizan | `bajo` y `alto` llegan como **parámetros** |
+| **Cómo se corta** | `while (bajo <= alto)` deja de cumplirse | Caso base `if (bajo > alto) return -1;` |
+| **Memoria** | Un solo marco de pila | Un marco de pila **por cada mitad** que queda |
+| **Resultado** | Se guarda en una variable | Se devuelve con `return` y sube por la pila |
+| **Complejidad** | $O(\log n)$ | $O(\log n)$ — **idéntica** |
+
+| Aspecto | Evaluación |
+| :--- | :--- |
+| **Mejor caso** | $O(1)$ — elemento central |
+| **Peor caso** | $O(\log n)$ |
+| **Requiere ordenación** | ✅ Sí |
+| **Uso** | Arrays grandes y ordenados |
+
+> ⚠️ **Advertencia:** cada llamada consume un marco de la pila. Con un array de 1.000.000 de elementos serán unas 20 llamadas apiladas (nada grave), pero una recursión mal planteada —por ejemplo, olvidar el caso base— puede llenar la pila y romper el programa. La versión con `while` no tiene ese riesgo.
+
+> 📝 **Nota:** en C# `Array.BinarySearch()` usa la versión **iterativa**: es más rápida y no gasta pila. La recursiva se ve sobre todo en entrevistas y en problemas que ya son recursivos de por sí (árboles, carpetas, expresiones anidadas).
+
+> 🔧 **Truco para recordarlo:** *iterativa = bucle que repite*, *recursiva = función que se llama*. Si puedes, practica las dos: te enseñan a pensar de formas distintas.
+
 ## 7.4. Tabla comparativa de complejidad
 
 | Algoritmo | Mejor Caso | Promedio | Peor Caso | Estable |
@@ -418,6 +495,7 @@ int BuscarBinaria(int[] arr, int objetivo)
 | **QuickSort** | $O(n \log n)$ | $O(n \log n)$ | $O(n^2)$ | ❌ No |
 | **Búsqueda Lineal** | $O(1)$ | $O(n)$ | $O(n)$ | N/A |
 | **Búsqueda Binaria** | $O(1)$ | $O(\log n)$ | $O(\log n)$ | N/A |
+| **Búsqueda Binaria Recursiva** | $O(1)$ | $O(\log n)$ | $O(\log n)$ | N/A |
 
 > 📝 **Nota:** En C# puedes usar `Array.Sort(arr)` (usa Introsort, una variante de QuickSort) y `Array.BinarySearch(arr, valor)` (Búsqueda Binaria). En la práctica, usa estos métodos estándar en lugar de implementar los algoritmos a mano.
 
@@ -431,6 +509,7 @@ int BuscarBinaria(int[] arr, int objetivo)
 | **Estabilidad necesaria** | Burbuja o Inserción |
 | **Búsqueda en array ordenado** | Búsqueda Binaria |
 | **Búsqueda en array no ordenado** | Búsqueda Lineal |
+| **Problema ya recursivo (árboles, carpetas)** | Búsqueda Binaria Recursiva |
 | **Máximo rendimiento** | QuickSort + Búsqueda Binaria |
 
 **Resumen del punto:**
@@ -445,6 +524,7 @@ int BuscarBinaria(int[] arr, int objetivo)
 | **QuickSort** | Divide y vencerás, $O(n \log n)$ promedio |
 | **Búsqueda Lineal** | Recorre todo, $O(n)$ |
 | **Búsqueda Binaria** | Divide por la mitad, $O(\log n)$, requiere ordenación |
+| **Búsqueda Binaria Recursiva** | Divide por la mitad llamándose a sí misma, $O(\log n)$ |
 
 ## ¿Qué viene después?
 

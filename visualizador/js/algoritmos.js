@@ -729,6 +729,156 @@ function* genBinaria(arr, objetivo) {
 }
 
 /* ============================================================
+   8) BÚSQUEDA BINARIA RECURSIVA
+   ------------------------------------------------------------
+   Misma idea que la iterativa, pero la función se llama a sí
+   misma con la mitad que queda en lugar de usar un while.
+   ============================================================ */
+const COD_BINARIA_REC = [
+  'int BuscarBinariaRec(int[] arr, int objetivo, int bajo, int alto) {',
+  '    // Caso base: no queda sitio, el objetivo no está',
+  '    if (bajo > alto) return -1;',
+  '    int medio = bajo + (alto - bajo) / 2;',
+  '    if (arr[medio] == objetivo) return medio;',
+  '    // ¿En qué mitad puede estar?',
+  '    if (arr[medio] < objetivo)',
+  '        return BuscarBinariaRec(arr, objetivo, medio + 1, alto);',
+  '    return BuscarBinariaRec(arr, objetivo, bajo, medio - 1);',
+  '}'
+];
+
+const FLUJO_BINARIA_REC = `graph TD
+  INICIO(["🎬 Inicio"]) --> L3{"¿bajo &gt; alto?"}
+  L3 -->|"Sí: no queda sitio"| KO(["😕 No encontrado"])
+  L3 -->|"No: queda rango"| L4["medio = bajo + (alto - bajo) / 2"]
+  L4 --> L5{"¿arr[medio] == objetivo?"}
+  L5 -->|"Sí"| OK(["🎉 ¡Encontrado!"])
+  L5 -->|"No"| L7{"¿arr[medio] &lt; objetivo?"}
+  L7 -->|"Sí: mitad derecha"| L8["return BuscarBinariaRec(..., medio + 1, alto)"]
+  L7 -->|"No: mitad izquierda"| L9["return BuscarBinariaRec(..., bajo, medio - 1)"]
+  L8 --> REC(["📞 Nueva llamada"])
+  L9 --> REC
+  REC --> L3`;
+
+function* genBinariaRec(arr, objetivo) {
+  const a = [...arr];
+  const visit = [];
+  let nivel = -1;
+
+  yield paso(1, 'init', {
+    arr: [...a], vars: { objetivo, bajo: 0, alto: a.length - 1 },
+    rango: [0, a.length - 1], descartar: true, visit: [],
+    marcas: [['bajo', 0], ['alto', a.length - 1]],
+    msg: `Llamada inicial: buscar ${objetivo} entre las posiciones 0 y ${a.length - 1}`
+  });
+
+  // Cada nivel de la recursión es una llamada nueva a ESTA MISMA función.
+  // `miNivel` se guarda al entrar: la variable compartida `nivel` sigue
+  // creciendo con las llamadas hijas y no sirve para hablar del nivel actual.
+  function* llamar(bajo, alto) {
+    nivel++;
+    const miNivel = nivel;
+
+    // ---- Línea 3: caso base ----
+    const vacio = bajo > alto;
+    yield paso(3, vacio ? 'notfound' : 'check', {
+      arr: [...a], vars: { bajo, alto, objetivo, nivel: miNivel },
+      rango: vacio ? [] : [bajo, alto], descartar: true, visit: [...visit],
+      marcas: vacio ? [] : [['bajo', bajo], ['alto', alto]],
+      msg: vacio
+        ? `Nivel ${miNivel}: ¿bajo (${bajo}) > alto (${alto})? Sí → no queda sitio, devolvemos -1`
+        : `Nivel ${miNivel}: ¿bajo (${bajo}) > alto (${alto})? No → seguimos con el rango ${bajo}..${alto}`
+    });
+
+    if (vacio) return -1;
+
+    // ---- Línea 4: calculamos el medio ----
+    const medio = bajo + Math.floor((alto - bajo) / 2);
+    visit.push(medio);
+
+    yield paso(4, 'set', {
+      arr: [...a], vars: { bajo, alto, medio, objetivo, nivel: miNivel },
+      rango: [bajo, alto], descartar: true, visit: [...visit],
+      idx: [[medio, 'mid']], marcas: [['bajo', bajo], ['medio', medio], ['alto', alto]],
+      msg: `Nivel ${miNivel}: medio = ${bajo} + (${alto} - ${bajo}) / 2 = ${medio}`
+    });
+
+    // ---- Línea 5: ¿lo hemos dado? ----
+    const igual = a[medio] === objetivo;
+    yield paso(5, 'cmp', {
+      arr: [...a], vars: { bajo, alto, medio, objetivo, nivel: miNivel },
+      rango: [bajo, alto], descartar: true, visit: [...visit],
+      idx: [[medio, igual ? 'found' : 'cmp']], marcas: [['bajo', bajo], ['medio', medio], ['alto', alto]],
+      msg: `¿a[${medio}] = ${a[medio]} es igual a ${objetivo}? ${igual ? '¡Sí! Encontrado 🎉' : 'No → elegimos mitad'}`
+    });
+
+    if (igual) {
+      yield paso(5, 'found', {
+        arr: [...a], vars: { bajo, alto, medio, objetivo, nivel: miNivel, resultado: medio },
+        visit: [...visit], idx: [[medio, 'found']], marcas: [['medio', medio]],
+        msg: `🎉 ¡Encontrado en la posición ${medio}! Cerramos la llamada del nivel ${miNivel}`
+      });
+      return medio;
+    }
+
+    // ---- Línea 7: ¿mitad derecha o izquierda? ----
+    const derecha = a[medio] < objetivo;
+    yield paso(7, 'check', {
+      arr: [...a], vars: { bajo, alto, medio, objetivo, nivel: miNivel },
+      rango: [bajo, alto], descartar: true, visit: [...visit],
+      idx: [[medio, 'discard']], marcas: [['bajo', bajo], ['medio', medio], ['alto', alto]],
+      msg: derecha
+        ? `${a[medio]} < ${objetivo} → el objetivo está en la MITAD DERECHA`
+        : `${a[medio]} > ${objetivo} → el objetivo está en la MITAD IZQUIERDA`
+    });
+
+    // ---- Líneas 8 y 9: la llamada recursiva ----
+    const lineaLlamada = derecha ? 8 : 9;
+    const nuevosLimites = derecha ? [medio + 1, alto] : [bajo, medio - 1];
+
+    yield paso(lineaLlamada, 'call', {
+      arr: [...a], vars: { bajo, alto, medio, objetivo, nivel: miNivel },
+      rango: nuevosLimites, descartar: true, visit: [...visit],
+      marcas: [['bajo', nuevosLimites[0]], ['alto', nuevosLimites[1]]],
+      msg: `📞 Nivel ${miNivel}: llamamos a BuscarBinariaRec(arr, ${objetivo}, ${nuevosLimites[0]}, ${nuevosLimites[1]})`
+    });
+
+    const resultado = yield* llamar(nuevosLimites[0], nuevosLimites[1]);
+
+    // El valor vuelve por la misma línea que hizo la llamada: eso es
+    // lo que la recursión añade sobre la versión con bucle.
+    yield paso(lineaLlamada, 'ret', {
+      arr: [...a], vars: { bajo, alto, medio, objetivo, nivel: miNivel, resultado },
+      rango: [bajo, alto], descartar: true, visit: [...visit],
+      idx: resultado >= 0 ? [[resultado, 'found']] : [],
+      marcas: resultado >= 0 ? [['medio', resultado]] : [],
+      msg: resultado === -1
+        ? `↩️ Nivel ${miNivel}: la llamada devolvió -1 → lo devolvemos a su vez`
+        : `↩️ Nivel ${miNivel}: la llamada devolvió ${resultado} → lo devolvemos hasta arriba`
+    });
+
+    return resultado;
+  }
+
+  const res = yield* llamar(0, a.length - 1);
+  nivel = -1; // dejamos el contador como estaba para la próxima ejecución
+
+  if (res === -1) {
+    yield paso(3, 'fin', {
+      arr: [...a], vars: { resultado: -1 }, visit: [...visit],
+      msg: `🏁 Resultado final: -1 → ${objetivo} no está en el array`
+    });
+  } else {
+    yield paso(1, 'fin', {
+      arr: [...a], vars: { resultado: res }, visit: [...visit],
+      idx: [[res, 'found']], marcas: [['medio', res]],
+      msg: `🏁 Resultado final: ${res} 🎉`
+    });
+  }
+  return res;
+}
+
+/* ============================================================
    Registro de algoritmos (orden del tema)
    ============================================================ */
 const ALGORITMOS = {
@@ -787,11 +937,19 @@ const ALGORITMOS = {
     uso: 'Arrays grandes y ordenados.',
     complejidad: { mejor: 'O(1)', promedio: 'O(log n)', peor: 'O(log n)', estable: false, requiereOrden: true },
     codigo: COD_BINARIA, flujo: FLUJO_BINARIA, generar: genBinaria
+  },
+  binariarecursiva: {
+    id: 'binariarecursiva', nombre: 'Búsqueda binaria recursiva', icono: '🌀', tipo: 'busqueda',
+    idea: 'Lo mismo que la binaria, pero la función se llama a sí misma con la mitad que queda. Cada llamada descarta la mitad.',
+    ejemplo: 'Como repartir una lista de invitados a dos equipos: eliges el del medio y le pides a alguien que siga con su mitad.',
+    uso: 'Arrays grandes y ordenados, cuando la versión recursiva queda más clara.',
+    complejidad: { mejor: 'O(1)', promedio: 'O(log n)', peor: 'O(log n)', estable: false, requiereOrden: true },
+    codigo: COD_BINARIA_REC, flujo: FLUJO_BINARIA_REC, generar: genBinariaRec
   }
 };
 
 const ORDENACION = ['burbuja', 'seleccion', 'insercion', 'shell', 'quicksort'];
-const BUSQUEDA = ['lineal', 'binaria'];
+const BUSQUEDA = ['lineal', 'binaria', 'binariarecursiva'];
 const TODOS = [...ORDENACION, ...BUSQUEDA];
 
 // Líneas que tienen nodo en el diagrama (para resaltarlo al ejecutar)

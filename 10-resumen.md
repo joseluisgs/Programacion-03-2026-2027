@@ -170,6 +170,7 @@ graph TD
 | **QuickSort** | $O(n \log n)$ | ❌ | Más rápido en la práctica |
 | **Búsqueda Lineal** | $O(n)$ | N/A | Arrays no ordenados |
 | **Búsqueda Binaria** | $O(\log n)$ | N/A | Arrays ordenados |
+| **Búsqueda Binaria Recursiva** | $O(\log n)$ | N/A | Arrays ordenados, código recursivo |
 
 📌 **Ejemplo real:** Netflix usa Búsqueda Binaria sobre títulos ordenados. Con millones de películas, $O(\log n)$ es mucho más rápido que $O(n)$.
 
@@ -266,6 +267,8 @@ Antes de dar por cerrado el tema, asegúrate de poder responder **SÍ** a estas 
 | **QuickSort** | Divide y vencerás con pivote — $O(n \log n)$ |
 | **Búsqueda Lineal** | Recorre todo el array — $O(n)$ |
 | **Búsqueda Binaria** | Divide por la mitad — $O(\log n)$, requiere ordenación |
+| **Búsqueda Binaria Recursiva** | Divide por la mitad llamándose a sí misma — $O(\log n)$ |
+| **Caso base** | Condición que corta una recursión para que no sea infinita |
 
 ## 10.7. Ejercicios de repaso
 
@@ -279,6 +282,7 @@ Antes de dar por cerrado el tema, asegúrate de poder responder **SÍ** a estas 
 8. **Ordena un array** con Selection Sort y cuenta los intercambios
 9. **Construye un log** con `StringBuilder` en lugar de concatenar con `+`
 10. **Extrae las fechas** de un texto usando regex con grupos de captura
+11. **Reescribe la Búsqueda Binaria en versión recursiva** y compara cuántos pasos da una y otra sobre el mismo array
 
 ## 10.8. ¿Qué viene después?
 

@@ -2,7 +2,7 @@
 
 > 💡 **Punto de partida:** ¿y si pudieras ver el algoritmo "pensar" línea a línea, mientras las barras se mueven?
 
-Web para visualizar en animación los **7 algoritmos de ordenación y búsqueda**, con el código C# del tema resaltado paso a paso y su diagrama de flujo sincronizado.
+Web para visualizar en animación los **8 algoritmos de ordenación y búsqueda**, con el código C# del tema resaltado paso a paso y su diagrama de flujo sincronizado.
 
 **Objetivos de aprendizaje:**
 
@@ -58,7 +58,7 @@ visualizador/
 ├── favicon.svg
 ├── css/estilos.css          # Tema claro y oscuro (tokens de joseluisgs.dev)
 └── js/
-    ├── algoritmos.js        # Los 7 algoritmos: código, trazas y diagrama
+    ├── algoritmos.js        # Los 8 algoritmos: código, trazas y diagrama
     ├── motor.js             # Reproductor de pasos (play, pausa, salto)
     ├── ui.js                # Dibujo: código, barras, diagrama e historial
     ├── quiz.js              # Modo reto
