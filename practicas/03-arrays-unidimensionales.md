@@ -93,7 +93,7 @@ Sin inspeccionar: 3
 ### Bloque IV: Juegos y simulación (ejercicios 23-27)
 
 **Ejercicio 23: ¿Dónde está la Mosca?**
-Implementa el juego de la mosca con un array de 20 casillas (índices 0-19). La mosca está oculta en una posición aleatoria. El jugador introduce una posición y el programa responde: "¡Tocada!" si acierta, "¡Casi! La mosca revolotea" si está en una casilla adyacente (la casilla ±1), o "Agua" si está lejos. Cuando la mosca revolotea, se mueve a una posición adyacente aleatoria. Ejemplo de partida:
+Implementa el juego de la mosca con un array de 20 casillas (índices 0-19). La mosca está oculta en una posición aleatoria. **Al arrancar, el programa pregunta al jugador cuántos intentos quiere** (si deja la entrada vacía, se usan 5) y valida que sea un número entero mayor que 0. El jugador introduce una posición y el programa responde: "¡Tocada!" si acierta, "¡Casi! La mosca revolotea" si está en una casilla adyacente (la casilla ±1), o "Agua" si está lejos. Cuando la mosca revolotea **se va a otra casilla aleatoria** del tablero, no necesariamente a la de al lado. Ejemplo de partida:
 
 ```
 === ¿Dónde está la mosca? (0-19) ===

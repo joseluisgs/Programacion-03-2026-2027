@@ -69,7 +69,7 @@ Implementa el juego de barquitos para dos jugadores. Cada jugador tiene **dos pa
 Generaliza el juego de las parejas para una matriz `int[4,6]` (24 casillas = 12 parejas). Coloca las parejas aleatoriamente y deja al jugador destapar de 2 en 2.
 
 **Ejercicio 19: ¿Dónde está la Mosca? (Matriz)**
-Implementa la versión generalizada del juego de la mosca para una matriz `int[N,M]` con `K` moscas. Si golpeas una casilla adyacente a una mosca (horizontal, vertical o diagonal), esta "revolotea" a otra posición libre. Muestra el tablero con puntos si no hay nada y `X` si aciertas. Ejemplo de partida:
+Implementa la versión generalizada del juego de la mosca para una matriz `int[N,M]` con `K` moscas. **Al arrancar, el programa pregunta la dificultad** —Fácil (5×5, 1 mosca, 5 intentos), Normal (8×8, 2 moscas, 8 intentos) o Difícil (12×12, 3 moscas, 5 intentos)— y valida la respuesta. Si golpeas una casilla adyacente a una mosca (horizontal, vertical o diagonal), esta "revolotea" **a otra posición libre aleatoria** del tablero, no necesariamente a la contigua. Muestra el tablero con puntos si no hay nada y `X` si aciertas. Ejemplo de partida:
 
 ```
 === Tablero 5x5 con 2 moscas ===
