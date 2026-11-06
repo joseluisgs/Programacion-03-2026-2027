@@ -63,6 +63,35 @@ De todos los algoritmos de ordenación, puedes verlos animados **en nuestro [vis
 
 📌 **Ejemplo real:** En un casting de televisión, los directores ordenan a los actores por altura usando burbuja: comparan dos personas de pie una al lado de la otra, y si el de la izquierda es más alto, cambian de posición.
 
+📐 **Ordinograma:** este es el diagrama de flujo **del código** de abajo. Cada caja es una sentencia real (el número es su línea) y cada rombo, una condición. Fíjate en los **dos bucles anidados** y en el `break` de la línea 15, que corta la ejecución cuando ya no ha habido ningún intercambio.
+
+```mermaid
+graph TD
+    INICIO(["🎬 Inicio"]) --> L3["for (int i = 0; i &lt; arr.Length - 1; i++)"]
+    L3 -->|"queda pasada"| L5["bool intercambio = false"]
+    L3 -->|"i llegó al final"| FIN(["✅ Fin"])
+    L5 --> L6["for (int j = 0; j &lt; arr.Length - 1 - i; j++)"]
+    L6 -->|"hay j"| L8{"¿arr[j] &gt; arr[j + 1]?"}
+    L6 -->|"pasada completa"| L15{"¿hubo intercambios?"}
+    L8 -->|"Sí"| L10["(arr[j], arr[j + 1]) = (arr[j + 1], arr[j])"]
+    L10 --> L11["intercambio = true"]
+    L11 --> L6
+    L8 -->|"No"| L6
+    L15 -->|"Sí"| L3
+    L15 -->|"No: ya está"| FIN
+    style INICIO fill:#4CAF50,color:#fff
+    style FIN fill:#4CAF50,color:#fff
+    style L3 fill:#2196F3,color:#fff
+    style L6 fill:#2196F3,color:#fff
+    style L8 fill:#FF9800,color:#fff
+    style L15 fill:#FF9800,color:#fff
+    style L10 fill:#9C27B0,color:#fff
+    style L5 fill:#607D8B,color:#fff
+    style L11 fill:#607D8B,color:#fff
+```
+
+▶️ **Ejemplo paso a paso** con el array `[5, 3, 8, 1]`: mira cómo van cambiando las posiciones en cada pasada hasta llegar a `[1, 3, 5, 8]`.
+
 ```mermaid
 graph TD
     A["[5, 3, 8, 1]"] -->|"Comparar 5,3 → intercambiar"| B["[3, 5, 8, 1]"]
@@ -112,6 +141,32 @@ void Burbuja(int[] arr)
 
 📌 **Ejemplo real:** Un DJ que ordena sus discos por año de publicación: escanea todos los discos, encuentra el más antiguo, lo pone primero. Luego busca el siguiente más antiguo del resto, y así sucesivamente.
 
+📐 **Ordinograma:** el flujo del código de abajo. En cada pasada se guarda el mínimo de partida (línea 5), se recorre el resto buscando si hay alguno menor (líneas 6-9) y solo al terminar se hace el intercambio (línea 11).
+
+```mermaid
+graph TD
+    INICIO(["🎬 Inicio"]) --> L3["for (int i = 0; i &lt; arr.Length - 1; i++)"]
+    L3 -->|"queda array"| L5["int minIdx = i"]
+    L3 -->|"i llegó al final"| FIN(["✅ Fin"])
+    L5 --> L6["for (int j = i + 1; j &lt; arr.Length; j++)"]
+    L6 -->|"hay j"| L8{"¿arr[j] &lt; arr[minIdx]?"}
+    L6 -->|"recorrido completo"| L11["(arr[i], arr[minIdx]) = (arr[minIdx], arr[i])"]
+    L8 -->|"Sí"| L9["minIdx = j"]
+    L9 --> L6
+    L8 -->|"No"| L6
+    L11 --> L3
+    style INICIO fill:#4CAF50,color:#fff
+    style FIN fill:#4CAF50,color:#fff
+    style L3 fill:#2196F3,color:#fff
+    style L6 fill:#2196F3,color:#fff
+    style L8 fill:#FF9800,color:#fff
+    style L5 fill:#607D8B,color:#fff
+    style L9 fill:#607D8B,color:#fff
+    style L11 fill:#9C27B0,color:#fff
+```
+
+▶️ **Ejemplo paso a paso** con `[5, 3, 8, 1]`: en cada ronda se busca el mínimo del trozo que queda y se intercambia con la primera posición.
+
 ```mermaid
 graph TD
     A["[5, 3, 8, 1]"] -->|"Paso 1: Buscar mínimo → 1"| B["Intercambiar 5 ↔ 1"]
@@ -158,6 +213,33 @@ void Seleccion(int[] arr)
 
 📌 **Ejemplo real:** Netflix usa Inserción para ordenar tu "Lista de favoritos" cuando añades una sola película — como tiene pocos elementos, es rápido y estable. También es lo que usas cuando ordenas naipes en tu mano durante una partida de poker.
 
+📐 **Ordinograma:** la idea de Inserción es sacar el elemento (línea 5), retroceder con `j` desplazando los mayores (líneas 7-11) y dejarlo en su hueco (línea 12). El `while` de la línea 7 es el que hace el "corrimiento".
+
+```mermaid
+graph TD
+    INICIO(["🎬 Inicio"]) --> L3["for (int i = 1; i &lt; arr.Length; i++)"]
+    L3 -->|"queda"| L5["int clave = arr[i]"]
+    L3 -->|"fin"| FIN(["✅ Fin"])
+    L5 --> L6["int j = i - 1"]
+    L6 --> L7{"¿j &gt;= 0 y arr[j] &gt; clave?"}
+    L7 -->|"Sí"| L9["arr[j + 1] = arr[j]"]
+    L9 --> L10["j--"]
+    L10 --> L7
+    L7 -->|"No"| L12["arr[j + 1] = clave"]
+    L12 --> L3
+    style INICIO fill:#4CAF50,color:#fff
+    style FIN fill:#4CAF50,color:#fff
+    style L3 fill:#2196F3,color:#fff
+    style L7 fill:#FF9800,color:#fff
+    style L5 fill:#607D8B,color:#fff
+    style L6 fill:#607D8B,color:#fff
+    style L9 fill:#9C27B0,color:#fff
+    style L10 fill:#607D8B,color:#fff
+    style L12 fill:#9C27B0,color:#fff
+```
+
+▶️ **Ejemplo paso a paso** con `[5, 3, 8, 1]`: la zona de la izquierda ya está ordenada y vamos encajando cada carta en su sitio.
+
 ```mermaid
 graph TD
     A["Mano: [5, 3, 8, 1]"] -->|"Tomar 3, insertar"| B["[3, 5, 8, 1]"]
@@ -202,6 +284,38 @@ void Insercion(int[] arr)
 > 💡 **Analogía:** Imagina que estás ordenando una fila de personas por altura. Primero comparas personas que están muy separadas (posición 0 con posición 5, posición 1 con posición 6...). Esto mueve a las personas más altas lejos de las más bajas rápidamente. Luego reduces la distancia y refinas. Es como hacer un borrador grueso primero y luego detallar.
 
 📌 **Ejemplo real:** Los motores de bases de datos usan Shell Sort internamente para ordenar pequeños bloques de datos antes de fusionarlos con QuickSort.
+
+📐 **Ordinograma:** Shell es una inserción que salta. El bucle de la línea 4 va reduciendo el `gap` a la mitad; para cada `gap` se recorre el array (línea 6) y cada elemento se desplaza hacia atrás de `gap` en `gap` hasta encontrar su hueco (líneas 10-15).
+
+```mermaid
+graph TD
+    INICIO(["🎬 Inicio"]) --> L3["int n = arr.Length"]
+    L3 --> L4["for (int gap = n / 2; gap &gt; 0; gap /= 2)"]
+    L4 -->|"gap &gt; 0"| L6["for (int i = gap; i &lt; n; i++)"]
+    L4 -->|"gap = 0"| FIN(["✅ Fin"])
+    L6 -->|"hay i"| L8["int temp = arr[i]"]
+    L6 -->|"termina i"| L4
+    L8 --> L9["int j = i"]
+    L9 --> L10{"¿j &gt;= gap y arr[j - gap] &gt; temp?"}
+    L10 -->|"Sí"| L12["arr[j] = arr[j - gap]"]
+    L12 --> L13["j -= gap"]
+    L13 --> L10
+    L10 -->|"No"| L15["arr[j] = temp"]
+    L15 --> L6
+    style INICIO fill:#4CAF50,color:#fff
+    style FIN fill:#4CAF50,color:#fff
+    style L4 fill:#2196F3,color:#fff
+    style L6 fill:#2196F3,color:#fff
+    style L10 fill:#FF9800,color:#fff
+    style L3 fill:#607D8B,color:#fff
+    style L8 fill:#607D8B,color:#fff
+    style L9 fill:#607D8B,color:#fff
+    style L12 fill:#9C27B0,color:#fff
+    style L13 fill:#607D8B,color:#fff
+    style L15 fill:#9C27B0,color:#fff
+```
+
+▶️ **Ejemplo paso a paso** con `[8, 5, 9, 3, 2, 7, 1, 6, 4]`: primero se comparan los que están a `gap = 4` posiciones, luego a 2 y por último a 1 (inserción normal).
 
 ```mermaid
 graph TD
@@ -256,6 +370,48 @@ void ShellSort(int[] arr)
 📌 **Ejemplo real:** El método de ordenación de Google Search usa QuickSort internamente para ordenar millones de resultados por relevancia. Por eso aparecen tan rápido.
 
 > 🎥 **Visualización del Algoritmo QuickSort:** https://www.youtube.com/watch?v=ywWBy6J5gz8
+
+![Árbol de partición de QuickSort: cada pivote divide su trozo en los menores y los mayores](images/quicksort.png)
+
+📐 **Ordinograma:** el flujo del código de abajo. Fíjate en que **el caso base NO es el fin del algoritmo**: la línea 3 (`¿bajo < alto?`) se cumple en **cada** llamada, y cuando no se cumple esa llamada simplemente hace `return` — lo que corta es la llamada **inicial**, la que hizo el programa. Por eso el terminal es `↩️ return` y no `✅ Fin`.
+
+```mermaid
+graph TD
+    INICIO(["🎬 Inicio"]) --> L3{"¿bajo &lt; alto?"}
+    L3 -->|"Sí"| L5["int pivote = Partition(arr, bajo, alto)"]
+    L3 -->|"No: un solo elemento"| RET(["↩️ return: fin de ESTA llamada"])
+    L5 -.->|"entramos en Partition"| L13["int pivote = arr[alto]"]
+    L13 --> L14["int i = bajo - 1"]
+    L14 --> L15["for (int j = bajo; j &lt; alto; j++)"]
+    L15 -->|"hay j"| L17{"¿arr[j] &lt; pivote?"}
+    L15 -->|"termina j"| L23["(arr[i + 1], arr[alto]) = (arr[alto], arr[i + 1])"]
+    L17 -->|"Sí"| L19["i++"]
+    L19 --> L20["(arr[i], arr[j]) = (arr[j], arr[i])"]
+    L20 --> L15
+    L17 -->|"No"| L15
+    L23 --> L24["return i + 1"]
+    L24 --> L6["QuickSort(arr, bajo, pivote - 1)"]
+    L6 -.->|"recursión"| L3
+    L6 --> L7["QuickSort(arr, pivote + 1, alto)"]
+    L7 -.->|"recursión"| L3
+    L7 --> RET
+    style INICIO fill:#4CAF50,color:#fff
+    style RET fill:#607D8B,color:#fff
+    style L3 fill:#FF9800,color:#fff
+    style L17 fill:#FF9800,color:#fff
+    style L15 fill:#2196F3,color:#fff
+    style L5 fill:#9C27B0,color:#fff
+    style L6 fill:#9C27B0,color:#fff
+    style L7 fill:#9C27B0,color:#fff
+    style L13 fill:#607D8B,color:#fff
+    style L14 fill:#607D8B,color:#fff
+    style L19 fill:#607D8B,color:#fff
+    style L20 fill:#9C27B0,color:#fff
+    style L23 fill:#9C27B0,color:#fff
+    style L24 fill:#9C27B0,color:#fff
+```
+
+▶️ **Ejemplo paso a paso:** cómo se va partiendo el array hasta dejar cada trozo con un solo elemento.
 
 ```mermaid
 graph TD
@@ -318,24 +474,63 @@ int Partition(int[] arr, int bajo, int alto)
 
 > 💡 **Analogía:** Tienes que ordenar la lista de invitados de una boda por apellido. En vez de ordenarla tú solo, le dices a un amigo que ordene la primera mitad y a otro que ordene la segunda; luego vosotros dos **mezcláis** las dos listas ya ordenadas cogiendo siempre el apellido que va antes.
 
+> 🎥 **Visualización del Algoritmo Merge Sort:** https://www.youtube.com/watch?v=HzUrYDdXY-8
+
+![Merge Sort: se divide el array por la mitad hasta trozos de uno y se van combinando](images/mergesort.png)
+
 Lo delicado es el paso de **combinar** (`Merge`): se recorren las dos mitades con dos punteros (`i` y `j`), siempre se coge el elemento menor de los dos y se deja en un array auxiliar `tmp`. Al final, `tmp` se devuelve al array original.
+
+📐 **Ordinograma:** el flujo del código de abajo, con las **dos funciones**. Igual que en QuickSort, el caso base (línea 4) **no es el fin del algoritmo**: cada llamada que llega a `izq >= der` simplemente hace `return`. La recursión se ve con las flechas discontinuas que vuelven a la condición.
 
 ```mermaid
 graph TD
-    S(("Inicio")) --> BASE{"¿izq >= der?"}
-    BASE -->|"Sí: un solo elemento"| OK["Ya está ordenado"]
-    BASE -->|"No"| MEDIO["Calculo el medio"]
-    MEDIO --> IZQ["Ordeno la mitad izquierda"]
-    IZQ --> DER["Ordeno la mitad derecha"]
-    DER --> MEZCLA["Combino con Merge"]
-    MEZCLA --> S
-    style S fill:#4CAF50,color:#fff
-    style OK fill:#4CAF50,color:#fff
-    style BASE fill:#FF9800,color:#fff
-    style MEDIO fill:#2196F3,color:#fff
-    style IZQ fill:#9C27B0,color:#fff
-    style DER fill:#9C27B0,color:#fff
-    style MEZCLA fill:#607D8B,color:#fff
+    INICIO(["🎬 Inicio"]) --> L4{"¿izq &gt;= der?"}
+    L4 -->|"Sí: un solo elemento"| RET(["↩️ return: fin de ESTA llamada"])
+    L4 -->|"No"| L5["int medio = izq + (der - izq) / 2"]
+    L5 --> L6["MergeSort(arr, izq, medio)"]
+    L6 -.->|"recursión izquierda"| L4
+    L6 --> L7["MergeSort(arr, medio + 1, der)"]
+    L7 -.->|"recursión derecha"| L4
+    L7 --> L8["Merge(arr, izq, medio, der)"]
+    L8 -.->|"entramos en Merge"| L13["int[] tmp = new int[der - izq + 1]"]
+    L13 --> L14["int i = izq, j = medio + 1, k = 0"]
+    L14 --> L15{"¿i &lt;= medio y j &lt;= der?"}
+    L15 -->|"Sí"| L17{"¿arr[i] &lt;= arr[j]?"}
+    L17 -->|"Sí: tmp[k++] = arr[i++]"| L15
+    L17 -->|"No"| L18["else tmp[k++] = arr[j++]"]
+    L18 --> L15
+    L15 -->|"No: alguno se agotó"| L20["while (i &lt;= medio) tmp[k++] = arr[i++]"]
+    L20 --> L21["while (j &lt;= der) tmp[k++] = arr[j++]"]
+    L21 --> L22["for (int m = 0; m &lt; tmp.Length; m++) arr[izq + m] = tmp[m]"]
+    L22 --> RET
+    style INICIO fill:#4CAF50,color:#fff
+    style RET fill:#607D8B,color:#fff
+    style L4 fill:#FF9800,color:#fff
+    style L15 fill:#FF9800,color:#fff
+    style L17 fill:#FF9800,color:#fff
+    style L5 fill:#2196F3,color:#fff
+    style L6 fill:#9C27B0,color:#fff
+    style L7 fill:#9C27B0,color:#fff
+    style L8 fill:#9C27B0,color:#fff
+    style L13 fill:#607D8B,color:#fff
+    style L14 fill:#607D8B,color:#fff
+    style L18 fill:#9C27B0,color:#fff
+    style L20 fill:#9C27B0,color:#fff
+    style L21 fill:#9C27B0,color:#fff
+    style L22 fill:#4CAF50,color:#fff
+```
+
+▶️ **Ejemplo paso a paso** con `[8, 3, 5, 1]`: se parte, se ordena cada trozo por separado y luego se van cogiendo los menores de las dos mitades.
+
+```mermaid
+graph TD
+    A["[8, 3, 5, 1]"] -->|"divido por la mitad"| B["[8, 3] · [5, 1]"]
+    B -->|"ordeno cada trozo por separado"| C["[3, 8] · [1, 5]"]
+    C -->|"combino cogiendo siempre el menor"| D["[1, 3, 5, 8] ✅"]
+    style A fill:#2196F3,color:#fff
+    style B fill:#FF9800,color:#fff
+    style C fill:#9C27B0,color:#fff
+    style D fill:#4CAF50,color:#fff
 ```
 
 Así queda el código en C#:
@@ -390,20 +585,35 @@ void Merge(int[] arr, int izq, int medio, int der)
 
 > 🎥 **Visualización de Búsqueda Lineal:** https://www.youtube.com/watch?v=-PuqKbu9K3U
 
+📐 **Ordinograma:** fíjate en que **no hay línea de `i = 0` ni de `i++` sueltas**: todo vive en la cabecera del `for` de la línea 3. El único sitio donde puede salir el bucle sin encontrar nada es la línea 8.
+
 ```mermaid
 graph TD
-    START(("Inicio")) --> IDX["i = 0"]
-    IDX --> COND{"¿i < Length?"}
-    COND -->|"Sí"| COMP{"¿arr[i] == objetivo?"}
-    COMP -->|"Sí"| FOUND["¡Encontrado! Devolver i"]
-    COMP -->|"No"| NEXT["i++"]
-    NEXT --> COND
-    COND -->|"No"| NOTFOUND["No encontrado → -1"]
-    style START fill:#4CAF50,color:#fff
-    style FOUND fill:#4CAF50,color:#fff
-    style NOTFOUND fill:#f44336,color:#fff
-    style COND fill:#FF9800,color:#fff
-    style COMP fill:#2196F3,color:#fff
+    INICIO(["🎬 Inicio"]) --> L3["for (int i = 0; i &lt; arr.Length; i++)"]
+    L3 -->|"hay i"| L5{"¿arr[i] == objetivo?"}
+    L3 -->|"recorrido completo"| L8["return -1"]
+    L5 -->|"Sí"| L6["return i"]
+    L5 -->|"No"| L3
+    L6 --> OK(["🎯 ¡Encontrado!"])
+    L8 --> KO(["😕 No encontrado"])
+    style INICIO fill:#4CAF50,color:#fff
+    style OK fill:#4CAF50,color:#fff
+    style KO fill:#f44336,color:#fff
+    style L3 fill:#2196F3,color:#fff
+    style L5 fill:#FF9800,color:#fff
+    style L6 fill:#9C27B0,color:#fff
+    style L8 fill:#9C27B0,color:#fff
+```
+
+▶️ **Ejemplo paso a paso:** buscamos el `16` en `[4, 8, 15, 16, 23, 42]`. Se mira uno a uno hasta dar con él en la posición 3.
+
+```mermaid
+graph TD
+    A["[4, 8, 15, 16, 23, 42] · objetivo 16"] -->|"i = 0 → 4 ≠ 16"| B["i = 1 → 8 ≠ 16"]
+    B -->|"i = 2 → 15 ≠ 16"| C["i = 3 → 16 = 16 ✅ devuelve 3"]
+    style A fill:#2196F3,color:#fff
+    style B fill:#FF9800,color:#fff
+    style C fill:#4CAF50,color:#fff
 ```
 
 ```csharp
@@ -433,22 +643,46 @@ int BuscarLineal(int[] arr, int objetivo)
 
 > 🎥 **Visualización de Búsqueda Binaria:** https://www.youtube.com/watch?v=iP897Z5Nerk
 
+![Búsqueda binaria: cada paso descarta la mitad del rango que queda](images/binary_search.webp)
+
+📐 **Ordinograma:** el flujo del código de abajo. El `while` de la línea 4 es el que controla todo; dentro se calcula el medio (línea 8) y se descarta media mitad en cada vuelta. Fíjate en que las líneas 10 y 11 son un `else if` / `else`: **el `if` es el rombo y la acción va en la flecha**.
+
 ```mermaid
 graph TD
-    S(("Inicio")) --> MID["Calcular medio"]
-    MID --> COMP{"¿Igual?"}
-    COMP -->|"Sí"| OK["¡Encontrado!"]
-    COMP -->|"No"| DIR{"¿Mayor?"}
-    DIR -->|"Sí"| DER["Buscar derecha"]
-    DIR -->|"No"| IZQ["Buscar izquierda"]
-    DER --> S
-    IZQ --> S
-    style S fill:#4CAF50,color:#fff
+    INICIO(["🎬 Inicio"]) --> L3["int bajo = 0, alto = arr.Length - 1"]
+    L3 --> L4{"¿bajo &lt;= alto?"}
+    L4 -->|"Sí"| L8["int medio = bajo + (alto - bajo) / 2"]
+    L4 -->|"No: no queda sitio"| L13["return -1"]
+    L8 --> L9{"¿arr[medio] == objetivo?"}
+    L9 -->|"Sí: return medio"| OK(["🎯 ¡Encontrado!"])
+    L9 -->|"No"| L10{"¿arr[medio] &lt; objetivo?"}
+    L10 -->|"Sí: bajo = medio + 1"| L4
+    L10 -->|"No"| L11["alto = medio - 1"]
+    L11 --> L4
+    L13 --> KO(["😕 No encontrado"])
+    style INICIO fill:#4CAF50,color:#fff
     style OK fill:#4CAF50,color:#fff
-    style COMP fill:#FF9800,color:#fff
-    style DIR fill:#FF9800,color:#fff
-    style DER fill:#2196F3,color:#fff
-    style IZQ fill:#2196F3,color:#fff
+    style KO fill:#f44336,color:#fff
+    style L4 fill:#2196F3,color:#fff
+    style L9 fill:#FF9800,color:#fff
+    style L10 fill:#FF9800,color:#fff
+    style L3 fill:#607D8B,color:#fff
+    style L8 fill:#607D8B,color:#fff
+    style L11 fill:#9C27B0,color:#fff
+    style L13 fill:#9C27B0,color:#fff
+```
+
+▶️ **Ejemplo paso a paso:** buscamos el `23` en `[2, 5, 8, 12, 16, 23, 38, 56, 72, 91]`. Cada paso descarta la mitad de lo que queda.
+
+```mermaid
+graph TD
+    A["[2, 5, 8, 12, 16, 23, 38, 56, 72, 91] · objetivo 23"] -->|"medio = 4 → 16 &lt; 23 → descarto la izquierda"| B["bajo = 5, alto = 9"]
+    B -->|"medio = 7 → 56 &gt; 23 → descarto la derecha"| C["bajo = 5, alto = 6"]
+    C -->|"medio = 5 → 23 = 23 ✅"| D["Encontrado en la posición 5"]
+    style A fill:#2196F3,color:#fff
+    style B fill:#FF9800,color:#fff
+    style C fill:#FF9800,color:#fff
+    style D fill:#4CAF50,color:#fff
 ```
 
 ```csharp
@@ -489,30 +723,47 @@ int BuscarBinaria(int[] arr, int objetivo)
 
 La diferencia práctica es que **ya no hay variables de estado viviendo en un bucle**: cada llamada lleva `bajo` y `alto` como parámetros, así que son dos argumentos más que en la versión iterativa.
 
+📐 **Ordinograma:** el flujo del código de abajo. Los tres terminales de este algoritmo **sí son la respuesta final**: `return -1` (no está), `return medio` (está) y los dos `return` de las líneas 9 y 10, que devuelven lo que traiga la llamada hija. Las flechas discontinuas son la recursión.
+
 ```mermaid
 graph TD
-    S(("Inicio")) --> BASE{"¿bajo &gt; alto?"}
-    BASE -->|"Sí: no queda sitio"| KO["Devolvo -1"]
-    BASE -->|"No: queda rango"| MID["Calculo el medio"]
-    MID --> COMP{"¿arr[medio] == objetivo?"}
-    COMP -->|"Sí"| OK["¡Encontrado!"]
-    COMP -->|"No"| DIR{"¿arr[medio] &lt; objetivo?"}
-    DIR -->|"Sí: mitad derecha"| DER["Llamo con medio + 1, alto"]
-    DIR -->|"No: mitad izquierda"| IZQ["Llamo con bajo, medio - 1"]
-    DER --> S
-    IZQ --> S
-    style S fill:#4CAF50,color:#fff
+    INICIO(["🎬 Inicio"]) --> L4{"¿bajo &gt; alto?"}
+    L4 -->|"Sí: no queda sitio"| KO(["↩️ return -1"])
+    L4 -->|"No"| L5["int medio = bajo + (alto - bajo) / 2"]
+    L5 --> L6{"¿arr[medio] == objetivo?"}
+    L6 -->|"Sí"| OK(["🎯 return medio"])
+    L6 -->|"No"| L8{"¿arr[medio] &lt; objetivo?"}
+    L8 -->|"Sí: mitad derecha"| L9["return BuscarBinariaRec(arr, objetivo, medio + 1, alto)"]
+    L8 -->|"No: mitad izquierda"| L10["return BuscarBinariaRec(arr, objetivo, bajo, medio - 1)"]
+    L9 -.->|"recursión"| L4
+    L10 -.->|"recursión"| L4
+    style INICIO fill:#4CAF50,color:#fff
     style OK fill:#4CAF50,color:#fff
     style KO fill:#f44336,color:#fff
-    style BASE fill:#FF9800,color:#fff
-    style COMP fill:#FF9800,color:#fff
-    style DIR fill:#FF9800,color:#fff
-    style MID fill:#2196F3,color:#fff
-    style DER fill:#9C27B0,color:#fff
-    style IZQ fill:#9C27B0,color:#fff
+    style L4 fill:#FF9800,color:#fff
+    style L6 fill:#FF9800,color:#fff
+    style L8 fill:#FF9800,color:#fff
+    style L5 fill:#607D8B,color:#fff
+    style L9 fill:#9C27B0,color:#fff
+    style L10 fill:#9C27B0,color:#fff
 ```
 
 En el diagrama se ve el corazón del asunto: hay un **caso base** (`¿bajo > alto?`) que corta la recursión, y una **llamada recursiva** que vuelve a empezar con un rango más pequeño. Sin el caso base, la función se llamaría a sí misma para siempre.
+
+▶️ **Ejemplo paso a paso:** buscamos el `23` en `[2, 5, 8, 12, 16, 23, 38, 56, 72, 91]`. Cada llamada descarta la mitad, y cuando se encuentra, **el valor vuelve subiendo** por todas las llamadas hasta la primera.
+
+```mermaid
+graph TD
+    A["Llamada 1: buscar 23 en [0..9]<br/>medio = 4 → 16 &lt; 23"] -->|"voy a la mitad derecha"| B["Llamada 2: buscar en [5..9]<br/>medio = 7 → 56 &gt; 23"]
+    B -->|"voy a la mitad izquierda"| C["Llamada 3: buscar en [5..6]<br/>medio = 5 → 23 = 23 ✅"]
+    C -->|"return 5"| D["La llamada 2 recibe 5 y lo devuelve"]
+    D -->|"return 5"| E["La llamada 1 recibe 5 y lo devuelve"]
+    style A fill:#2196F3,color:#fff
+    style B fill:#FF9800,color:#fff
+    style C fill:#4CAF50,color:#fff
+    style D fill:#9C27B0,color:#fff
+    style E fill:#9C27B0,color:#fff
+```
 
 La implementación en C# es esta:
 
