@@ -67,23 +67,23 @@ stopwatch.Stop();
 tiempoMs = stopwatch.ElapsedMilliseconds;
 Console.WriteLine($"⏱️ Tiempo Alg. Shell Sort: {tiempoMs} ms");
 
-// Probamos Merge Sort
-var vectorMerge = (int[])vectorInicial.Clone();
-Console.WriteLine("\n5.- Ordenación Alg. Merge Sort (O(n log n)), por favor espere...");
-stopwatch.Restart();
-MergeSort(vectorMerge, 0, vectorMerge.Length - 1);
-stopwatch.Stop();
-tiempoMs = stopwatch.ElapsedMilliseconds;
-Console.WriteLine($"⏱️ Tiempo Alg. Merge Sort: {tiempoMs} ms");
-
 // Probamos QuickSort
 var vectorQuick = (int[])vectorInicial.Clone();
-Console.WriteLine("\n6.- Ordenación Alg. QuickSort (O(n log n)), por favor espere...");
+Console.WriteLine("\n5.- Ordenación Alg. QuickSort (O(n log n)), por favor espere...");
 stopwatch.Restart();
 QuickSort(vectorQuick);
 stopwatch.Stop();
 tiempoMs = stopwatch.ElapsedMilliseconds;
 Console.WriteLine($"⏱️ Tiempo Alg. QuickSort: {tiempoMs} ms");
+
+// Probamos Merge Sort
+var vectorMerge = (int[])vectorInicial.Clone();
+Console.WriteLine("\n6.- Ordenación Alg. Merge Sort (O(n log n)), por favor espere...");
+stopwatch.Restart();
+MergeSort(vectorMerge, 0, vectorMerge.Length - 1);
+stopwatch.Stop();
+tiempoMs = stopwatch.ElapsedMilliseconds;
+Console.WriteLine($"⏱️ Tiempo Alg. Merge Sort: {tiempoMs} ms");
 
 // Contra el método de ordenación de .NET
 var vectorDotNet = (int[])vectorInicial.Clone();
@@ -214,47 +214,6 @@ void ShellSort(int[] array) {
 
         h /= 3;
     }
-}
-
-/**
- * Método de ordenación Merge Sort O(n log n)
- * Recursivo: divide el array hasta trozos de un solo elemento y
- * luego los combina ya ordenados. Necesita un array auxiliar (tmp),
- * por eso usa O(n) de memoria a cambio de ser siempre O(n log n).
- */
-void MergeSort(int[] array, int left, int right) {
-    // Caso base: un solo elemento ya está ordenado
-    if (left >= right) return;
-
-    // left + (right - left) / 2 es la forma didáctica de prevenir overflows
-    var middle = left + (right - left) / 2;
-    MergeSort(array, left, middle);
-    MergeSort(array, middle + 1, right);
-    Merge(array, left, middle, right);
-}
-
-/**
- * Combina los dos mitades [left..middle] y [middle+1..right],
- * que ya están ordenadas por separado, en un único trozo ordenado.
- */
-void Merge(int[] array, int left, int middle, int right) {
-    var tmp = new int[right - left + 1];
-    var i = left;
-    var j = middle + 1;
-    var k = 0;
-
-    // Cogemos siempre el menor de los dos punteros
-    while (i <= middle && j <= right) {
-        if (array[i] <= array[j]) tmp[k++] = array[i++];
-        else tmp[k++] = array[j++];
-    }
-
-    // Lo que sobre de una de las mitades se copia tal cual
-    while (i <= middle) tmp[k++] = array[i++];
-    while (j <= right) tmp[k++] = array[j++];
-
-    // Y devolvemos tmp al array original
-    for (var m = 0; m < tmp.Length; m++) array[left + m] = tmp[m];
 }
 
 /**
