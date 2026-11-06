@@ -16,6 +16,13 @@
 // ---------- Utilidades para construir trazas ----------
 const paso = (l, act, extra = {}) => ({ l, act, ...extra });
 
+/**
+ * Copia de la pila de llamadas para el paso actual.
+ * Sin copiarla, al materializar toda la traza de golpe, TODOS los pasos
+ * verían el estado final de la pila en vez del suyo.
+ */
+const copiaPila = (pila) => pila.map((f) => ({ ...f }));
+
 const rango = (desde, hasta) => {
   const res = [];
   for (let k = desde; k <= hasta; k++) res.push(k);
@@ -456,50 +463,58 @@ function* genQuicksort(arr) {
     return;
   }
 
-  yield* genQs(a, 0, a.length - 1);
-  yield paso(7, 'fin', { arr: [...a], fijos: rango(0, a.length - 1), msg: '✅ ¡Array ordenado!' });
+  const pila = [];
+  yield* genQs(a, 0, a.length - 1, pila);
+  yield paso(7, 'fin', {
+    arr: [...a], fijos: rango(0, a.length - 1), pila: copiaPila(pila),
+    msg: '✅ ¡Array ordenado!'
+  });
 }
 
-function* genQs(a, bajo, alto) {
+function* genQs(a, bajo, alto, pila) {
+  pila.push({ nivel: pila.length, bajo, alto }); // abre el marco
+
   yield paso(2, 'check', {
-    arr: [...a], rango: [bajo, alto], vars: { bajo, alto },
+    arr: [...a], rango: [bajo, alto], vars: { bajo, alto }, pila: copiaPila(pila),
     msg: `¿bajo (${bajo}) < alto (${alto})? ${bajo < alto ? 'Sí → hay que particionar' : 'No → este trozo ya está ordenado'}`
   });
 
-  if (bajo >= alto) return;
+  if (bajo >= alto) { pila.pop(); return; } // cierra el marco
 
   yield paso(3, 'call', {
-    arr: [...a], rango: [bajo, alto], vars: { bajo, alto },
+    arr: [...a], rango: [bajo, alto], vars: { bajo, alto }, pila: copiaPila(pila),
     idx: [[alto, 'pivot']], marcas: [['bajo', bajo], ['alto', alto]],
     msg: 'Vamos a llamar a Partition: elegiremos pivote y separaremos menores y mayores'
   });
 
-  const p = yield* genPartition(a, bajo, alto);
+  const p = yield* genPartition(a, bajo, alto, pila);
 
   yield paso(4, 'call', {
     arr: [...a], rango: [bajo, Math.max(bajo, p - 1)], vars: { bajo, alto, pivote: p },
-    idx: p > bajo ? [] : [], marcas: [['pivote', p]],
+    idx: p > bajo ? [] : [], marcas: [['pivote', p]], pila: copiaPila(pila),
     msg: p > bajo
       ? `Recursión izquierda: QuickSort(${bajo}, ${p - 1})`
       : `No hay subarreglo izquierdo: ${p} = ${bajo}`
   });
-  if (p > bajo) yield* genQs(a, bajo, p - 1);
+  if (p > bajo) yield* genQs(a, bajo, p - 1, pila);
 
   yield paso(5, 'call', {
     arr: [...a], rango: [Math.min(alto, p + 1), alto], vars: { bajo, alto, pivote: p },
-    marcas: [['pivote', p]],
+    marcas: [['pivote', p]], pila: copiaPila(pila),
     msg: p < alto
       ? `Recursión derecha: QuickSort(${p + 1}, ${alto})`
       : `No hay subarreglo derecho: ${p} = ${alto}`
   });
-  if (p < alto) yield* genQs(a, p + 1, alto);
+  if (p < alto) yield* genQs(a, p + 1, alto, pila);
+
+  pila.pop(); // cierra el marco
 }
 
-function* genPartition(a, bajo, alto) {
+function* genPartition(a, bajo, alto, pila) {
   const pivote = a[alto];
 
   yield paso(10, 'set', {
-    arr: [...a], rango: [bajo, alto], vars: { bajo, alto, pivote },
+    arr: [...a], rango: [bajo, alto], vars: { bajo, alto, pivote }, pila: copiaPila(pila),
     idx: [[alto, 'pivot']], marcas: [['pivote', alto]],
     msg: `pivote = arr[${alto}] = ${pivote} (tomamos el último como referencia)`
   });
@@ -507,7 +522,7 @@ function* genPartition(a, bajo, alto) {
   let i = bajo - 1;
 
   yield paso(11, 'set', {
-    arr: [...a], rango: [bajo, alto], vars: { bajo, alto, pivote, i },
+    arr: [...a], rango: [bajo, alto], vars: { bajo, alto, pivote, i }, pila: copiaPila(pila),
     idx: [[alto, 'pivot']], marcas: [['i', i], ['pivote', alto]],
     msg: `i = ${i}: por delante de i vivirán los menores que el pivote`
   });
@@ -516,7 +531,7 @@ function* genPartition(a, bajo, alto) {
     const menor = a[j] < pivote;
 
     yield paso(13, 'cmp', {
-      arr: [...a], rango: [bajo, alto], vars: { bajo, alto, pivote, i, j },
+      arr: [...a], rango: [bajo, alto], vars: { bajo, alto, pivote, i, j }, pila: copiaPila(pila),
       idx: [[j, 'cmp'], [alto, 'pivot']],
       marcas: [['i', i], ['j', j], ['pivote', alto]],
       msg: `¿${a[j]} < pivote (${pivote})? ${menor ? 'Sí → va con los menores' : 'No → se queda donde está'}`
@@ -525,7 +540,7 @@ function* genPartition(a, bajo, alto) {
     if (menor) {
       i++;
       yield paso(14, 'set', {
-        arr: [...a], rango: [bajo, alto], vars: { bajo, alto, pivote, i, j },
+        arr: [...a], rango: [bajo, alto], vars: { bajo, alto, pivote, i, j }, pila: copiaPila(pila),
         idx: [[i, 'cur'], [j, 'cmp']],
         marcas: [['i', i], ['j', j], ['pivote', alto]],
         msg: `Sí → i++ = ${i}: ampliamos la zona de menores`
@@ -533,7 +548,7 @@ function* genPartition(a, bajo, alto) {
 
       [a[i], a[j]] = [a[j], a[i]];
       yield paso(15, 'swap', {
-        arr: [...a], rango: [bajo, alto], vars: { bajo, alto, pivote, i, j },
+        arr: [...a], rango: [bajo, alto], vars: { bajo, alto, pivote, i, j }, pila: copiaPila(pila),
         idx: [[i, 'swap'], [j, 'swap']],
         marcas: [['i', i], ['j', j], ['pivote', alto]],
         msg: `Intercambiamos las posiciones ${i} y ${j}`
@@ -546,7 +561,7 @@ function* genPartition(a, bajo, alto) {
   if (mover) [a[pos], a[alto]] = [a[alto], a[pos]];
 
   yield paso(18, mover ? 'swap' : 'set', {
-    arr: [...a], rango: [bajo, alto], vars: { bajo, alto, pivote, i },
+    arr: [...a], rango: [bajo, alto], vars: { bajo, alto, pivote, i }, pila: copiaPila(pila),
     idx: mover ? [[pos, 'swap'], [alto, 'swap']] : [[alto, 'pivot']],
     marcas: [['pivote', pos]],
     msg: mover
@@ -555,7 +570,7 @@ function* genPartition(a, bajo, alto) {
   });
 
   yield paso(19, 'ret', {
-    arr: [...a], rango: [bajo, alto], vars: { bajo, alto, pivote: pos },
+    arr: [...a], rango: [bajo, alto], vars: { bajo, alto, pivote: pos }, pila: copiaPila(pila),
     idx: [[pos, 'fijo']], marcas: [['pivote', pos]],
     msg: `Partition devuelve ${pos} → ${a[pos]} queda fijo en su sitio ✅`
   });
@@ -764,6 +779,10 @@ function* genBinariaRec(arr, objetivo) {
   const a = [...arr];
   const visit = [];
   let nivel = -1;
+  // Marcos de pila abiertos. Se COPIA en cada paso: si no, al materializar
+  // toda la traza de golpe, todos los pasos verían el estado final.
+  const pila = [];
+  const marcos = () => pila.map((f) => ({ ...f }));
 
   yield paso(1, 'init', {
     arr: [...a], vars: { objetivo, bajo: 0, alto: a.length - 1 },
@@ -778,6 +797,7 @@ function* genBinariaRec(arr, objetivo) {
   function* llamar(bajo, alto) {
     nivel++;
     const miNivel = nivel;
+    pila.push({ nivel: miNivel, bajo, alto }); // abre el marco
 
     // ---- Línea 3: caso base ----
     const vacio = bajo > alto;
@@ -785,12 +805,13 @@ function* genBinariaRec(arr, objetivo) {
       arr: [...a], vars: { bajo, alto, objetivo, nivel: miNivel },
       rango: vacio ? [] : [bajo, alto], descartar: true, visit: [...visit],
       marcas: vacio ? [] : [['bajo', bajo], ['alto', alto]],
+      pila: marcos(),
       msg: vacio
         ? `Nivel ${miNivel}: ¿bajo (${bajo}) > alto (${alto})? Sí → no queda sitio, devolvemos -1`
         : `Nivel ${miNivel}: ¿bajo (${bajo}) > alto (${alto})? No → seguimos con el rango ${bajo}..${alto}`
     });
 
-    if (vacio) return -1;
+    if (vacio) { pila.pop(); return -1; } // cierra el marco
 
     // ---- Línea 4: calculamos el medio ----
     const medio = bajo + Math.floor((alto - bajo) / 2);
@@ -800,6 +821,7 @@ function* genBinariaRec(arr, objetivo) {
       arr: [...a], vars: { bajo, alto, medio, objetivo, nivel: miNivel },
       rango: [bajo, alto], descartar: true, visit: [...visit],
       idx: [[medio, 'mid']], marcas: [['bajo', bajo], ['medio', medio], ['alto', alto]],
+      pila: marcos(),
       msg: `Nivel ${miNivel}: medio = ${bajo} + (${alto} - ${bajo}) / 2 = ${medio}`
     });
 
@@ -809,6 +831,7 @@ function* genBinariaRec(arr, objetivo) {
       arr: [...a], vars: { bajo, alto, medio, objetivo, nivel: miNivel },
       rango: [bajo, alto], descartar: true, visit: [...visit],
       idx: [[medio, igual ? 'found' : 'cmp']], marcas: [['bajo', bajo], ['medio', medio], ['alto', alto]],
+      pila: marcos(),
       msg: `¿a[${medio}] = ${a[medio]} es igual a ${objetivo}? ${igual ? '¡Sí! Encontrado 🎉' : 'No → elegimos mitad'}`
     });
 
@@ -816,8 +839,10 @@ function* genBinariaRec(arr, objetivo) {
       yield paso(5, 'found', {
         arr: [...a], vars: { bajo, alto, medio, objetivo, nivel: miNivel, resultado: medio },
         visit: [...visit], idx: [[medio, 'found']], marcas: [['medio', medio]],
+        pila: marcos(),
         msg: `🎉 ¡Encontrado en la posición ${medio}! Cerramos la llamada del nivel ${miNivel}`
       });
+      pila.pop(); // cierra el marco
       return medio;
     }
 
@@ -827,6 +852,7 @@ function* genBinariaRec(arr, objetivo) {
       arr: [...a], vars: { bajo, alto, medio, objetivo, nivel: miNivel },
       rango: [bajo, alto], descartar: true, visit: [...visit],
       idx: [[medio, 'discard']], marcas: [['bajo', bajo], ['medio', medio], ['alto', alto]],
+      pila: marcos(),
       msg: derecha
         ? `${a[medio]} < ${objetivo} → el objetivo está en la MITAD DERECHA`
         : `${a[medio]} > ${objetivo} → el objetivo está en la MITAD IZQUIERDA`
@@ -840,6 +866,7 @@ function* genBinariaRec(arr, objetivo) {
       arr: [...a], vars: { bajo, alto, medio, objetivo, nivel: miNivel },
       rango: nuevosLimites, descartar: true, visit: [...visit],
       marcas: [['bajo', nuevosLimites[0]], ['alto', nuevosLimites[1]]],
+      pila: marcos(),
       msg: `📞 Nivel ${miNivel}: llamamos a BuscarBinariaRec(arr, ${objetivo}, ${nuevosLimites[0]}, ${nuevosLimites[1]})`
     });
 
@@ -852,11 +879,13 @@ function* genBinariaRec(arr, objetivo) {
       rango: [bajo, alto], descartar: true, visit: [...visit],
       idx: resultado >= 0 ? [[resultado, 'found']] : [],
       marcas: resultado >= 0 ? [['medio', resultado]] : [],
+      pila: marcos(),
       msg: resultado === -1
         ? `↩️ Nivel ${miNivel}: la llamada devolvió -1 → lo devolvemos a su vez`
         : `↩️ Nivel ${miNivel}: la llamada devolvió ${resultado} → lo devolvemos hasta arriba`
     });
 
+    pila.pop(); // cierra el marco
     return resultado;
   }
 
@@ -920,6 +949,7 @@ const ALGORITMOS = {
     ejemplo: 'Google Search usa QuickSort para ordenar millones de resultados por relevancia.',
     uso: 'El más rápido en la práctica para grandes volúmenes.',
     complejidad: { mejor: 'O(n log n)', promedio: 'O(n log n)', peor: 'O(n²)', estable: false },
+    recursivo: true,
     codigo: COD_QUICKSORT, flujo: FLUJO_QUICKSORT, generar: genQuicksort
   },
   lineal: {
@@ -944,6 +974,7 @@ const ALGORITMOS = {
     ejemplo: 'Como repartir una lista de invitados a dos equipos: eliges el del medio y le pides a alguien que siga con su mitad.',
     uso: 'Arrays grandes y ordenados, cuando la versión recursiva queda más clara.',
     complejidad: { mejor: 'O(1)', promedio: 'O(log n)', peor: 'O(log n)', estable: false, requiereOrden: true },
+    recursivo: true,
     codigo: COD_BINARIA_REC, flujo: FLUJO_BINARIA_REC, generar: genBinariaRec
   }
 };

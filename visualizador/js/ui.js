@@ -94,6 +94,10 @@ const plantillaVista = () => `
     <span><i class="pt pt-pivot"></i>pivote, mínimo o medio</span>
     <span><i class="pt pt-fuera"></i>descartado</span>
   </div>
+  <div class="pila" hidden>
+    <span class="pila-titulo">📌 Pila de llamadas</span>
+    <span class="pila-migas"></span>
+  </div>
   <div class="diagrama-caja">
     <div class="diagrama-cab">
       <span>📐 Diagrama de flujo · haz clic en un nodo para saltar allí</span>
@@ -126,6 +130,8 @@ const plantillaVista = () => `
     <h3>Complejidad</h3>
     <div class="complejidad"></div>
     <p class="uso"></p>
+    <button class="btn-mini btn-curva" type="button" data-accion="curva"
+            title="Ver cuántas comparaciones hace según el tamaño del array">📈 Ver la curva</button>
   </div>
   <div class="bloque bloque-historial">
     <h3>Historial de pasos</h3>
@@ -173,6 +179,8 @@ class Vista {
     this.$comp = this.raiz.querySelector('.complejidad');
     this.$uso = this.raiz.querySelector('.uso');
     this.$historial = this.raiz.querySelector('.historial');
+    this.$pila = this.raiz.querySelector('.pila');
+    this.$pilaMigas = this.raiz.querySelector('.pila-migas');
 
     // Motor propio de esta vista
     this.motor = new Motor();
@@ -196,6 +204,9 @@ class Vista {
           this.cambiarZoom(0.15);
         } else if (accion === 'zoom-fit') {
           this.ajustarZoom();
+        } else if (accion === 'curva') {
+          // El modal lo maneja main.js; aquí solo avisamos con qué algoritmo
+          document.dispatchEvent(new CustomEvent('curva:abrir', { detail: { algo: this.algo } }));
         }
       });
     });
@@ -226,6 +237,9 @@ class Vista {
     this.pintarCodigo(algo);
     this.pintarMeta(algo);
     this.pintarDiagrama(algo);
+    // La pila de llamadas solo tiene sentido en algoritmos recursivos:
+    // en los demás NO se pinta nada y el layout no cambia ni un píxel
+    if (this.$pila) this.$pila.hidden = algo.recursivo !== true;
     this.motor.cargar(trazas);
     this.reiniciarVisual();
   }
@@ -245,6 +259,7 @@ class Vista {
     this.historial = [];
     if (this.$historial) this.$historial.innerHTML = '';
     this.pintarVars({});
+    this.pintarPila({});
     this.pintarStats();
     this.pintarProgreso();
     this.quitarFin();
@@ -597,6 +612,29 @@ class Vista {
   }
 
   /**
+   * Pila de llamadas (solo algoritmos recursivos): los marcos abiertos,
+   * del más antiguo al más reciente, resaltando en el que estamos.
+   * En el resto de algoritmos el bloque está oculto y no se pinta nada.
+   */
+  pintarPila(paso) {
+    if (!this.$pilaMigas) return;
+    const pila = Array.isArray(paso.pila) ? paso.pila : [];
+
+    if (!pila.length) {
+      this.$pilaMigas.innerHTML = '<span class="miga miga-vacia">ninguna llamada abierta</span>';
+      return;
+    }
+
+    this.$pilaMigas.innerHTML = pila
+      .map((marco, i) => {
+        const actual = i === pila.length - 1;
+        return `<span class="miga${actual ? ' miga-actual' : ''}">` +
+          `<b>n${marco.nivel}</b> bajo=${marco.bajo} alto=${marco.alto}</span>`;
+      })
+      .join('<span class="miga-flecha">›</span>');
+  }
+
+  /**
    * Historial COMPLETO de la simulación: se apunta cada paso con su
    * mensaje. El más reciente arriba; el bloque tiene scroll propio
    * para recorrer los pasos que hagan falta.
@@ -636,6 +674,7 @@ class Vista {
     this.pintarBanda(paso);
     this.pintarMensaje(paso);
     this.pintarVars(paso);
+    this.pintarPila(paso);
     this.pintarHistorial(paso);
     this.pintarStats();
     this.pintarProgreso();

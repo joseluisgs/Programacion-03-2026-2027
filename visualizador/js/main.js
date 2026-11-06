@@ -306,6 +306,14 @@ function registrarEventos() {
   // Atajos de teclado
   document.addEventListener('keydown', (ev) => {
     if (Quiz.abierto) return; // mientras hay pregunta, manda el modal
+
+    // Con la curva abierta solo manda cerrarla (Esc); el resto de
+    // atajos no debe mover la simulación de detrás
+    if (curvaAbierta()) {
+      if (ev.key === 'Escape') cerrarCurva();
+      return;
+    }
+
     const tag = (ev.target.tagName || '').toLowerCase();
     if (tag === 'input' || tag === 'select' || tag === 'textarea') return;
 
@@ -322,6 +330,151 @@ function registrarEventos() {
     }
   });
 }
+
+// ------------------------------------------------------------
+// Modal: la curva del Big O (comparaciones según el tamaño)
+// ------------------------------------------------------------
+// Sin librerías: se pinta un SVG a mano para que la web siga
+// funcionando con doble clic y sin internet.
+const TAMAÑOS_CURVA = [6, 10, 14, 18, 22];
+const COLORES_CURVA = ['#4967cf', '#e5484d', '#46a758', '#9c27b0', '#ff9800', '#0091b3', '#8b6f47', '#607D8B'];
+
+/** Permutación determinista: mismos datos en cada medición. */
+function arrayDePrueba(n) {
+  const arr = Array.from({ length: n }, (_, i) => i);
+  let s = (n * 1103515245 + 12345) & 0x7fffffff;
+  for (let i = n - 1; i > 0; i--) {
+    s = (s * 1103515245 + 12345) & 0x7fffffff;
+    const j = s % (i + 1);
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+/** Comparaciones que hace el algoritmo, sin animar nada. */
+function contarComparaciones(algo, arr, objetivo) {
+  let cmp = 0;
+  for (const p of algo.generar(arr, objetivo)) if (p.act === 'cmp') cmp++;
+  return cmp;
+}
+
+/**
+ * Media de comparaciones para un tamaño dado.
+ * · Ordenación: una ejecución con datos deterministas.
+ * · Búsqueda: media de TODOS los objetivos posibles, así no depende
+ *   de la suerte de coger uno cerca o lejos.
+ */
+function comparacionesMedias(algo, n) {
+  if (algo.tipo === 'busqueda') {
+    const ordenado = Array.from({ length: n }, (_, i) => i);
+    let total = 0;
+    for (let obj = 0; obj < n; obj++) total += contarComparaciones(algo, ordenado, obj);
+    return Math.round(total / n);
+  }
+  return contarComparaciones(algo, arrayDePrueba(n), null);
+}
+
+/** Redondea "hacia arriba" a un número redondo para el eje Y. */
+function techoBonito(v) {
+  if (v <= 5) return 5;
+  const exp = Math.pow(10, Math.floor(Math.log10(v)));
+  const f = v / exp;
+  return (f <= 1 ? 1 : f <= 2 ? 2 : f <= 5 ? 5 : 10) * exp;
+}
+
+function pintarCurva(algo) {
+  // Solo se comparan algoritmos del MISMO tipo: mezclar ordenación con
+  // búsqueda en un mismo eje no significa nada (n² vs log n)
+  const delTipo = TODOS.filter((id) => ALGORITMOS[id].tipo === algo.tipo);
+
+  const series = delTipo.map((id, i) => ({
+    id,
+    nombre: ALGORITMOS[id].nombre,
+    color: COLORES_CURVA[i % COLORES_CURVA.length],
+    activa: id === algo.id,
+    puntos: TAMAÑOS_CURVA.map((n) => [n, comparacionesMedias(ALGORITMOS[id], n)]),
+  }));
+
+  // La serie activa se pinta la última (encima) y más gruesa
+  series.sort((a, b) => Number(a.activa) - Number(b.activa));
+
+  const W = 720;
+  const H = 320;
+  const ml = 56;
+  const mr = 20;
+  const mt = 18;
+  const mb = 46;
+  const iw = W - ml - mr;
+  const ih = H - mt - mb;
+
+  const maxBruto = Math.max(1, ...series.flatMap((s) => s.puntos.map((p) => p[1])));
+  const maxY = techoBonito(maxBruto);
+  const x = (n) => ml + TAMAÑOS_CURVA.indexOf(n) * (iw / (TAMAÑOS_CURVA.length - 1));
+  const y = (v) => mt + ih - (v / maxY) * ih;
+
+  const rejilla = [];
+  for (let k = 0; k <= 4; k++) {
+    const v = (maxY / 4) * k;
+    const py = y(v);
+    rejilla.push(
+      `<line x1="${ml}" y1="${py}" x2="${W - mr}" y2="${py}" stroke="currentColor" stroke-opacity=".14" stroke-dasharray="${k === 0 ? '' : '3 4'}"/>` +
+      `<text x="${ml - 8}" y="${py + 4}" text-anchor="end" class="cv-eje">${Math.round(v)}</text>`
+    );
+  }
+
+  const ejesX = TAMAÑOS_CURVA.map((n) =>
+    `<text x="${x(n)}" y="${H - mb + 20}" text-anchor="middle" class="cv-eje">${n}</text>`
+  ).join('');
+
+  const lineas = series.map((s) => {
+    const d = s.puntos.map((p) => `${x(p[0])},${y(p[1])}`).join(' ');
+    const grosor = s.activa ? 3 : 1.6;
+    const opacidad = s.activa ? 1 : 0.42;
+    const puntos = s.puntos.map((p) =>
+      `<circle cx="${x(p[0])}" cy="${y(p[1])}" r="${s.activa ? 4.5 : 3}" fill="${s.color}" stroke="var(--vp-c-bg-elv)" stroke-width="1.5"/>`
+    ).join('');
+    return `<polyline points="${d}" fill="none" stroke="${s.color}" stroke-width="${grosor}" stroke-linecap="round" stroke-linejoin="round" opacity="${opacidad}"/>${puntos}`;
+  }).join('');
+
+  const svg =
+    `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Comparaciones según el tamaño del array">` +
+    rejilla.join('') +
+    ejesX +
+    `<text x="${ml + iw / 2}" y="${H - 6}" text-anchor="middle" class="cv-eje cv-titulo">tamaño del array (n)</text>` +
+    `<text x="14" y="${mt + ih / 2}" text-anchor="middle" class="cv-eje cv-titulo" transform="rotate(-90 14 ${mt + ih / 2})">comparaciones</text>` +
+    lineas +
+    `</svg>`;
+
+  $('#curva-grafico').innerHTML = svg;
+  $('#curva-leyenda').innerHTML = series
+    .slice()
+    .reverse()
+    .map((s) => `<span class="${s.activa ? 'activa' : ''}"><i style="background:${s.color}"></i>${escapar(s.nombre)}</span>`)
+    .join('');
+
+  $('#curva-letra').innerHTML =
+    `<b>${escapar(algo.nombre)}</b> (${escapar(algo.complejidad.promedio)}) frente a los demás algoritmos de ${algo.tipo === 'busqueda' ? 'búsqueda' : 'ordenación'}.`;
+}
+
+function abrirCurva(algo) {
+  if (!algo) return;
+  pintarCurva(algo);
+  $('#curva-fondo').hidden = false;
+}
+
+function cerrarCurva() {
+  $('#curva-fondo').hidden = true;
+}
+
+function curvaAbierta() {
+  return !$('#curva-fondo').hidden;
+}
+
+document.addEventListener('curva:abrir', (ev) => abrirCurva(ev.detail && ev.detail.algo));
+$('#curva-cerrar').addEventListener('click', cerrarCurva);
+$('#curva-fondo').addEventListener('click', (ev) => {
+  if (ev.target === ev.currentTarget) cerrarCurva(); // clic en el fondo
+});
 
 // ------------------------------------------------------------
 // Arranque

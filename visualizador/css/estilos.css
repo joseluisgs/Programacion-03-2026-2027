@@ -718,6 +718,78 @@ input[type="range"] {
 .pt-fuera { background: var(--vp-c-border); }
 
 /* ------------------------------------------------------------
+   Pila de llamadas (SOLO algoritmos recursivos)
+   ------------------------------------------------------------
+   Franja horizontal a todo el ancho de la escena. En los demás
+   algoritmos el bloque lleva el atributo hidden y no ocupa ni un
+   píxel: el layout no cambia.
+   ------------------------------------------------------------ */
+.pila {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  min-height: 34px;
+  padding: 6px 16px;
+  border-top: 1px solid var(--vp-c-divider);
+  background: var(--vp-c-bg-alt);
+}
+
+.pila[hidden] { display: none; }
+
+.pila-titulo {
+  font-size: 0.68rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--vp-c-text-subtle);
+  flex: none;
+}
+
+.pila-migas {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-width: 0;
+}
+
+.miga {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--fuente-codigo);
+  font-size: 0.7rem;
+  color: var(--vp-c-text-mute);
+  background: var(--vp-c-control);
+  border: 1px solid var(--vp-c-border);
+  border-radius: 5px;
+  padding: 2px 8px;
+  white-space: nowrap;
+  transition: all var(--transicion);
+}
+
+.miga b { color: var(--vp-c-text); font-weight: 700; }
+
+/* El marco en el que estamos ahora mismo */
+.miga-actual {
+  background: var(--vp-c-accent-soft);
+  border-color: var(--vp-c-accent);
+  color: var(--vp-c-accent);
+  font-weight: 700;
+}
+.miga-actual b { color: var(--vp-c-accent); }
+
+.miga-flecha { color: var(--vp-c-text-subtle); font-size: 0.75rem; }
+
+.miga-vacia {
+  font-style: italic;
+  opacity: 0.75;
+  background: transparent;
+  border-style: dashed;
+}
+
+/* ------------------------------------------------------------
    Diagrama de flujo (Mermaid)
    ------------------------------------------------------------ */
 .diagrama-caja { border-top: 1px solid var(--vp-c-divider); background: var(--vp-c-bg-alt); }
@@ -947,6 +1019,71 @@ input[type="range"] {
 
 .quiz-cab { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .quiz-cab h2 { font-size: 1.05rem; flex: 1; min-width: 220px; }
+
+/* ------------------------------------------------------------
+   Modal "La curva del Big O" (comparaciones según el tamaño)
+   Mismo patrón que el modal del reto: hidden + display en :not().
+   ------------------------------------------------------------ */
+.curva-fondo {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: #00000073;
+  backdrop-filter: blur(3px);
+  display: none;
+  place-items: center;
+  padding: 20px;
+  animation: aparecer 0.2s ease;
+}
+
+/* No poner display a secas: anularía el atributo hidden */
+.curva-fondo:not([hidden]) { display: grid; }
+
+.curva-modal {
+  width: min(780px, 100%);
+  max-height: 90vh;
+  overflow-y: auto;
+  background: var(--vp-c-bg-elv);
+  border: 1px solid var(--vp-c-accent);
+  border-radius: 12px;
+  box-shadow: 0 20px 60px #00000059;
+  padding: 20px 22px;
+  animation: aparecer 0.25s ease;
+}
+
+.curva-cab { display: flex; align-items: center; gap: 12px; }
+.curva-cab h2 { font-size: 1.05rem; flex: 1; margin: 0; }
+
+.curva-letra { margin: 8px 0 14px; font-size: 0.88rem; color: var(--vp-c-text-mute); }
+
+.curva-grafico svg { width: 100%; height: auto; display: block; }
+
+.curva-leyenda {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  margin-top: 14px;
+  font-size: 0.78rem;
+}
+
+.curva-leyenda span { display: inline-flex; align-items: center; gap: 6px; color: var(--vp-c-text-mute); }
+.curva-leyenda i { width: 16px; height: 3px; border-radius: 2px; display: inline-block; flex: none; }
+.curva-leyenda .activa { color: var(--vp-c-text); font-weight: 700; }
+
+.curva-pie {
+  margin: 14px 0 0;
+  padding-top: 10px;
+  border-top: 1px solid var(--vp-c-divider);
+  font-size: 0.76rem;
+  color: var(--vp-c-text-subtle);
+}
+
+/* Botón que abre la curva, dentro del bloque de Complejidad */
+.btn-curva { display: block; width: 100%; margin-top: 9px; text-align: center; cursor: pointer; }
+
+/* Etiquetas del gráfico (SVG): heredan el color del tema */
+.cv-eje { font-family: var(--fuente-codigo); font-size: 11px; fill: var(--vp-c-text-mute); }
+.cv-titulo { font-family: var(--fuente); font-size: 11px; fill: var(--vp-c-text-subtle); }
 
 .quiz-score { display: flex; gap: 8px; font-size: 0.8rem; }
 

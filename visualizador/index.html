@@ -113,6 +113,26 @@
 
 <div class="duelo" id="duelo" hidden></div>
 
+<!-- ============================================================
+     Modal: la curva del Big O (comparaciones según el tamaño)
+     No toca el layout principal: solo se pinta al abrirlo.
+     ============================================================ -->
+<div class="curva-fondo" id="curva-fondo" hidden>
+  <div class="curva-modal" role="dialog" aria-modal="true" aria-labelledby="curva-titulo">
+    <div class="curva-cab">
+      <h2 id="curva-titulo">📈 La curva del Big O</h2>
+      <button class="btn-mini" type="button" id="curva-cerrar" title="Cerrar (Esc)">✕</button>
+    </div>
+    <p class="curva-letra" id="curva-letra"></p>
+    <div class="curva-grafico" id="curva-grafico"></div>
+    <div class="curva-leyenda" id="curva-leyenda"></div>
+    <p class="curva-pie">
+      Cada punto es el mismo algoritmo ejecutándose con ese tamaño de array.
+      Las <b>comparaciones</b> son lo que mide de verdad la tabla de complejidad.
+    </p>
+  </div>
+</div>
+
 <footer class="pie">
   <span class="pie-autor">J.L. González. 1DAW. Programación. I.E.S. Luis Vives (Leganés).</span>
   <span class="pie-links">
