@@ -1,6 +1,6 @@
-- [10. Resumen y conclusiones UD03](#10-resumen-y-conclusiones-ud03)
-  - [10.1. Mapa conceptual de la unidad](#101-mapa-conceptual-de-la-unidad)
-  - [10.2. Conceptos clave](#102-conceptos-clave)
+- [9. Resumen y conclusiones UD03](#9-resumen-y-conclusiones-ud03)
+  - [9.1. Mapa conceptual de la unidad](#91-mapa-conceptual-de-la-unidad)
+  - [9.2. Conceptos clave](#92-conceptos-clave)
     - [Introducción a los arrays](#introducción-a-los-arrays)
     - [Arrays unidimensionales](#arrays-unidimensionales)
     - [Arrays multidimensionales](#arrays-multidimensionales)
@@ -8,17 +8,17 @@
     - [Cadenas de texto](#cadenas-de-texto)
     - [Expresiones regulares](#expresiones-regulares)
     - [Algoritmos de ordenación y búsqueda](#algoritmos-de-ordenación-y-búsqueda)
-  - [10.3. Herramientas y perfiles](#103-herramientas-y-perfiles)
-  - [10.4. Errores comunes a evitar](#104-errores-comunes-a-evitar)
-  - [10.5. Checklist de supervivencia](#105-checklist-de-supervivencia)
-  - [10.6. Glosario de términos](#106-glosario-de-términos)
-  - [10.7. Ejercicios de repaso](#107-ejercicios-de-repaso)
-  - [10.8. ¿Qué viene después?](#108-qué-viene-después)
-  - [10.9. Mapa de conexiones entre temas](#109-mapa-de-conexiones-entre-temas)
+  - [9.3. Herramientas y perfiles](#93-herramientas-y-perfiles)
+  - [9.4. Errores comunes a evitar](#94-errores-comunes-a-evitar)
+  - [9.5. Checklist de supervivencia](#95-checklist-de-supervivencia)
+  - [9.6. Glosario de términos](#96-glosario-de-términos)
+  - [9.7. Ejercicios de repaso](#97-ejercicios-de-repaso)
+  - [9.8. ¿Qué viene después?](#98-qué-viene-después)
+  - [9.9. Mapa de conexiones entre temas](#99-mapa-de-conexiones-entre-temas)
 
 
 
-# 10. Resumen y conclusiones UD03
+# 9. Resumen y conclusiones UD03
 
 > 💡 **Punto de partida:** Has pasado de manejar variables individuales a manipular colecciones enteras de datos. Has aprendido a almacenar, recorrer, ordenar, buscar y validar información. Estas son las bases sobre las que se construye toda la programación real.
 
@@ -28,7 +28,7 @@
 - Consolidar el vocabulario técnico
 - Tener una referencia rápida para el examen
 
-## 10.1. Mapa conceptual de la unidad
+## 9.1. Mapa conceptual de la unidad
 
 ```mermaid
 graph TD
@@ -86,7 +86,7 @@ graph TD
     style RE3 fill:#607D8B,color:#fff
 ```
 
-## 10.2. Conceptos clave
+## 9.2. Conceptos clave
 
 ### Introducción a los arrays
 
@@ -174,7 +174,7 @@ graph TD
 
 📌 **Ejemplo real:** Netflix usa Búsqueda Binaria sobre títulos ordenados. Con millones de películas, $O(\log n)$ es mucho más rápido que $O(n)$.
 
-## 10.3. Herramientas y perfiles
+## 9.3. Herramientas y perfiles
 
 ### IDE y depuración
 
@@ -202,7 +202,7 @@ dotnet run
 dotnet run archivo.cs
 ```
 
-## 10.4. Errores comunes a evitar
+## 9.4. Errores comunes a evitar
 
 | Error | Por qué está mal | Cómo evitarlo |
 | :--- | :--- | :--- |
@@ -216,7 +216,7 @@ dotnet run archivo.cs
 | **Regex sin `^` y `$`** | Permite basura antes/después | Siempre anclar con `^` y `$` |
 | **Clonar solo array exterior en escalonadas** | Filas compartidas — dependencia parcial | Clonar cada fila manualmente |
 
-## 10.5. Checklist de supervivencia
+## 9.5. Checklist de supervivencia
 
 Antes de dar por cerrado el tema, asegúrate de poder responder **SÍ** a estas preguntas:
 
@@ -239,7 +239,7 @@ Antes de dar por cerrado el tema, asegúrate de poder responder **SÍ** a estas 
 > - **`ref`** = **R**eferencia → puedes modificar
 > - **`in`** = **I**nmutable → solo lectura
 
-## 10.6. Glosario de términos
+## 9.6. Glosario de términos
 
 | Término | Definición |
 | :--- | :--- |
@@ -270,7 +270,7 @@ Antes de dar por cerrado el tema, asegúrate de poder responder **SÍ** a estas 
 | **Búsqueda Binaria Recursiva** | Divide por la mitad llamándose a sí misma — $O(\log n)$ |
 | **Caso base** | Condición que corta una recursión para que no sea infinita |
 
-## 10.7. Ejercicios de repaso
+## 9.7. Ejercicios de repaso
 
 1. **Crea un array** de 10 enteros, rellénalo con los números del 1 al 10 y muéstralo por consola
 2. **Invierte un array** sin crear uno nuevo (usa intercambio de posiciones)
@@ -284,7 +284,7 @@ Antes de dar por cerrado el tema, asegúrate de poder responder **SÍ** a estas 
 10. **Extrae las fechas** de un texto usando regex con grupos de captura
 11. **Reescribe la Búsqueda Binaria en versión recursiva** y compara cuántos pasos da una y otra sobre el mismo array
 
-## 10.8. ¿Qué viene después?
+## 9.8. ¿Qué viene después?
 
 En la **UD 04: Programación Orientada a Objetos** aprenderás a organizar el código en **clases** y **objetos**, usando **encapsulación**. Los arrays que has aprendido aquí serán la base para almacenar colecciones de objetos.
 
@@ -297,7 +297,7 @@ En la **UD 04: Programación Orientada a Objetos** aprenderás a organizar el c�
 | Cadenas y Regex | Validación de datos en objetos |
 | Ordenación y búsqueda | Encontrar y ordenar objetos en colecciones |
 
-## 10.9. Mapa de conexiones entre temas
+## 9.9. Mapa de conexiones entre temas
 
 ```mermaid
 graph LR

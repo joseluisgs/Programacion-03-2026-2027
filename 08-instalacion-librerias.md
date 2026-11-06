@@ -172,7 +172,7 @@ Como ves, las dos primeras **no compiten**: se dedican a loguear (y pueden usars
 
 ## ¿Qué viene después?
 
-En el siguiente punto veremos cómo se traduce un diagrama E/R a clases: cardinalidades uno a uno, uno a muchos y muchos a muchos, y si el enlace entre objetos se pone en el constructor o en el setter. Después cerraremos la unidad con un resumen completo: mapa conceptual, errores comunes, checklist de supervivencia y glosario de términos clave.
+En el siguiente punto cerraremos la unidad con un resumen completo: mapa conceptual, errores comunes, checklist de supervivencia y glosario de términos clave.
 
 ---
 

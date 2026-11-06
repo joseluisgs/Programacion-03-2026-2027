@@ -14,8 +14,7 @@ UD03. Almacenamiento estático y cadenas. 1DAW. Curso 2026-2027.
 6. [Expresiones regulares (Regex)](06-expresiones-regulares.md)
 7. [Algoritmos de ordenación y búsqueda](07-ordenacion-busqueda.md)
 8. [Instalación de librerías con NuGet](08-instalacion-librerias.md)
-9. [Diseño orientado a objetos: del diagrama E/R a las clases](09-diseno-orientado-objetos.md)
-10. [Resumen y conclusiones](10-resumen.md)
+9. [Resumen y conclusiones](09-resumen.md)
 
 ## Contenido en YouTube
 
