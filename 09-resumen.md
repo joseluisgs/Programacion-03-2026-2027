@@ -168,6 +168,7 @@ graph TD
 | **Inserción** | $O(n^2)$ | ✅ | Arrays pequeños o casi ordenados |
 | **Shell Sort** | $O(n^{1.5})$ promedio | ❌ | Compromiso para arrays medianos |
 | **QuickSort** | $O(n \log n)$ | ❌ | Más rápido en la práctica |
+| **Merge Sort** | $O(n \log n)$ | ✅ | Garantizado y estable (usa array auxiliar) |
 | **Búsqueda Lineal** | $O(n)$ | N/A | Arrays no ordenados |
 | **Búsqueda Binaria** | $O(\log n)$ | N/A | Arrays ordenados |
 | **Búsqueda Binaria Recursiva** | $O(\log n)$ | N/A | Arrays ordenados, código recursivo |
@@ -265,6 +266,7 @@ Antes de dar por cerrado el tema, asegúrate de poder responder **SÍ** a estas 
 | **Inserción** | Ordenación insertando en posición — $O(n^2)$ |
 | **Shell Sort** | Inserción con brechas — $O(n^{1.5})$ promedio |
 | **QuickSort** | Divide y vencerás con pivote — $O(n \log n)$ |
+| **Merge Sort** | Divide y combina con un array auxiliar — $O(n \log n)$ siempre, estable |
 | **Búsqueda Lineal** | Recorre todo el array — $O(n)$ |
 | **Búsqueda Binaria** | Divide por la mitad — $O(\log n)$, requiere ordenación |
 | **Búsqueda Binaria Recursiva** | Divide por la mitad llamándose a sí misma — $O(\log n)$ |

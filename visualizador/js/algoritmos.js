@@ -579,7 +579,234 @@ function* genPartition(a, bajo, alto, pila) {
 }
 
 /* ============================================================
-   6) BÚSQUEDA LINEAL
+   6) MERGE SORT (Ordenación por mezcla)
+   ------------------------------------------------------------
+   Recursivo puro: divide hasta trozos de 1 y luego combina.
+   A diferencia de QuickSort necesita un array auxiliar (tmp).
+   ============================================================ */
+const COD_MERGE = [
+  'void MergeSort(int[] arr, int izq, int der) {',
+  '    if (izq >= der) return; // Caso base: un solo elemento',
+  '    int medio = izq + (der - izq) / 2;',
+  '    MergeSort(arr, izq, medio);',
+  '    MergeSort(arr, medio + 1, der);',
+  '    Merge(arr, izq, medio, der);',
+  '}',
+  '',
+  'void Merge(int[] arr, int izq, int medio, int der) {',
+  '    int[] tmp = new int[der - izq + 1];',
+  '    int i = izq, j = medio + 1, k = 0;',
+  '    while (i <= medio && j <= der) {',
+  '        if (arr[i] <= arr[j]) tmp[k++] = arr[i++];',
+  '        else tmp[k++] = arr[j++];',
+  '    }',
+  '    while (i <= medio) tmp[k++] = arr[i++];',
+  '    while (j <= der) tmp[k++] = arr[j++];',
+  '    for (int m = 0; m < tmp.Length; m++) arr[izq + m] = tmp[m];',
+  '}'
+];
+
+const FLUJO_MERGE = `graph TD
+  INICIO(["🎬 Inicio"]) --> L2{"¿izq &gt;= der?"}
+  L2 -->|"Sí: un solo elemento"| FIN(["✅ Fin"])
+  L2 -->|"No"| L3["medio = izq + (der - izq) / 2"]
+  L3 --> L4["MergeSort(arr, izq, medio)"]
+  L4 --> L5["MergeSort(arr, medio + 1, der)"]
+  L5 --> L6["Merge(arr, izq, medio, der)"]
+  L6 -.->|"entramos"| L10["int[] tmp = new int[der - izq + 1]"]
+  L10 --> L11["i = izq, j = medio + 1, k = 0"]
+  L11 --> L12{"¿i &lt;= medio y j &lt;= der?"}
+  L12 -->|"Sí"| L13{"¿arr[i] &lt;= arr[j]?"}
+  L13 -->|"Sí: izquierdo"| L12
+  L13 -->|"No"| L14["else tmp[k++] = arr[j++]"]
+  L14 --> L12
+  L12 -->|"No: alguno se agotó"| L16["while (i &lt;= medio): resto izquierdo"]
+  L16 --> L17["while (j &lt;= der): resto derecho"]
+  L17 --> L18["for m: arr[izq + m] = tmp[m]"]
+  L18 --> L19(["Merge devuelve"])
+  L19 -->|"volvemos"| L2`;
+
+function* genMergeSort(arr) {
+  const a = [...arr];
+  const pila = [];
+
+  yield paso(1, 'init', {
+    arr: [...a], vars: { n: a.length }, pila: copiaPila(pila),
+    msg: `Merge Sort: dividimos ${a.length} elementos y vamos combinando los trozos ya ordenados`
+  });
+
+  yield* genMs(a, 0, a.length - 1, pila);
+
+  yield paso(7, 'fin', {
+    arr: [...a], fijos: rango(0, a.length - 1), pila: copiaPila(pila),
+    msg: '✅ ¡Array ordenado! Todo ha vuelto de tmp a arr'
+  });
+}
+
+/** Divide: corresponde a las líneas 1-7 del código. */
+function* genMs(a, izq, der, pila) {
+  pila.push({ nivel: pila.length, bajo: izq, alto: der }); // abre el marco
+
+  const base = izq >= der;
+  yield paso(2, base ? 'fin-cond' : 'check', {
+    arr: [...a], rango: [izq, der], descartar: true, vars: { izq, der },
+    pila: copiaPila(pila),
+    msg: base
+      ? `Nivel ${pila.length - 1}: ¿izq (${izq}) >= der (${der})? Sí → un solo elemento, ya está`
+      : `Nivel ${pila.length - 1}: ¿izq (${izq}) >= der (${der})? No → hay que dividir ${izq}..${der}`
+  });
+
+  if (base) { pila.pop(); return; }
+
+  const medio = izq + Math.floor((der - izq) / 2);
+  yield paso(3, 'set', {
+    arr: [...a], rango: [izq, der], descartar: true, vars: { izq, der, medio },
+    marcas: [['medio', medio]], pila: copiaPila(pila),
+    msg: `medio = ${izq} + (${der} - ${izq}) / 2 = ${medio} → izquierda ${izq}..${medio}, derecha ${medio + 1}..${der}`
+  });
+
+  yield paso(4, 'call', {
+    arr: [...a], rango: [izq, medio], descartar: true, vars: { izq, der, medio },
+    pila: copiaPila(pila),
+    msg: `📞 MergeSort(${izq}, ${medio}) → ordenamos la mitad izquierda`
+  });
+  yield* genMs(a, izq, medio, pila);
+
+  yield paso(5, 'call', {
+    arr: [...a], rango: [medio + 1, der], descartar: true, vars: { izq, der, medio },
+    pila: copiaPila(pila),
+    msg: `📞 MergeSort(${medio + 1}, ${der}) → ordenamos la mitad derecha`
+  });
+  yield* genMs(a, medio + 1, der, pila);
+
+  yield paso(6, 'call', {
+    arr: [...a], rango: [izq, der], descartar: true, vars: { izq, der, medio },
+    pila: copiaPila(pila),
+    msg: `🔗 Merge(${izq}, ${medio}, ${der}) → combinamos las dos mitades, que ya están ordenadas`
+  });
+
+  yield* genMerge(a, izq, medio, der, pila);
+
+  pila.pop(); // cierra el marco
+}
+
+/** Combina: corresponde a las líneas 9-19 del código. */
+function* genMerge(a, izq, medio, der, pila) {
+  const total = der - izq + 1;
+  const tmp = new Array(total);
+
+  yield paso(10, 'set', {
+    arr: [...a], rango: [izq, der], descartar: true,
+    vars: { izq, medio, der, tmp: `int[${total}]` },
+    marcas: [['izq', izq], ['der', der]], pila: copiaPila(pila),
+    msg: `Creamos tmp de ${total} posiciones: ahí iremos juntando las dos mitades`
+  });
+
+  let i = izq;
+  let j = medio + 1;
+  let k = 0;
+
+  yield paso(11, 'set', {
+    arr: [...a], rango: [izq, der], descartar: true,
+    vars: { izq, medio, der, i, j, k },
+    idx: [[i, 'cmp'], [j, 'cmp']], marcas: [['i', i], ['j', j]],
+    pila: copiaPila(pila),
+    msg: `i apunta a ${i} (izquierda) y j a ${j} (derecha): vamos cogiendo el menor`
+  });
+
+  // Líneas 12-15: mientras los dos lados tengan elementos
+  while (i <= medio && j <= der) {
+    yield paso(12, 'check', {
+      arr: [...a], rango: [izq, der], descartar: true,
+      vars: { izq, medio, der, i, j, k },
+      idx: [[i, 'cmp'], [j, 'cmp']], marcas: [['i', i], ['j', j]],
+      pila: copiaPila(pila),
+      msg: `¿i (${i}) <= medio (${medio}) y j (${j}) <= der (${der})? Sí → comparamos`
+    });
+
+    const izquierdo = a[i] <= a[j];
+    yield paso(13, 'cmp', {
+      arr: [...a], rango: [izq, der], descartar: true,
+      vars: { izq, medio, der, i, j, k },
+      idx: [[i, 'cmp'], [j, 'cmp']], marcas: [['i', i], ['j', j]],
+      pila: copiaPila(pila),
+      msg: `¿arr[${i}] = ${a[i]} <= arr[${j}] = ${a[j]}? ${izquierdo ? 'Sí → nos quedamos el izquierdo' : 'No → nos quedamos el derecho'}`
+    });
+
+    if (izquierdo) {
+      tmp[k] = a[i];
+      yield paso(13, 'set', {
+        arr: [...a], rango: [izq, der], descartar: true,
+        vars: { izq, medio, der, i, j, k },
+        idx: [[i, 'move']], marcas: [['i', i], ['k', k]],
+        pila: copiaPila(pila),
+        msg: `tmp[${k}] = arr[${i}] = ${tmp[k]} → avanzamos i (ya no queda en la izquierda)`
+      });
+      i++;
+    } else {
+      tmp[k] = a[j];
+      yield paso(14, 'set', {
+        arr: [...a], rango: [izq, der], descartar: true,
+        vars: { izq, medio, der, i, j, k },
+        idx: [[j, 'move']], marcas: [['j', j], ['k', k]],
+        pila: copiaPila(pila),
+        msg: `tmp[${k}] = arr[${j}] = ${tmp[k]} → avanzamos j (ya no queda en la derecha)`
+      });
+      j++;
+    }
+    k++;
+  }
+
+  // Línea 16: sobra mitad izquierda
+  while (i <= medio) {
+    yield paso(16, 'check', {
+      arr: [...a], rango: [izq, der], descartar: true,
+      vars: { izq, medio, der, i, j, k },
+      idx: [[i, 'move']], marcas: [['i', i], ['k', k]],
+      pila: copiaPila(pila),
+      msg: `La derecha se agotó: arrancamos el resto izquierdo, arr[${i}] = ${a[i]} → tmp[${k}]`
+    });
+    tmp[k] = a[i];
+    i++;
+    k++;
+  }
+
+  // Línea 17: sobra mitad derecha
+  while (j <= der) {
+    yield paso(17, 'check', {
+      arr: [...a], rango: [izq, der], descartar: true,
+      vars: { izq, medio, der, i, j, k },
+      idx: [[j, 'move']], marcas: [['j', j], ['k', k]],
+      pila: copiaPila(pila),
+      msg: `La izquierda se agotó: arrancamos el resto derecho, arr[${j}] = ${a[j]} → tmp[${k}]`
+    });
+    tmp[k] = a[j];
+    j++;
+    k++;
+  }
+
+  // Línea 18: devolvemos tmp a arr, elemento a elemento (aquí SÍ se ven mover)
+  for (let m = 0; m < total; m++) {
+    a[izq + m] = tmp[m];
+    yield paso(18, 'move', {
+      arr: [...a], rango: [izq, der], descartar: true,
+      vars: { izq, medio, der, m, total },
+      idx: rango(izq, izq + m).map((p) => [p, 'move']),
+      pila: copiaPila(pila),
+      msg: `arr[${izq + m}] = tmp[${m}] = ${tmp[m]} → ya está en su sitio (${m + 1}/${total})`
+    });
+  }
+
+  yield paso(19, 'ret', {
+    arr: [...a], rango: [izq, der], descartar: true,
+    vars: { izq, medio, der },
+    pila: copiaPila(pila),
+    msg: `Merge(${izq}, ${medio}, ${der}) termina: ${izq}..${der} ya está ordenado ✅`
+  });
+}
+
+/* ============================================================
+   7) BÚSQUEDA LINEAL
    ============================================================ */
 const COD_LINEAL = [
   'int BuscarLineal(int[] arr, int objetivo) {',
@@ -636,7 +863,7 @@ function* genLineal(arr, objetivo) {
 }
 
 /* ============================================================
-   7) BÚSQUEDA BINARIA
+   8) BÚSQUEDA BINARIA
    ============================================================ */
 const COD_BINARIA = [
   'int BuscarBinaria(int[] arr, int objetivo) {',
@@ -744,7 +971,7 @@ function* genBinaria(arr, objetivo) {
 }
 
 /* ============================================================
-   8) BÚSQUEDA BINARIA RECURSIVA
+   9) BÚSQUEDA BINARIA RECURSIVA
    ------------------------------------------------------------
    Misma idea que la iterativa, pero la función se llama a sí
    misma con la mitad que queda en lugar de usar un while.
@@ -952,6 +1179,15 @@ const ALGORITMOS = {
     recursivo: true,
     codigo: COD_QUICKSORT, flujo: FLUJO_QUICKSORT, generar: genQuicksort
   },
+  mergesort: {
+    id: 'mergesort', nombre: 'Merge Sort', icono: '🔀', tipo: 'orden',
+    idea: 'Divide el array hasta trozos de un elemento y luego los va combinando ya ordenados. Es el "divide y vencerás" en estado puro.',
+    ejemplo: 'Como mezclar dos mazos de cartas que ya están ordenados: en cada paso coges la carta más pequeña de los dos.',
+    uso: 'Cuando hace falta O(n log n) garantizado y estabilidad.',
+    complejidad: { mejor: 'O(n log n)', promedio: 'O(n log n)', peor: 'O(n log n)', estable: true },
+    recursivo: true,
+    codigo: COD_MERGE, flujo: FLUJO_MERGE, generar: genMergeSort
+  },
   lineal: {
     id: 'lineal', nombre: 'Búsqueda lineal', icono: '🔍', tipo: 'busqueda',
     idea: 'Recorre el array entero de izquierda a derecha mirando elemento a elemento. No necesita orden.',
@@ -979,7 +1215,7 @@ const ALGORITMOS = {
   }
 };
 
-const ORDENACION = ['burbuja', 'seleccion', 'insercion', 'shell', 'quicksort'];
+const ORDENACION = ['burbuja', 'seleccion', 'insercion', 'shell', 'quicksort', 'mergesort'];
 const BUSQUEDA = ['lineal', 'binaria', 'binariarecursiva'];
 const TODOS = [...ORDENACION, ...BUSQUEDA];
 

@@ -6,6 +6,7 @@
     - [7.2.3. Inserción (Insertion Sort)](#723-inserción-insertion-sort)
     - [7.2.4. Shell Sort](#724-shell-sort)
     - [7.2.5. QuickSort](#725-quicksort)
+    - [7.2.6. Ordenación por mezcla (Merge Sort)](#726-ordenación-por-mezcla-merge-sort)
   - [7.3. Algoritmos de búsqueda (Searching)](#73-algoritmos-de-búsqueda-searching)
     - [7.3.1. Búsqueda lineal](#731-búsqueda-lineal)
     - [7.3.2. Búsqueda binaria](#732-búsqueda-binaria)
@@ -54,7 +55,7 @@ Antes de ver algoritmos, necesitamos una forma de **comparar** cuán rápido es 
 
 ## 7.2. Algoritmos de ordenación (Sorting)
 
-De todos los algoritmos de ordenación, puedes visualizarlos interactivamente [aquí](https://www.cs.usfca.edu/~galles/visualization/Algorithms.html), [aquí](https://visualgo.net/en/sorting) y [aquí](https://algorithm-visualizer.org/).
+De todos los algoritmos de ordenación, puedes verlos animados **en nuestro [visualizador de algoritmos](visualizador/index.html)**: con el código C# resaltado paso a paso, el diagrama de flujo sincronizado, la pila de llamadas de los recursivos y la curva de comparaciones según el tamaño. También hay visualizadores externos [aquí](https://www.cs.usfca.edu/~galles/visualization/Algorithms.html), [aquí](https://visualgo.net/en/sorting) y [aquí](https://algorithm-visualizer.org/).
 
 ### 7.2.1. Burbuja (Bubble Sort)
 
@@ -309,6 +310,76 @@ int Partition(int[] arr, int bajo, int alto)
 
 > 💡 **Consejo:** En la práctica, los lenguajes modernos usan variantes optimizadas de QuickSort en sus métodos de ordenación estándar. No necesitas implementarlo a mano, pero entenderlo te ayuda a elegir el mejor algoritmo.
 
+### 7.2.6. Ordenación por mezcla (Merge Sort)
+
+**Idea:** Es el "divide y vencerás" en estado puro. Cortas el array por la mitad una y otra vez hasta quedarte con trozos de **un solo elemento** —que ya están ordenados, porque un elemento consigo mismo siempre lo está— y luego **combinas** esos trozos de dos en dos hasta tener el array entero ordenado.
+
+📌 **Ejemplo real:** Es exactamente lo que hace quien reparte dos mazos de cartas ya ordenados: miras la carta de arriba de cada mazo, te quedas la menor y repites. Cuando un mazo se queda sin cartas, vacías el otro entero tal cual.
+
+> 💡 **Analogía:** Tienes que ordenar la lista de invitados de una boda por apellido. En vez de ordenarla tú solo, le dices a un amigo que ordene la primera mitad y a otro que ordene la segunda; luego vosotros dos **mezcláis** las dos listas ya ordenadas cogiendo siempre el apellido que va antes.
+
+Lo delicado es el paso de **combinar** (`Merge`): se recorren las dos mitades con dos punteros (`i` y `j`), siempre se coge el elemento menor de los dos y se deja en un array auxiliar `tmp`. Al final, `tmp` se devuelve al array original.
+
+```mermaid
+graph TD
+    S(("Inicio")) --> BASE{"¿izq >= der?"}
+    BASE -->|"Sí: un solo elemento"| OK["Ya está ordenado"]
+    BASE -->|"No"| MEDIO["Calculo el medio"]
+    MEDIO --> IZQ["Ordeno la mitad izquierda"]
+    IZQ --> DER["Ordeno la mitad derecha"]
+    DER --> MEZCLA["Combino con Merge"]
+    MEZCLA --> S
+    style S fill:#4CAF50,color:#fff
+    style OK fill:#4CAF50,color:#fff
+    style BASE fill:#FF9800,color:#fff
+    style MEDIO fill:#2196F3,color:#fff
+    style IZQ fill:#9C27B0,color:#fff
+    style DER fill:#9C27B0,color:#fff
+    style MEZCLA fill:#607D8B,color:#fff
+```
+
+Así queda el código en C#:
+
+```csharp
+void MergeSort(int[] arr, int izq, int der)
+{
+    // Caso base: un solo elemento ya está ordenado
+    if (izq >= der) return;
+    int medio = izq + (der - izq) / 2;
+    MergeSort(arr, izq, medio);
+    MergeSort(arr, medio + 1, der);
+    Merge(arr, izq, medio, der);
+}
+
+void Merge(int[] arr, int izq, int medio, int der)
+{
+    int[] tmp = new int[der - izq + 1];
+    int i = izq, j = medio + 1, k = 0;
+    while (i <= medio && j <= der)
+    {
+        if (arr[i] <= arr[j]) tmp[k++] = arr[i++];
+        else tmp[k++] = arr[j++];
+    }
+    while (i <= medio) tmp[k++] = arr[i++];
+    while (j <= der) tmp[k++] = arr[j++];
+    for (int m = 0; m < tmp.Length; m++) arr[izq + m] = tmp[m];
+}
+```
+
+| Aspecto | Evaluación |
+| :--- | :--- |
+| **Mejor caso** | $O(n \log n)$ |
+| **Peor caso** | $O(n \log n)$ — siempre, no depende de los datos |
+| **Estable** | ✅ Sí |
+| **Espacio** | $O(n)$ — necesita el array auxiliar `tmp` |
+| **Uso** | Cuando hace falta $O(n \log n)$ garantizado y estabilidad |
+
+> ⚠️ **Advertencia:** Merge Sort necesita un **array auxiliar** del tamaño del trozo que estás mezclando, así que gasta $O(n)$ de memoria. A cambio es el único de los que hemos visto que **nunca cae por debajo de $O(n \log n)$**: QuickSort puede desplomarse hasta $O(n^2)$ con malas suertes, él no.
+
+> 📝 **Nota:** Por eso es el algoritmo de referencia cuando la **estabilidad** importa. Por ejemplo, ordenar primero por apellido y después por nota sin romper el primer criterio: si dos alumnos empatan en nota, Merge Sort les mantiene el orden de apellidos.
+
+> 🔧 **Truco:** QuickSort gana en la práctica porque trabaja *in place*; Merge Sort gana en **previsibilidad** y en **estabilidad**. Si el examen pregunta "¿cuál es siempre $O(n \log n)$ y estable?", la respuesta es **Merge Sort**.
+
 ## 7.3. Algoritmos de búsqueda (Searching)
 
 ### 7.3.1. Búsqueda lineal
@@ -493,6 +564,7 @@ Las dos versiones hacen exactamente lo mismo, paso a paso:
 | **Inserción** | $O(n)$ | $O(n^2)$ | $O(n^2)$ | ✅ Sí |
 | **Shell Sort** | $O(n \log n)$ | $O(n^{1.5})$ | $O(n^2)$ | ❌ No |
 | **QuickSort** | $O(n \log n)$ | $O(n \log n)$ | $O(n^2)$ | ❌ No |
+| **Merge Sort** | $O(n \log n)$ | $O(n \log n)$ | $O(n \log n)$ | ✅ Sí |
 | **Búsqueda Lineal** | $O(1)$ | $O(n)$ | $O(n)$ | N/A |
 | **Búsqueda Binaria** | $O(1)$ | $O(\log n)$ | $O(\log n)$ | N/A |
 | **Búsqueda Binaria Recursiva** | $O(1)$ | $O(\log n)$ | $O(\log n)$ | N/A |
@@ -506,7 +578,8 @@ Las dos versiones hacen exactamente lo mismo, paso a paso:
 | **Array pequeño (<20 elementos)** | Inserción |
 | **Array casi ordenado** | Inserción |
 | **Array grande, sin requisitos especiales** | QuickSort (o `Array.Sort`) |
-| **Estabilidad necesaria** | Burbuja o Inserción |
+| **Estabilidad necesaria** | Burbuja, Inserción o Merge Sort |
+| **O(n log n) garantizado** | Merge Sort |
 | **Búsqueda en array ordenado** | Búsqueda Binaria |
 | **Búsqueda en array no ordenado** | Búsqueda Lineal |
 | **Problema ya recursivo (árboles, carpetas)** | Búsqueda Binaria Recursiva |
@@ -522,13 +595,14 @@ Las dos versiones hacen exactamente lo mismo, paso a paso:
 | **Inserción** | Inserta en posición, $O(n^2)$, estable |
 | **Shell Sort** | Inserción con brechas, $O(n^{1.5})$ promedio |
 | **QuickSort** | Divide y vencerás, $O(n \log n)$ promedio |
+| **Merge Sort** | Divide y combina, $O(n \log n)$ siempre, estable |
 | **Búsqueda Lineal** | Recorre todo, $O(n)$ |
 | **Búsqueda Binaria** | Divide por la mitad, $O(\log n)$, requiere ordenación |
 | **Búsqueda Binaria Recursiva** | Divide por la mitad llamándose a sí misma, $O(\log n)$ |
 
 ## ¿Qué viene después?
 
-En el siguiente punto cerraremos la unidad con un resumen completo: mapa conceptual, errores comunes, checklist de supervivencia y glosario de términos clave.
+En el siguiente punto pasamos al **8. Instalación de librerías con NuGet**: cómo meter paquetes de terceros en un proyecto de .NET, tanto desde el Gestor de Paquetes de Visual Studio como desde la CLI de `dotnet`.
 
 ## Buenas prácticas
 
