@@ -214,7 +214,7 @@ Golpeo AnalizarGolpeo(Celda[,] mapa, Posicion posicion) {
 
     // 1. ACERTADO: Comprobación directa.
     // Comparamos el valor entero de la celda con el valor entero del enum (Celda.Mosca).
-    if (matriz[posicion.Fila, posicion.Columna] == Celda.Mosca)
+    if (mapa[posicion.Fila, posicion.Columna] == Celda.Mosca)
         return Golpeo.Acertado;
 
     // 2. CASI: Comprobación adyacente (vecindario 3x3).
@@ -233,7 +233,7 @@ Golpeo AnalizarGolpeo(Celda[,] mapa, Posicion posicion) {
             if (nuevaPosicion.Fila >= 0 && nuevaPosicion.Fila < filas &&
                 nuevaPosicion.Columna >= 0 && nuevaPosicion.Columna < columnas)
                 // Si la mosca está en alguna de las casillas adyacentes, devolvemos CASI.
-                if (matriz[nuevaPosicion.Fila, nuevaPosicion.Columna] == Celda.Mosca)
+                if (mapa[nuevaPosicion.Fila, nuevaPosicion.Columna] == Celda.Mosca)
                     return Golpeo.Casi;
         }
     }
