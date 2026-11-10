@@ -52,6 +52,9 @@ dotnet list package
 
 # Truco: ver si hay versiones más nuevas publicadas
 dotnet list package --outdated
+
+# Quitar un paquete: borra la referencia del .csproj
+dotnet remove package Serilog.Sinks.File
 ```
 
 Qué hace cada uno:
@@ -59,6 +62,7 @@ Qué hace cada uno:
 - **`dotnet add package`** — es "instalar": modifica tu `.csproj` añadiendo la `PackageReference`. Ojo dónde lo ejecutas: si no estás en la carpeta del proyecto, la referencia va donde no toca.
 - **`dotnet restore`** — no instala nada nuevo; **descarga** a la caché lo que el `.csproj` ya pide. Lo lanza automáticamente cada `dotnet build`, pero conviene ejecutarlo a mano tras clonar un proyecto o cuando el build queja de paquetes.
 - **`dotnet list package`** — inventario de lo que tienes, con versiones; con `--outdated` te muestra además qué paquetes se han quedado atrás.
+- **`dotnet remove package`** — es "desinstalar": borra la `PackageReference` del `.csproj`, con la misma regla de carpeta que `add`. El paquete sigue en la caché local por si lo usan otros proyectos, pero tu proyecto ya no lo referencia.
 
 La referencia que escribe `add package` en el `.csproj` tiene esta pinta:
 
@@ -174,7 +178,7 @@ Dos detalles importantes del uso:
 
 ## 8.6. Serilog
 
-**Serilog** es un framework de logging **estructurado**: más flexible y extensible que el oficial, con mensajes enriquecidos, formato coloreado en consola y múltiples **destinos (sinks)**: consola, fichero, base de datos… El paquete básico de consola es `Serilog.Sinks.Console`:
+**Serilog** es un framework de logging **estructurado** (web oficial: **https://serilog.net/**): más flexible y extensible que el oficial, con mensajes enriquecidos, formato coloreado en consola y múltiples **destinos (sinks)**: consola, fichero, base de datos… El paquete básico de consola es `Serilog.Sinks.Console`:
 
 ```bash
 dotnet add package Serilog.Sinks.Console
@@ -208,7 +212,7 @@ Log.CloseAndFlush();
 
 ## 8.7. Spectre.Console
 
-**Spectre.Console** no hace logging: hace que tu consola se vea **bien**. Tablas con bordes, texto con color mediante *markup*, menús interactivos, barras de progreso… El paquete es `Spectre.Console` y su punto de entrada es `AnsiConsole`:
+**Spectre.Console** no hace logging: hace que tu consola se vea **bien** (web oficial: **https://spectreconsole.net/**). Tablas con bordes, texto con color mediante *markup*, menús interactivos, barras de progreso… El paquete es `Spectre.Console` y su punto de entrada es `AnsiConsole`:
 
 ```bash
 dotnet add package Spectre.Console
