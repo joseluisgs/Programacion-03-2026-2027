@@ -1,10 +1,10 @@
-# 24. Base de Datos Alumnado
+# 24. Base de datos alumnado
 
 ## Enunciado
 
 Desarrolla una aplicación CRUD de gestión de base de datos de alumnos utilizando un array nullable `Alumno?[].` El programa debe permitir listar alumnos (ordenados por DNI o por nota), buscar por ID o DNI, añadir, actualizar y eliminar alumnos con validación completa de DNI (letra de control módulo 23). El array debe auto-redimensionarse: expandirse al 80% de ocupación y reducirse al 50%. Implementar ordenación con Bubble Sort y estadísticas (tasa de aprobado, nota media). Usar Serilog para logging.
 
-## Conceptos Clave
+## Conceptos clave
 
 - Structs nullable (`Alumno?[]`) para almacenar alumnos con huecos (null)
 - Redimensión dinámica del array con `ref` (expansión +80%, reducción -50%)
@@ -42,8 +42,10 @@ Desarrolla una aplicación CRUD de gestión de base de datos de alumnos utilizan
 
 ## Diagrama
 
+Mapa general del programa: el detalle de las opciones **4 (crear)** y **6 (eliminar)** está en los dos diagramas de flujo de los apartados siguientes.
+
 ```mermaid
-graph TD
+graph LR
     A[Menú principal] --> B{Opción}
     B -->|1| C[Listar por DNI]
     B -->|2| D[Buscar por ID]
@@ -54,20 +56,16 @@ graph TD
     B -->|7| I[Listar por notas]
     B -->|8| J[Estadísticas]
     B -->|0| K[Salir]
-    F --> F1[Validar DNI nuevo]
-    F1 --> F2[Validar nombre y nota]
-    F2 --> F3{¿Necesita expansión?}
-    F3 -->|Sí| F4[Crear array +10 y copiar]
-    F3 -->|No| F5[Insertar en hueco libre]
-    F4 --> F5
-    H --> H1[Buscar alumno por DNI]
-    H1 --> H2[Mostrar datos y confirmar]
-    H2 --> H3[Marcar null]
-    H3 --> H4{¿Necesita reducción?}
-    H4 -->|Sí| H5[Crear array -10 y copiar]
-    H4 -->|No| A
-    H5 --> A
     style A fill:#2196F3,color:#fff
+    style B fill:#607D8B,color:#fff
+    style C fill:#4CAF50,color:#fff
+    style D fill:#4CAF50,color:#fff
+    style E fill:#4CAF50,color:#fff
+    style F fill:#FF9800,color:#fff
+    style G fill:#FF9800,color:#fff
+    style H fill:#FF9800,color:#fff
+    style I fill:#4CAF50,color:#fff
+    style J fill:#4CAF50,color:#fff
     style K fill:#f44336,color:#fff
 ```
 
