@@ -1,6 +1,6 @@
 ﻿namespace MineralesMatrizAdvanced.Structs;
 
-internal struct Direccion {
+public struct Direccion {
     public int Fila;
     public int Columna;
 }

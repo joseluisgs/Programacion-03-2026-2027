@@ -4,7 +4,7 @@ namespace _35_VecesMatriz.Structs;
 // Mismo planteamiento que en el ejemplo 34 (vector), con un matiz: aquí las
 // posiciones NO son enteros sueltos, sino structs Posicion, porque una celda
 // de una matriz se identifica con DOS índices.
-internal struct Veces
+public struct Veces
 {
     public int Conteo;          // Cuántas veces aparece el número (0 si no aparece)
     public Posicion[] Posiciones; // Las celdas EXACTAS donde aparece, sin huecos

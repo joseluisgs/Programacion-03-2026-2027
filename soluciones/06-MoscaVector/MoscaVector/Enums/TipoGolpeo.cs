@@ -1,6 +1,6 @@
 ﻿namespace _08_MoscaVector.Enums;
 
-internal enum TipoGolpeo {
+public enum TipoGolpeo {
     Acertado,
     Fallado,
     Casi

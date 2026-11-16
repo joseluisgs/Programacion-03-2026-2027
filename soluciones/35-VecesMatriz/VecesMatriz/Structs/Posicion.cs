@@ -5,7 +5,7 @@ namespace _35_VecesMatriz.Structs;
 // unidimensional; en una matriz hacen falta SIEMPRE dos índices, y meterlos
 // en un struct evita arrastrar dos arrays paralelos (filas[] y columnas[])
 // que se pueden desincronizar.
-internal struct Posicion
+public struct Posicion
 {
     public int Fila;    // Índice de la fila (0-indexado)
     public int Columna; // Índice de la columna (0-indexado)

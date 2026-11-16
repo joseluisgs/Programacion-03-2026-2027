@@ -6,7 +6,7 @@ namespace _34_VecesVector.Structs;
 // una sola función. Si devolviéramos solo el contador, el llamador no
 // sabría dónde está; si devolviéramos solo las posiciones, no sabríamos
 // cuántas hay sin recorrer el array otra vez.
-internal struct Veces
+public struct Veces
 {
     public int Conteo; // Cuántas veces aparece el número (0 si no aparece)
     public int[] Posiciones; // Los índices EXACTOS donde aparece, sin huecos
