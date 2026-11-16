@@ -20,6 +20,9 @@
   - [2.4. Parámetros variables (`params`) y modificador `in`](#24-parámetros-variables-params-y-modificador-in)
   - [2.5. Identidad vs. igualdad (referencia vs. contenido)](#25-identidad-vs-igualdad-referencia-vs-contenido)
   - [2.6. Copias, clonación y la inmutabilidad del tamaño](#26-copias-clonación-y-la-inmutabilidad-del-tamaño)
+    - [2.6.1. Copia superficial y copia profunda: copiar y clonar arrays](#261-copia-superficial-y-copia-profunda-copiar-y-clonar-arrays)
+    - [2.6.2. El problema del redimensionado: el acordeón](#262-el-problema-del-redimensionado-el-acordeón)
+    - [2.6.3. Funciones del sistema: `Copy`, `Clone` y `Resize`](#263-funciones-del-sistema-copy-clone-y-resize)
   - [2.7. La trampa del alias](#27-la-trampa-del-alias)
   - [2.8. Arrays de tipos compuestos](#28-arrays-de-tipos-compuestos)
 
@@ -215,6 +218,38 @@ foreach (string? nombre in nombres)
     Console.WriteLine($"Usuario: {nombre ?? "vacío"}");
 }
 ```
+
+Cuando el elemento puede ser `null`, además del `if` clásico hay dos formas más idiomáticas de recorrer el array sin estrellarte:
+
+**Patrón `is { } x`: comprueba y extrae en un paso.** La expresión `x is { } v` pregunta «¿`x` tiene valor?» y, si lo tiene, **lo deja guardado en `v`**: comprueba que no es `null` y hace la extracción (el "casting" del valor) en la misma línea. Es el atajo del `if (x != null)` manual, y funciona con cualquier tipo anulable, incluidos los structs anulables:
+
+```csharp
+foreach (string? nombre in nombres)
+{
+    if (nombre is { } n)   // si no es null, n contiene ya el valor
+        Console.WriteLine($"Usuario: {n} (longitud {n.Length})");
+    else
+        Console.WriteLine("Posición vacía");
+}
+```
+
+**Acceso condicional `x?.Propiedad`: si es null, no se toca.** Cuando no queremos acceder a una de sus propiedades directamente (porque el elemento podría ser `null`), el operador `?.` comprueba la nulidad por nosotros: si el elemento es `null`, **no accede a la propiedad** y la expresión entera vale `null`, en vez de lanzar una `NullReferenceException`. Por eso encaja tan bien dentro de un `if`:
+
+```csharp
+foreach (string? nombre in nombres)
+{
+    // Si nombre es null, nombre?.Length también es null: nadie accede a nada
+    Console.WriteLine(nombre?.Length);
+
+    // Dentro de un if: solo entramos si hay valor y la condición se cumple
+    if (nombre?.Length > 3)
+        Console.WriteLine($"{nombre} tiene más de 3 caracteres");
+}
+```
+
+Las dos formas se combinan con la coalescencia de arriba cuando necesitas un valor concreto: `nombre?.Length ?? 0`.
+
+> 💡 **Consejo:** Usa `is { } x` cuando necesitas **usar** el valor dentro del `if`, y `?.` cuando solo quieres **consultar algo puntual** sin montar el bloque. Con cualquiera de las dos, el array puede estar lleno de huecos `null` y el programa sigue en pie.
 
 ## 2.3. Paso por referencia, devolución y clonación
 
@@ -599,7 +634,86 @@ Console.WriteLine(SonIguales(arrayA, arrayB));      // true (mismo contenido)
 
 ## 2.6. Copias, clonación y la inmutabilidad del tamaño
 
+Esta sección se lee en tres bloques: primero, **copiar y clonar** arrays distinguiendo la copia superficial de la profunda, todo con funciones escritas a mano; después, **el problema del redimensionado** —el tamaño no cambia— y su solución, el acordeón, también con código tuyo; y al final, las **funciones del sistema** (`Array.Copy`, `Clone()` y `Array.Resize`) que hacen el mismo trabajo por ti.
+
+### 2.6.1. Copia superficial y copia profunda: copiar y clonar arrays
+
+**Copiar** un array significa crear **otro array nuevo** con los mismos elementos y dejar el original intacto; ojo, `int[] b = a` **no copia nada**, solo añade un segundo nombre para el mismo array (el alias, en la 2.7). **Clonar** es lo mismo, pidiéndoselo al propio array. En los dos casos, lo que hay que mirar es **qué se copia de verdad**:
+
+- **Copia superficial** (*shallow*): se copian los **elementos**. En un `int[]` eso es copiar los datos completos; pero en arrays de tipos de referencia (de clases, lo verás en la 2.8) se copian las **direcciones**: el original y la copia seguirían apuntando a los mismos objetos.
+- **Copia profunda** (*deep*): se copian los elementos **y** cada objeto al que apuntan, de modo que cada array queda con lo suyo. Aquí, con arrays de `int`, copiar elemento a elemento ya es una copia completa.
+
+**Algoritmo: copiar un array**
+
+1. Crear un array nuevo con el mismo número de posiciones que el original.
+2. Recorrer el original de la posición `0` a `Length - 1` y asignar cada elemento a la misma posición del array nuevo.
+3. Comprobar la independencia: cambiar un elemento de una copia no toca al otro array.
+
+**Tu función de copiar** (la que escribirías tú):
+
+```csharp
+// El destino lo crea quien llama; la función solo lo rellena
+void Copiar(int[] origen, int[] destino)
+{
+    for (int i = 0; i < origen.Length; i++)
+    {
+        destino[i] = origen[i];  // elemento a elemento
+    }
+}
+
+int[] original = { 10, 20, 30 };
+int[] copia = new int[original.Length];   // el destino debe caber
+Copiar(original, copia);
+
+copia[0] = 99;
+Console.WriteLine(original[0]);  // 10 — el original no se entera
+Console.WriteLine(copia[0]);     // 99
+```
+
+📌 **Ejemplo real:** Al preparar un informe de notas suele copiarse el array original para ordenarlo a su gusto: el listado del profesor sigue en su orden original y los datos no se alteran.
+
+**Algoritmo: clonar un array**
+
+1. Crear (o pedir al array) uno nuevo con el mismo número de posiciones.
+2. Recorrer el original y llenar el nuevo con sus elementos.
+3. Resultado: un clon independiente; tocar el clon no afecta al original (ni al revés).
+
+**Tu función de clonar** (la misma idea que en la 2.3.7, aquí junto a su alternativa del sistema):
+
+```csharp
+// La función crea el array nuevo y lo devuelve
+int[] Clonar(int[] origen)
+{
+    int[] clon = new int[origen.Length];
+    for (int i = 0; i < origen.Length; i++)
+    {
+        clon[i] = origen[i];  // elemento a elemento
+    }
+    return clon;
+}
+
+int[] original = { 10, 20, 30 };
+int[] clon = Clonar(original);
+
+clon[0] = 99;
+Console.WriteLine(original[0]);  // 10 — el clon no toca al original
+Console.WriteLine(clon[0]);      // 99
+```
+
+📌 **Ejemplo real:** Un videojuego guarda las opciones de un nivel en un array; antes de que el jugador las cambie, clona el array de configuración —si luego quieres volver al ajuste por defecto, restauras el clon sin recalcular nada—.
+
+> 📝 **Nota:** Fíjate en el contrato de las dos funciones: en **copiar**, el destino lo pone quien llama (como hará `Array.Copy`); en **clonar**, el array nuevo lo crea la función (como hará `Clone()`). Esa es la diferencia entre las dos familias de la 2.6.3.
+
+
+### 2.6.2. El problema del redimensionado: el acordeón
+
 La propiedad `.Length` es de **solo lectura**. No puedes cambiar el tamaño de un array existente. Si necesitas más espacio, debes crear uno nuevo y copiar.
+
+**El acordeón.** Piensa en el array como un acordeón de gajos fijos: no se estira ni se encoge, se **sustituye** por otro de mayor o menor tamaño. Si queremos **aumentar** el tamaño, copiamos los datos en un vector nuevo más grande; si queremos **disminuirlo**, los copiamos en un vector nuevo más pequeño. En los dos casos el proceso es el mismo: **crear → copiar → reasignar**; el vector viejo se queda sin referencias y lo recoge el recolector de basura. ¿Por qué molestarnos? Porque un array está reservado entero aunque no lo uses todo: si crece cuando se llena y encoge cuando sobra, la memoria que ocupas se acerca a la que de verdad necesitas. Si el array tiene huecos (`null`), antes de copiar se compacta para que los datos válidos queden al principio (el recorrido con filtrado de la 2.2.4).
+
+📌 **Ejemplo real:** El historial de Netflix no sabe si tendrás 10 o 10.000 títulos: cuando el espacio se llena lo amplían por bloques y cuando se vacía lo reducen, sin reajustarlo en cada título. Ese crecer y encoger por bloques es el patrón del acordeón.
+
+Ampliar, en un esquema:
 
 ```mermaid
 graph TD
@@ -612,6 +726,22 @@ graph TD
     style D fill:#4CAF50,color:#fff
 ```
 
+**Algoritmo: ampliar un vector**
+
+1. Calcular el nuevo tamaño (por ejemplo, `tamañoActual + 10`).
+2. Crear un array nuevo con ese tamaño: las posiciones nuevas nacen con su valor por defecto.
+3. Copiar uno a uno los elementos del array viejo al nuevo (de la posición `0` a `viejo.Length - 1`).
+4. Reasignar la variable que apuntaba al viejo para que apunte al nuevo —si el cambio lo hace una función, eso exige `ref`—.
+5. Dejar el array viejo sin referencias: el recolector de basura se ocupará de liberar su memoria.
+
+**Algoritmo: reducir un vector**
+
+1. Calcular el nuevo tamaño (por ejemplo, `tamañoActual - 10`), sin bajar de un mínimo razonable.
+2. Crear un array nuevo con ese tamaño.
+3. Copiar solo los primeros `min(viejo.Length, nuevo.Length)` elementos: **lo que no quepa se descarta**, el array no recuerda lo que se queda fuera. Si el array tiene huecos (`null`), el primer paso es compactarlo (2.2.4) para que los datos válidos queden al principio.
+4. Reasignar la variable (igual que al ampliar; con `ref` desde una función).
+5. El array viejo queda sin referencias y el recolector de basura lo recoge.
+
 Y si quieres que esa operación viva en su propia función, ahí aparece **`ref`**: el procedimiento no toca elementos, **reasigna la variable** (`datos = nuevo`), y solo con `ref` esa reasignación llega al llamador (las reglas de la 2.3.4 y la 2.3.5).
 
 ```csharp
@@ -620,7 +750,9 @@ void Redimensionar(ref int[] datos, int nuevoTamano)
 {
     int[] nuevo = new int[nuevoTamano];
 
-    for (int i = 0; i < datos.Length; i++)
+    // Copia solo los que quepan: vale tanto para ampliar como para reducir
+    int n = Math.Min(datos.Length, nuevo.Length);
+    for (int i = 0; i < n; i++)
     {
         nuevo[i] = datos[i];  // copia los elementos existentes
     }
@@ -634,6 +766,13 @@ Redimensionar(ref arrayAntiguo, 5);
 // arrayAntiguo = { 10, 20, 30, 0, 0 }
 Console.WriteLine(string.Join(", ", arrayAntiguo));     // 10, 20, 30, 0, 0
 Console.WriteLine($"Longitud: {arrayAntiguo.Length}");  // 5
+
+// También sirve para REDUCIR: solo se copian los que quepan
+Redimensionar(ref arrayAntiguo, 2);
+
+// arrayAntiguo = { 10, 20 } — lo que no cupo se descartó
+Console.WriteLine(string.Join(", ", arrayAntiguo));     // 10, 20
+Console.WriteLine($"Longitud: {arrayAntiguo.Length}");  // 2
 ```
 
 **La otra forma: una función que devuelve el array redimensionado.** El procedimiento de arriba reasigna *dentro* (por eso lleva `ref`); si prefieres que la reasignación la haga *el que llama*, la función devuelve el array nuevo y tú lo asignas — en este caso **no hace falta `ref`**, porque el `return` ya trae la referencia.
@@ -644,7 +783,9 @@ int[] RedimensionarFuncion(int[] datos, int nuevoTamano)
 {
     int[] nuevo = new int[nuevoTamano];
 
-    for (int i = 0; i < datos.Length; i++)
+    // Copia solo los que quepan: vale tanto para ampliar como para reducir
+    int n = Math.Min(datos.Length, nuevo.Length);
+    for (int i = 0; i < n; i++)
     {
         nuevo[i] = datos[i];  // copia los elementos existentes
     }
@@ -667,7 +808,56 @@ Console.WriteLine($"Longitud: {arrayFuncion.Length}");  // 5
 
 En ambos estilos el efecto es idéntico y **en ambos hay una reasignación** (`datos = nuevo` dentro, `array = ...` fuera); lo que cambia es *dónde* vive esa línea y, por tanto, si hace falta `ref`.
 
-> 📝 **Nota:** La **BCL** (*Base Class Library* o Biblioteca de Clases Base: la enorme colección de clases que trae .NET de serie — `Array`, `Console`, `Math`...; la presentaste en la UD01) trae `Array.Resize(ref array, nuevoTamano)`, que hace exactamente esto por ti — y fíjate que su firma **también lleva `ref`**, por la misma razón: internamente crea un array nuevo, copia y reasigna (la BCL eligió el estilo del procedimiento con `ref`). Ojo: es un **método** estático de `Array`, no una propiedad `.Resize()`.
+### 2.6.3. Funciones del sistema: `Copy`, `Clone` y `Resize`
+
+La **BCL** (*Base Class Library* o Biblioteca de Clases Base: la enorme colección de clases que trae .NET de serie — `Array`, `Console`, `Math`...; la presentaste en la UD01) trae estas tres funciones hechas para ti. Hacen el mismo trabajo que los algoritmos y las funciones de las 2.6.1 y 2.6.2, pero escritas, probadas y optimizadas por Microsoft; conviene conocerlas porque las verás en cualquier proyecto.
+
+**`Array.Copy(origen, destino, cantidad)`** — copia elementos a un array destino que ya existe. Existe también la versión larga con índices, y `origen.CopyTo(destino, índice)`, que es el mismo trabajo invocado por el propio array de origen:
+
+```csharp
+int[] original = { 10, 20, 30 };
+int[] copia = new int[original.Length];
+
+Array.Copy(original, copia, original.Length);  // origen, destino, cantidad
+// original.CopyTo(copia, 0);                  // el mismo trabajo, invocado por el original
+
+copia[0] = 99;
+Console.WriteLine(original[0]);  // 10 — siguen siendo independientes
+Console.WriteLine(copia[0]);     // 99
+```
+
+**`original.Clone()`** — el array se clona a sí mismo; devuelve `object`, así que hay que convertirlo al tipo del array:
+
+```csharp
+int[] original = { 10, 20, 30 };
+int[] clon = (int[])original.Clone();
+
+clon[0] = 99;
+Console.WriteLine(original[0]);  // 10 — el clon no toca al original
+Console.WriteLine(clon[0]);      // 99
+```
+
+**`Array.Resize(ref datos, nuevoTamaño)`** — hace el acordeón entero: crea el array nuevo, copia lo que quepa y **reasigna** la variable que le pasas — por eso su firma también lleva `ref`, la misma razón que en tus funciones de la 2.6.2:
+
+```csharp
+int[] datos = { 10, 20, 30 };
+
+Array.Resize(ref datos, 5);  // crece:  { 10, 20, 30, 0, 0 }
+Array.Resize(ref datos, 2);  // reduce: { 10, 20 }
+
+Console.WriteLine(string.Join(", ", datos));  // 10, 20
+Console.WriteLine(datos.Length);              // 2
+```
+
+**Resumen de las funciones del sistema:**
+
+| Función | Quién crea el array destino | Efecto | Ejemplo |
+| :--- | :--- | :--- | :--- |
+| `Array.Copy(a, b, n)` | tú (`b` ya existe) | `void`: rellena `b` | `Array.Copy(original, copia, original.Length)` |
+| `a.Clone()` | el propio array | devuelve `object` (hay que convertirlo) | `(int[])original.Clone()` |
+| `Array.Resize(ref a, n)` | la función | `void`: **reasigna** `a` (por eso `ref`) | `Array.Resize(ref datos, 5)` |
+
+> 📝 **Nota:** `Array.Resize` es el `ref` de la 2.6.2 hecho función: internamente crea el array nuevo, copia y reasigna el que le pasas (la BCL eligió el estilo del procedimiento con `ref`). Ojo: es un **método estático** de `Array`, no una propiedad `.Resize()`.
 
 ## 2.7. La trampa del alias
 
