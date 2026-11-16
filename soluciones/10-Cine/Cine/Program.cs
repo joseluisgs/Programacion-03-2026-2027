@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
 using Cine.Enums;
@@ -27,7 +27,7 @@ WriteLine("🎞️ Bienvenido a CineDaw 🎞️");
 WriteLine("=========================");
 WriteLine();
 
-var opcion = 0;
+int opcion;
 
 do {
     // Barra de progreso
@@ -266,7 +266,7 @@ void ComprarEntrada(Butaca[,] miSala) {
         return;
     }
 
-    var repetir = false; // bandera
+    bool repetir; // bandera
     do {
         if (!LeerPosicionButaca("Ingrese butaca (A-E:1-6, Enter para salir): ", out var pos))
             return; // el usuario ha cancelado: volvemos al menú principal
@@ -298,7 +298,7 @@ void DevolverEntrada(Butaca[,] miSala) {
         return;
     }
 
-    var repetir = false; // bandera
+    bool repetir; // bandera
     do {
         if (!LeerPosicionButaca("Ingrese butaca a devolver (A-E:1-6, Enter para salir): ", out var pos))
             return; // el usuario ha cancelado: volvemos al menú principal
