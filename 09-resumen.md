@@ -8,13 +8,12 @@
     - [Cadenas de texto](#cadenas-de-texto)
     - [Expresiones regulares](#expresiones-regulares)
     - [Algoritmos de ordenación y búsqueda](#algoritmos-de-ordenación-y-búsqueda)
-  - [9.3. Herramientas y perfiles](#93-herramientas-y-perfiles)
-  - [9.4. Errores comunes a evitar](#94-errores-comunes-a-evitar)
-  - [9.5. Checklist de supervivencia](#95-checklist-de-supervivencia)
-  - [9.6. Glosario de términos](#96-glosario-de-términos)
-  - [9.7. Ejercicios de repaso](#97-ejercicios-de-repaso)
-  - [9.8. ¿Qué viene después?](#98-qué-viene-después)
-  - [9.9. Mapa de conexiones entre temas](#99-mapa-de-conexiones-entre-temas)
+  - [9.3. Errores comunes a evitar](#93-errores-comunes-a-evitar)
+  - [9.4. Checklist de supervivencia](#94-checklist-de-supervivencia)
+  - [9.5. Glosario de términos](#95-glosario-de-términos)
+  - [9.6. Ejercicios de repaso](#96-ejercicios-de-repaso)
+  - [9.7. ¿Qué viene después?](#97-qué-viene-después)
+  - [9.8. Mapa de conexiones entre temas](#98-mapa-de-conexiones-entre-temas)
 
 
 
@@ -175,35 +174,7 @@ graph TD
 
 📌 **Ejemplo real:** Netflix usa Búsqueda Binaria sobre títulos ordenados. Con millones de películas, $O(\log n)$ es mucho más rápido que $O(n)$.
 
-## 9.3. Herramientas y perfiles
-
-### IDE y depuración
-
-- **JetBrains Rider:** IDE principal para C#. Inspección de arrays, breakpoints condicionales, vista de memoria
-- **`Array.Sort()`:** Usa Introsort (variante de QuickSort) — úsalo en lugar de implementar a mano
-- **`Array.BinarySearch()`:** Búsqueda Binaria integrada
-
-### Paquetes útiles
-
-- **`System.Text.StringBuilder`:** Para construir texto eficientemente (viene con .NET)
-- **`System.Text.RegularExpressions`:** Para Regex (viene con .NET)
-
-### Comandos útiles
-
-Para que te los lleves de bolsillo, los comandos del día a día con los que se compila y se ejecuta todo lo de esta unidad:
-
-```bash
-# Compilar
-dotnet build
-
-# Ejecutar
-dotnet run
-
-# Ejecutar un archivo .cs directo (C# 14)
-dotnet run archivo.cs
-```
-
-## 9.4. Errores comunes a evitar
+## 9.3. Errores comunes a evitar
 
 | Error | Por qué está mal | Cómo evitarlo |
 | :--- | :--- | :--- |
@@ -217,7 +188,7 @@ dotnet run archivo.cs
 | **Regex sin `^` y `$`** | Permite basura antes/después | Siempre anclar con `^` y `$` |
 | **Clonar solo array exterior en escalonadas** | Filas compartidas — dependencia parcial | Clonar cada fila manualmente |
 
-## 9.5. Checklist de supervivencia
+## 9.4. Checklist de supervivencia
 
 Antes de dar por cerrado el tema, asegúrate de poder responder **SÍ** a estas preguntas:
 
@@ -240,7 +211,7 @@ Antes de dar por cerrado el tema, asegúrate de poder responder **SÍ** a estas 
 > - **`ref`** = **R**eferencia → puedes modificar
 > - **`in`** = **I**nmutable → solo lectura
 
-## 9.6. Glosario de términos
+## 9.5. Glosario de términos
 
 | Término | Definición |
 | :--- | :--- |
@@ -272,7 +243,7 @@ Antes de dar por cerrado el tema, asegúrate de poder responder **SÍ** a estas 
 | **Búsqueda Binaria Recursiva** | Divide por la mitad llamándose a sí misma — $O(\log n)$ |
 | **Caso base** | Condición que corta una recursión para que no sea infinita |
 
-## 9.7. Ejercicios de repaso
+## 9.6. Ejercicios de repaso
 
 1. **Crea un array** de 10 enteros, rellénalo con los números del 1 al 10 y muéstralo por consola
 2. **Invierte un array** sin crear uno nuevo (usa intercambio de posiciones)
@@ -286,7 +257,7 @@ Antes de dar por cerrado el tema, asegúrate de poder responder **SÍ** a estas 
 10. **Extrae las fechas** de un texto usando regex con grupos de captura
 11. **Reescribe la Búsqueda Binaria en versión recursiva** y compara cuántos pasos da una y otra sobre el mismo array
 
-## 9.8. ¿Qué viene después?
+## 9.7. ¿Qué viene después?
 
 En la **UD 04: Programación Orientada a Objetos** aprenderás a organizar el código en **clases** y **objetos**, usando **encapsulación**. Los arrays que has aprendido aquí serán la base para almacenar colecciones de objetos.
 
@@ -299,7 +270,7 @@ En la **UD 04: Programación Orientada a Objetos** aprenderás a organizar el c�
 | Cadenas y Regex | Validación de datos en objetos |
 | Ordenación y búsqueda | Encontrar y ordenar objetos en colecciones |
 
-## 9.9. Mapa de conexiones entre temas
+## 9.8. Mapa de conexiones entre temas
 
 ```mermaid
 graph LR
