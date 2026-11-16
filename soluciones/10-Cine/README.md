@@ -2,7 +2,7 @@
 
 ## Enunciado
 
-Desarrolla una aplicación de gestión de butacas de cine queutiliza una matriz 2D para representar la sala. El programa debe permitir al usuario comprar y devolver entradas por posición (formato "B:3"), visualizar el tablero con emojis, mostrar una barra de progreso de ocupación con colores ANSI, y generar un informe estadístico con entradas vendidas, recaudación y porcentaje de ocupación. Algunas butacas estarán fuera de servicio de forma aleatoria.
+Desarrolla una aplicación de gestión de butacas de cine que utiliza una matriz 2D para representar la sala. El programa debe permitir al usuario comprar y devolver entradas por posición (formato "B:3"), visualizar el tablero con emojis, mostrar una barra de progreso de ocupación con colores ANSI, y generar un informe estadístico con entradas vendidas, recaudación y porcentaje de ocupación. Algunas butacas estarán fuera de servicio de forma aleatoria.
 
 ## Conceptos Clave
 
