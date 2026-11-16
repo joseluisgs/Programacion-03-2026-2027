@@ -878,6 +878,76 @@ Verificar el `null` **antes** de usar el elemento: en los arrays de tipos anulab
 
 ---
 
+## Recorrer con nulos: `is { } x`
+
+El patrón `is { } x` **comprueba y extrae en un paso**: pregunta «¿`x` tiene valor?» y, si lo tiene, lo deja guardado en `x`. Es el atajo del `if (x != null)` manual y funciona con cualquier tipo anulable:
+
+<div class="grid grid-cols-2 gap-5 items-start">
+<div>
+
+```csharp
+foreach (string? nombre in nombres)
+{
+    if (nombre is { } n)   // n ya tiene el valor
+        Console.WriteLine(
+            $"{n}: longitud {n.Length}");
+    else
+        Console.WriteLine("Posición vacía");
+}
+```
+
+</div>
+<div>
+
+<TipBox type="nota">
+
+Dentro del `if` ya puedes usar `n` sin comprobar nada más: el compilador sabe que no es `null`. Fuera, sigue valiendo `nombre` (y sigue pudiendo ser `null`).
+
+</TipBox>
+
+</div>
+</div>
+
+---
+
+## Acceso condicional: `x?.Propiedad`
+
+Cuando solo quieres **consultar algo puntual** sin montar un bloque, `?.` comprueba la nulidad por ti: si el elemento es `null`, **no accede a la propiedad** y la expresión vale `null`, en vez de lanzar una `NullReferenceException`:
+
+<div class="grid grid-cols-2 gap-5 items-start">
+<div>
+
+```csharp
+foreach (string? nombre in nombres)
+{
+    Console.WriteLine(nombre?.Length);
+
+    if (nombre?.Length > 3)
+        Console.WriteLine(
+            $"{nombre} tiene más de 3 caracteres");
+}
+```
+
+</div>
+<div>
+
+<TipBox type="nota">
+
+Se combina con la coalescencia: `nombre?.Length ?? 0` te da un `0` cuando no hay valor.
+
+</TipBox>
+
+<TipBox type="consejo">
+
+El array puede estar lleno de huecos `null` y el programa sigue en pie.
+
+</TipBox>
+
+</div>
+</div>
+
+---
+
 ## Antes de los arrays: cómo se pasa un `int`
 
 Los tipos de valor (`int`, `double`, `bool`, `char`) guardan **el dato dentro de la propia variable**. Al llamar a una función, C# hace una **copia literal** de ese dato.
@@ -1163,6 +1233,78 @@ graph LR
 
 ---
 
+## Copia superficial y copia profunda
+
+**Copiar** crea un array nuevo con los mismos elementos; ojo, `int[] b = a` **no copia nada**, solo añade otro nombre. **Clonar** es lo mismo, pidiéndoselo al propio array. Lo que hay que mirar es **qué se copia de verdad**:
+
+<div class="grid grid-cols-2 gap-5 items-start">
+<div>
+
+<ConceptCard icon="📄" title="Copia superficial (shallow)" accent="blue">
+
+Se copian los **elementos**. En un `int[]` son los datos completos; en arrays de tipos de referencia se copian las **direcciones**: original y copia apuntarían a los mismos objetos.
+
+</ConceptCard>
+
+</div>
+<div>
+
+<ConceptCard icon="📦" title="Copia profunda (deep)" accent="green">
+
+Se copian los elementos **y** cada objeto al que apuntan: cada array queda con lo suyo. Con arrays de `int`, copiar elemento a elemento ya es una copia completa.
+
+</ConceptCard>
+
+</div>
+</div>
+
+<TipBox type="nota">
+
+📌 **Ejemplo real:** Al preparar un informe de notas suele copiarse el array original para ordenarlo a su gusto: el listado del profesor sigue en su orden original y los datos no se alteran.
+
+</TipBox>
+
+---
+
+## Tu función de copiar
+
+**El destino lo crea quien llama** (a diferencia de `Clonar`, que lo crea la función):
+
+<div class="grid grid-cols-2 gap-5 items-start">
+<div>
+
+```csharp
+void Copiar(int[] origen, int[] destino)
+{
+    for (int i = 0; i < origen.Length; i++)
+        destino[i] = origen[i];  // uno a uno
+}
+```
+
+</div>
+<div>
+
+```csharp
+int[] original = { 10, 20, 30 };
+int[] copia = new int[original.Length];
+Copiar(original, copia);
+
+copia[0] = 99;
+Console.WriteLine(original[0]);  // 10
+Console.WriteLine(copia[0]);     // 99
+```
+
+</div>
+</div>
+
+<TipBox type="nota">
+
+El **original queda intacto**: cambiar la copia no lo toca. Esa es la diferencia con el alias (`int[] b = a`), que no crea nada nuevo.
+
+</TipBox>
+
+---
+
 ## Clonación manual: la copia profunda
 
 Para obtener un array **completamente independiente**, debes crear uno nuevo y copiar elemento por elemento.
@@ -1194,9 +1336,9 @@ Console.WriteLine(arrayA[0]);    // 10 — A no cambia
 Console.WriteLine(arrayClon[0]); // 500 — independiente
 ```
 
-<TipBox type="consejo">
+<TipBox type="nota">
 
-Usa comentarios XML `/// <summary>` en funciones que trabajen con arrays. Facilita la comprensión y la depuración del código.
+Fíjate en el contrato de las dos funciones: en **copiar**, el destino lo pone quien llama (como hará `Array.Copy`); en **clonar**, el array nuevo lo crea la función (como hará `Clone()`).
 
 </TipBox>
 
@@ -1213,9 +1355,9 @@ Una función que devuelve un array retorna la **referencia**. La variable que re
 <div>
 
 ```csharp
-int[] CrearArray(int tamanho)
+int[] CrearArray(int tamano)
 {
-    return new int[tamanho];  // Retorna la referencia
+    return new int[tamano];  // Retorna la referencia
 }
 
 int[] miArray = CrearArray(10);
@@ -1427,7 +1569,7 @@ Imagina que `a` es la dirección de tu piso. Cuando escribes `b = a`, no estás 
 
 ## El tamaño no se puede cambiar: redimensionar
 
-El tamaño de un array es **inmutable**. Para «cambiarlo» hay que crear uno nuevo y copiar. Hay **dos estilos** y los dos funcionan igual:
+El tamaño de un array es **inmutable**. Para «cambiarlo» hay que crear uno nuevo y copiar. Es el **acordeón**: el array no se estira ni se encoge, se **sustituye** por otro de mayor o menor tamaño —y así la memoria que ocupas se acerca a la que de verdad necesitas.
 
 | Estilo | Quién reasigna | Modificador | Lectura |
 |---|---|---|---|
@@ -1452,9 +1594,9 @@ graph LR
 </div>
 <div>
 
-<TipBox type="nota">
+<TipBox type="analogia">
 
-En ambos estilos el efecto es idéntico y **en ambos hay una reasignación** (`datos = nuevo` dentro, `array = ...` fuera); lo que cambia es *dónde* vive esa línea y, por tanto, si hace falta `ref`.
+📌 **Ejemplo real:** El historial de Netflix no sabe si tendrás 10 o 10.000 títulos: cuando el espacio se llena lo amplían por bloques y cuando se vacía lo reducen, sin reajustarlo en cada título. Ese crecer y encoger por bloques es el patrón del acordeón.
 
 </TipBox>
 
@@ -1475,10 +1617,10 @@ void Redimensionar(ref int[] datos, int nuevoTamano)
 {
     int[] nuevo = new int[nuevoTamano];
 
-    for (int i = 0; i < datos.Length; i++)
-    {
+    // Copia solo los que quepan: vale para ampliar y reducir
+    int n = Math.Min(datos.Length, nuevo.Length);
+    for (int i = 0; i < n; i++)
         nuevo[i] = datos[i];  // copia los existentes
-    }
 
     datos = nuevo;  // EL TRUCO: sin ref se perdería
 }
@@ -1491,14 +1633,18 @@ void Redimensionar(ref int[] datos, int nuevoTamano)
 int[] arrayAntiguo = { 10, 20, 30 };
 Redimensionar(ref arrayAntiguo, 5);
 
-// arrayAntiguo = { 10, 20, 30, 0, 0 }
-Console.WriteLine(string.Join(", ", arrayAntiguo));
-Console.WriteLine($"Longitud: {arrayAntiguo.Length}");
+// arrayAntiguo = { 10, 20, 30, 0, 0 } — crece
+
+// También REDUCE: solo se copian los que quepan
+Redimensionar(ref arrayAntiguo, 2);
+
+// arrayAntiguo = { 10, 20 } — lo que no cupo se descartó
+Console.WriteLine(string.Join(", ", arrayAntiguo));  // 10, 20
 ```
 
 <TipBox type="consejo">
 
-El patrón es siempre el mismo: **crear** el array nuevo, **copiar** los elementos old, **reasignar** la variable. Los huecos que quedan se rellenan con el valor por defecto (`0`).
+El patrón es siempre el mismo: **crear** el array nuevo, **copiar** lo que quepa, **reasignar** la variable. Al ampliar, los huecos se rellenan con el valor por defecto (`0`); al reducir, **lo que no quepa se descarta**.
 
 </TipBox>
 
@@ -1518,10 +1664,10 @@ int[] RedimensionarFuncion(int[] datos, int nuevoTamano)
 {
     int[] nuevo = new int[nuevoTamano];
 
-    for (int i = 0; i < datos.Length; i++)
-    {
+    // Copia solo los que quepan: vale para ampliar y reducir
+    int n = Math.Min(datos.Length, nuevo.Length);
+    for (int i = 0; i < n; i++)
         nuevo[i] = datos[i];  // copia los existentes
-    }
 
     return nuevo;   // devuelve la referencia
 }
@@ -1534,14 +1680,97 @@ int[] RedimensionarFuncion(int[] datos, int nuevoTamano)
 int[] arrayFuncion = { 10, 20, 30 };
 arrayFuncion = RedimensionarFuncion(arrayFuncion, 5);
 
-// arrayFuncion = { 10, 20, 30, 0, 0 }
-Console.WriteLine(string.Join(", ", arrayFuncion));
-Console.WriteLine($"Longitud: {arrayFuncion.Length}");
+// arrayFuncion = { 10, 20, 30, 0, 0 } — crece
+arrayFuncion = RedimensionarFuncion(arrayFuncion, 2);
+
+// arrayFuncion = { 10, 20 } — reduce
+Console.WriteLine(string.Join(", ", arrayFuncion));  // 10, 20
 ```
 
 <TipBox type="nota">
 
 La **BCL** trae `Array.Resize(ref array, nuevoTamano)`, que hace exactamente esto por ti — y fíjate que su firma **también lleva `ref`**, por la misma razón: crea un array nuevo, copia y reasigna.
+
+</TipBox>
+
+</div>
+</div>
+
+---
+
+## Funciones del sistema: `Array.Copy` y `Clone()`
+
+La **BCL** (las clases que trae .NET de serie) hace el mismo trabajo que tus funciones de la 2.6.1, pero escritas, probadas y optimizadas por Microsoft:
+
+<div class="grid grid-cols-2 gap-5 items-start">
+<div>
+
+**`Array.Copy(origen, destino, cantidad)`** — rellena un array destino que ya existe:
+
+```csharp
+int[] original = { 10, 20, 30 };
+int[] copia = new int[original.Length];
+
+Array.Copy(original, copia, original.Length);
+// original.CopyTo(copia, 0);   // igual
+
+copia[0] = 99;
+Console.WriteLine(original[0]); // 10
+Console.WriteLine(copia[0]);    // 99
+```
+
+</div>
+<div>
+
+**`original.Clone()`** — el array se clona a sí mismo; devuelve `object`:
+
+```csharp
+int[] original = { 10, 20, 30 };
+int[] clon = (int[])original.Clone();
+
+clon[0] = 99;
+Console.WriteLine(original[0]); // 10
+Console.WriteLine(clon[0]);      // 99
+```
+
+</div>
+</div>
+
+---
+
+## `Array.Resize`: el acordeón, hecho función
+
+<div class="grid grid-cols-2 gap-5 items-start">
+<div>
+
+```csharp
+int[] datos = { 10, 20, 30 };
+
+Array.Resize(ref datos, 5);  // crece:  { 10, 20, 30, 0, 0 }
+Array.Resize(ref datos, 2);  // reduce: { 10, 20 }
+
+Console.WriteLine(string.Join(", ", datos));  // 10, 20
+Console.WriteLine(datos.Length);              // 2
+```
+
+<TipBox type="nota">
+
+`Array.Resize` es el `ref` de la 2.6.2 hecho función: internamente crea el array nuevo, copia y reasigna el que le pasas. Ojo: es un **método estático** de `Array`, no una propiedad `.Resize()`.
+
+</TipBox>
+
+</div>
+<div>
+
+| Función | Quién crea el destino | Efecto |
+|---|---|---|
+| `Array.Copy(a, b, n)` | tú (`b` ya existe) | `void`: rellena `b` |
+| `a.Clone()` | el propio array | devuelve `object` |
+| `Array.Resize(ref a, n)` | la función | `void`: **reasigna** `a` |
+
+<TipBox type="nota">
+
+Conviene conocer las tres: las verás en cualquier proyecto.
 
 </TipBox>
 
@@ -1570,7 +1799,8 @@ Los arrays no solo almacenan `int`, `string` o `bool`. También puedes guardar *
 
 // Recorrer
 for (int i = 0; i < alumnos.Length; i++)
-    Console.WriteLine($"{alumnos[i].nombre}: {alumnos[i].nota}");
+    Console.WriteLine(
+        $"{alumnos[i].nombre}: {alumnos[i].nota}");
 ```
 
 </div>
@@ -1645,9 +1875,6 @@ Los structs son tipos de valor, así que cada elemento del array es una **copia 
 
 ## Resumen del punto 2
 
-<div class="grid grid-cols-2 gap-5 items-start">
-<div>
-
 | Concepto | Descripción |
 |----------|-------------|
 | **`new tipo[n]`** | Crea un array con n elementos (valores por defecto) |
@@ -1658,7 +1885,15 @@ Los structs son tipos de valor, así que cada elemento del array es una **copia 
 | **`ref` / `in`** | Reemplazar el array / solo lectura |
 | **`==`** | Compara identidad (misma dirección), no contenido |
 | **Alias** | `b = a` crea dos nombres para el mismo array |
-</div>
+| **Copiar / Clonar** | Copia **superficial** (los elementos) o **profunda** (los objetos) |
+| **Redimensionar** | El acordeón: crear → copiar → reasignar (`ref`) |
+| **`is { }` / `?.`** | Recorrer arrays con `null` sin estrellarte |
+
+---
+
+## Buenas prácticas del punto 2
+
+<div class="grid grid-cols-2 gap-5 items-start">
 <div>
 
 <ConceptCard icon="✅" title="Buenas prácticas" accent="green">
@@ -1667,9 +1902,13 @@ Los structs son tipos de valor, así que cada elemento del array es una **copia 
 - `foreach` para solo leer los valores
 - Verifica `null` antes de acceder a `.Length`
 - `ref` solo si el procedimiento **reemplaza** el array
+- Recorre arrays con `null` usando `is { }` o `?.`
 - Clona cada fila manualmente en matrices escalonadas
 
 </ConceptCard>
+
+</div>
+<div>
 
 <div class="mt-3">
 
@@ -1679,7 +1918,6 @@ Los structs son tipos de valor, así que cada elemento del array es una **copia 
 
 </div>
 </div>
-
 ---
 layout: section
 ---
