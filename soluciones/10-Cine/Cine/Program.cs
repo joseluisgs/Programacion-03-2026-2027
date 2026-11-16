@@ -3,11 +3,12 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Cine.Enums;
 using Cine.Structs;
+using static System.Console;
 
 
 // Main Program
-Console.OutputEncoding = Encoding.UTF8;
-Console.Clear();
+OutputEncoding = Encoding.UTF8;
+Clear();
 
 const int TamFilas = 5;
 const int TamColumnas = 6;
@@ -22,26 +23,26 @@ var sala = new Butaca[TamFilas, TamColumnas];
 InitButacas(sala);
 
 // Mensaje bienvenida
-Console.WriteLine("🎞️ Bienvenido a CineDaw 🎞️");
-Console.WriteLine("=========================");
-Console.WriteLine();
+WriteLine("🎞️ Bienvenido a CineDaw 🎞️");
+WriteLine("=========================");
+WriteLine();
 
 var opcion = 0;
 
 do {
     // Barra de progreso
-    Console.WriteLine("Estado de ocupación de la sala:");
+    WriteLine("Estado de ocupación de la sala:");
     DibujarBarraProgreso(CalcularButacasOcupadasOFueraServicio(sala), TamFilas * TamColumnas);
-    Console.WriteLine("\n");
-    Console.WriteLine("Menú:");
-    Console.WriteLine($"{(int)MenuOpcion.Mostrar}. Mostrar miSala");
-    Console.WriteLine($"{(int)MenuOpcion.Comprar}. Comprar entrada");
-    Console.WriteLine($"{(int)MenuOpcion.Devolver}. Devolver entrada");
-    Console.WriteLine($"{(int)MenuOpcion.Informe}. Informe final (Estadísticas)");
-    Console.WriteLine($"{(int)MenuOpcion.Salir}. Salir");
-    Console.Write("Ingrese una opción: ");
+    WriteLine("\n");
+    WriteLine("Menú:");
+    WriteLine($"{(int)MenuOpcion.Mostrar}. Mostrar miSala");
+    WriteLine($"{(int)MenuOpcion.Comprar}. Comprar entrada");
+    WriteLine($"{(int)MenuOpcion.Devolver}. Devolver entrada");
+    WriteLine($"{(int)MenuOpcion.Informe}. Informe final (Estadísticas)");
+    WriteLine($"{(int)MenuOpcion.Salir}. Salir");
+    Write("Ingrese una opción: ");
 
-    var inputOpcion = (Console.ReadLine() ?? string.Empty).Trim();
+    var inputOpcion = (ReadLine() ?? string.Empty).Trim();
 
     var patronOpcion = @"^[1-5]$";
     var regexOpcion = new Regex(patronOpcion);
@@ -64,19 +65,19 @@ do {
             GenerarInforme(sala);
             break;
         case (int)MenuOpcion.Salir:
-            Console.WriteLine("¡Hasta luego!");
+            WriteLine("¡Hasta luego!");
             break;
         default:
-            Console.WriteLine("Opción no válida");
+            WriteLine("Opción no válida");
             break;
     }
 
-    Console.WriteLine();
+    WriteLine();
 } while (opcion != (int)MenuOpcion.Salir);
 
 
-Console.WriteLine("\n👋 Presiona una tecla para salir...");
-Console.ReadKey();
+WriteLine("\n👋 Presiona una tecla para salir...");
+ReadKey();
 return;
 
 // End Main Program
@@ -104,22 +105,22 @@ void InitButacas(Butaca[,] miSala) {
 
 // Muestra la miSala de cine
 void MostrarSala(Butaca[,] miSala) {
-    Console.WriteLine("\nEstado de la sala de cine\n");
+    WriteLine("\nEstado de la sala de cine\n");
 
     var ancho = 3; // fijo para todos
 
     // Usamos padLeft para alinear a la derecha
 
     // Encabezados de columnas
-    Console.Write("    ");
+    Write("    ");
     for (var i = 1; i <= TamColumnas; i++)
-        Console.Write(i.ToString().PadLeft(ancho));
+        Write(i.ToString().PadLeft(ancho));
 
-    Console.WriteLine();
+    WriteLine();
 
     // Filas con butacas
     for (var fila = 0; fila < TamFilas; fila++) {
-        Console.Write(" " + ObtenerLetraFila(fila) + "  "); // Esto funciona porque 'A' + 0 = 'A', 'A' + 1 = 'B', etc.
+        Write(" " + ObtenerLetraFila(fila) + "  "); // Esto funciona porque 'A' + 0 = 'A', 'A' + 1 = 'B', etc.
 
         for (var col = 0; col < TamColumnas; col++) {
             var icono = miSala[fila, col].Estado switch {
@@ -128,13 +129,13 @@ void MostrarSala(Butaca[,] miSala) {
                 _ => "💺"
             };
 
-            Console.Write(icono.PadLeft(ancho));
+            Write(icono.PadLeft(ancho));
         }
 
-        Console.WriteLine();
+        WriteLine();
     }
 
-    Console.WriteLine();
+    WriteLine();
 }
 
 // Compra una entrada para el usuario
@@ -194,33 +195,39 @@ void LiberarButaca(Butaca[,] miSala, Posicion posicion) {
     miSala[posicion.Fila, posicion.Columna].Estado = Estado.Libre;
 }
 
-// Lee una posición de butaca desde la entrada del usuario o devuelve null si es inválida
-Posicion LeerPosicionButaca(string mensaje) {
-    Posicion pos;
-    string input;
-    var inputOk = false;
-    do {
-        Console.Write(mensaje);
-        input = (Console.ReadLine() ?? "").Trim().ToUpper();
-        inputOk = Regex.IsMatch(input, @"^([A-E]):([1-6])$");
-        if (!inputOk)
-            Console.WriteLine("Formato incorrecto. Usa A-E:1-6 (ej. B:3).");
-    } while (!inputOk);
+// Lee una posición de butaca desde la entrada del usuario.
+// Devuelve false si el usuario cancela (Enter vacío o "0"), true si hay posición válida.
+bool LeerPosicionButaca(string mensaje, out Posicion pos) {
+    pos = new Posicion();
 
-    var partes = input.Split(':');
+    while (true) {
+        Write(mensaje);
+        var input = (ReadLine() ?? "").Trim().ToUpperInvariant();
 
-    pos = new Posicion {
-        Fila = ObtenerIndiceFila(partes[0][0]), // "A", 'A'
-        Columna = int.Parse(partes[1]) - 1
-    };
-    return pos;
+        // Cancelar: Enter vacío o "0"
+        if (input == "" || input == "0") {
+            WriteLine("Operación cancelada.");
+            return false;
+        }
+
+        if (Regex.IsMatch(input, @"^[A-E]:[1-6]$")) {
+            var partes = input.Split(':');
+            pos = new Posicion {
+                Fila = ObtenerIndiceFila(partes[0][0]), // "A", 'A'
+                Columna = int.Parse(partes[1]) - 1
+            };
+            return true;
+        }
+
+        WriteLine("Formato incorrecto. Usa A-E:1-6 (ej. B:3) o pulsa Enter para salir.");
+    }
 }
 
 // Solicita confirmación al usuario
 bool Confirmar(string mensaje) {
-    Console.Write(mensaje);
-    var k = Console.ReadKey(true).KeyChar;
-    Console.WriteLine();
+    Write(mensaje);
+    var k = ReadKey(true).KeyChar;
+    WriteLine();
     return k == 's' || k == 'S'; // Si la respuesta es's' o 'S'
 }
 
@@ -234,12 +241,12 @@ void ComprarButaca(Butaca[,] miSala, Posicion posicion) {
         Precio = miSala[posicion.Fila, posicion.Columna].Precio
     };
 
-    Console.WriteLine("\n--- 🎟️ ENTRADA DE CINE ---");
-    Console.WriteLine(
+    WriteLine("\n--- 🎟️ ENTRADA DE CINE ---");
+    WriteLine(
         $"Butaca: {ObtenerLetraFila(entrada.Butaca.Posicion.Fila)}:{entrada.Butaca.Posicion.Columna + 1}");
-    Console.WriteLine($"Precio: {entrada.Precio.ToString("C2", localeEs)}");
-    Console.WriteLine($"Fecha:  {entrada.FechaCompra.ToString("g", localeEs)}");
-    Console.WriteLine("------------------------------\n");
+    WriteLine($"Precio: {entrada.Precio.ToString("C2", localeEs)}");
+    WriteLine($"Fecha:  {entrada.FechaCompra.ToString("g", localeEs)}");
+    WriteLine("------------------------------\n");
 }
 
 // Devuelve la entrada para el usuario
@@ -247,35 +254,37 @@ void DevolverButaca(Butaca[,] miSala, Posicion posicion) {
     var importe = miSala[posicion.Fila, posicion.Columna].Precio;
     LiberarButaca(miSala, posicion);
 
-    Console.WriteLine(
+    WriteLine(
         $"✅ Devolución realizada de la entrada ({ObtenerLetraFila(posicion.Fila)},{posicion.Columna + 1}).");
-    Console.WriteLine($"💰 Importe devuelto: {importe.ToString("C2", localeEs)}\n");
+    WriteLine($"💰 Importe devuelto: {importe.ToString("C2", localeEs)}\n");
 }
 
 // Compra una entrada para el usuario
 void ComprarEntrada(Butaca[,] miSala) {
     if (!HayButacaPorEstado(miSala, Estado.Libre)) {
-        Console.WriteLine("❌ No hay butacas libres.");
+        WriteLine("❌ No hay butacas libres.");
         return;
     }
 
     var repetir = false; // bandera
     do {
-        var pos = LeerPosicionButaca("Ingrese butaca (A-E:1-6): ");
+        if (!LeerPosicionButaca("Ingrese butaca (A-E:1-6, Enter para salir): ", out var pos))
+            return; // el usuario ha cancelado: volvemos al menú principal
+
         if (miSala[pos.Fila, pos.Columna].Estado != Estado.Libre) {
-            Console.WriteLine("❌ La butaca no está disponible.");
+            WriteLine("❌ La butaca no está disponible.");
             repetir = true;
             //return; // salimos del bucle para volver al menú principal
         }
         else {
             var precioStr = miSala[pos.Fila, pos.Columna].Precio.ToString("C2", localeEs);
             if (Confirmar(
-                    $"⚠️ Confirmar compra de ({ObtenerLetraFila(pos.Fila)},{pos.Columna + 1}) por {precioStr} (s/n): ")) {
+                    $"⚠️ Confirmar compra de ({ObtenerLetraFila(pos.Fila)}:{pos.Columna + 1}) por {precioStr} (s/n): ")) {
                 ComprarButaca(miSala, pos);
                 repetir = false;
             }
             else {
-                Console.WriteLine("❌ Compra cancelada.");
+                WriteLine("❌ Compra cancelada.");
                 repetir = false;
             }
         }
@@ -285,26 +294,28 @@ void ComprarEntrada(Butaca[,] miSala) {
 // Devuelve una entrada para el usuario
 void DevolverEntrada(Butaca[,] miSala) {
     if (!HayButacaPorEstado(miSala, Estado.Ocupada)) {
-        Console.WriteLine("❌ No hay butacas ocupadas.");
+        WriteLine("❌ No hay butacas ocupadas.");
         return;
     }
 
     var repetir = false; // bandera
     do {
-        var pos = LeerPosicionButaca("Ingrese butaca a devolver (A-E:1-6): ");
+        if (!LeerPosicionButaca("Ingrese butaca a devolver (A-E:1-6, Enter para salir): ", out var pos))
+            return; // el usuario ha cancelado: volvemos al menú principal
+
         if (!IsOcupada(miSala, pos)) {
-            Console.WriteLine("❌ La butaca no estaba ocupada.");
+            WriteLine("❌ La butaca no estaba ocupada.");
             repetir = true;
         }
         else {
             var precioStr = miSala[pos.Fila, pos.Columna].Precio.ToString("C2", localeEs);
             if (Confirmar(
-                    $"⚠️ Confirmar la devolución de ({ObtenerLetraFila(pos.Fila)},{pos.Columna + 1}) por {precioStr} (s/n): ")) {
+                    $"⚠️ Confirmar la devolución de ({ObtenerLetraFila(pos.Fila)}:{pos.Columna + 1}) por {precioStr} (s/n): ")) {
                 DevolverButaca(miSala, pos);
                 repetir = false;
             }
             else {
-                Console.WriteLine("❌ Operación cancelada.");
+                WriteLine("❌ Operación cancelada.");
                 repetir = false;
             }
         }
@@ -331,12 +342,12 @@ void GenerarInforme(Butaca[,] miSala) {
     var ocup = disponibles == 0 ? 0 : (double)vendidas / disponibles * 100;
     var recaudacion = vendidas * PrecioEntrada;
 
-    Console.WriteLine("\n--- 📈 INFORME CINEDAW 📈 ---");
-    Console.WriteLine($"🎟️ Entradas Vendidas: {vendidas}");
-    Console.WriteLine($"💺 Asientos Libres: {libres}");
-    Console.WriteLine($"🚫 Fuera de Servicio: {fueraServicio}");
-    Console.WriteLine($"📽️ Ocupación: {ocup.ToString("F2", localeEs)}%");
-    Console.WriteLine($"💵 Recaudación Total: {recaudacion.ToString("C2", localeEs)}\n");
+    WriteLine("\n--- 📈 INFORME CINEDAW 📈 ---");
+    WriteLine($"🎟️ Entradas Vendidas: {vendidas}");
+    WriteLine($"💺 Asientos Libres: {libres}");
+    WriteLine($"🚫 Fuera de Servicio: {fueraServicio}");
+    WriteLine($"📽️ Ocupación: {ocup.ToString("F2", localeEs)}%");
+    WriteLine($"💵 Recaudación Total: {recaudacion.ToString("C2", localeEs)}\n");
 }
 
 void DibujarBarraProgreso(int actual, int maximo) {
@@ -356,7 +367,7 @@ void DibujarBarraProgreso(int actual, int maximo) {
     var reset = "\u001b[0m";
 
     // Imprimimos en la misma línea, es el /r
-    Console.Write($"\r{color}[{barra}]{reset} {(int)(porcentaje * 100)}%");
+    Write($"\r{color}[{barra}]{reset} {(int)(porcentaje * 100)}%");
 }
 
 int CalcularButacasOcupadasOFueraServicio(Butaca[,] miSala) {
