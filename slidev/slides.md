@@ -92,6 +92,7 @@ Clónalo, forquéalo o descárgalo en zip: el material siempre está a un clic.
 <RaaCcee
   code="RA 6"
   title="Escribe programas que manipulen información seleccionando y utilizando tipos avanzados de datos."
+  :letters="['a', 'g']"
   :ccee="[
     'Se han escrito programas que utilicen matrices (arrays).',
     'Se han utilizado expresiones regulares en la búsqueda de patrones en cadenas de texto.',
@@ -766,9 +767,6 @@ YouTube usa un bucle `for` para cargar los 50 primeros comentarios de un vídeo.
 
 ## El bucle `for` por dentro
 
-<div class="grid grid-cols-2 gap-5 items-start">
-<div>
-
 ```mermaid
 graph LR
     START((Inicio)) --> INIT["i = 0"]
@@ -788,17 +786,11 @@ graph LR
     style INC fill:#607D8B,color:#fff
 ```
 
-</div>
-<div>
-
 <TipBox type="nota">
 
 Tres pasos en cada vuelta: **comprobar** la condición, **acceder** al elemento (`array[i]`) e **incrementar** el índice. La condición es la que decide cuándo termina el bucle.
 
 </TipBox>
-
-</div>
-</div>
 
 ---
 
