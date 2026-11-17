@@ -525,7 +525,7 @@ bool LeerDniValido(Alumno?[] alumnos, bool debeSerNuevo, out string dni) {
 
 /*
  * Solicita la nota al usuario y valida que esté entre 0.00 y 10.00.
- * Usa el CultureInfo español para leer la coma decimal.
+ * Normaliza la coma decimal a punto y lee con InvariantCulture (que solo entiende el punto).
  * Devuelve false si el usuario cancela (Enter vacío); "0" sigue siendo una nota válida.
  * * nota La nota validada (parámetro de salida).
  * return bool true si la nota es válida; false si el usuario cancela.
@@ -543,8 +543,9 @@ bool LeerNotaValida(out double nota) {
         out var notaStr))
         return false; // el usuario ha cancelado
 
-    // Al usar InvariantCulture, nos aseguramos de que el punto se interprete correctamente.
-    // El estilo NumberStyles.Float permite tanto coma como punto decimal.
+    // Normalizamos la coma decimal a punto: así las dos formas ("7.5" y "7,5")
+    // las entiende InvariantCulture, que solo usa el punto como separador decimal.
+    notaStr = notaStr.Replace(',', '.');
     double.TryParse(notaStr, NumberStyles.Float, CultureInfo.InvariantCulture, out nota);
     return true;
 }
