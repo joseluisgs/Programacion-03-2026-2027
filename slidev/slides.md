@@ -139,7 +139,7 @@ layout: section
 
 ---
 
-## Un array: una cajonera de elementos del mismo tipo
+## 🗄️ Un array: una cajonera de elementos del mismo tipo
 
 Un **array** es una estructura de datos **estática** que almacena una colección **ordenada** de elementos del **mismo tipo**.
 
@@ -179,7 +179,7 @@ Un array es como una **hilera de casas** en una calle. Cada casa tiene un númer
 
 ---
 
-## Las cinco características clave
+## 🧩 Las cinco características clave
 
 <div class="grid grid-cols-2 gap-5 items-start">
 <div>
@@ -210,7 +210,7 @@ Si necesitas más espacio, tienes que crear un array **nuevo** y copiar: el tama
 
 ---
 
-## Indexación basada en cero: el primer elemento es el 0
+## 🔢 Indexación basada en cero: el primer elemento es el 0
 
 El primer elemento está en el **índice 0**. La convención se basa en el **cálculo directo de la dirección de memoria**: el índice es el **desplazamiento** (*offset*) desde la dirección de inicio, y el primer elemento no tiene desplazamiento.
 
@@ -249,7 +249,7 @@ Dirección(A[i]) = Base + (índice × Tamaño del Tipo)
 
 ---
 
-## Indexación basada en uno: el primer elemento es el 1
+## 🔢 Indexación basada en uno: el primer elemento es el 1
 
 En algunos lenguajes (**Fortran, MATLAB, Lua, Pascal**) el primer elemento está en el **índice 1**.
 
@@ -282,7 +282,7 @@ Piensa así: si tienes 5 elementos, van del 0 al 4. Nunca del 1 al 5. El último
 
 ---
 
-## Arrays en C#: la indexación es cero-basada
+## 🗄️ Arrays en C#: la indexación es cero-basada
 
 Si accedes a un índice negativo o a uno mayor o igual al tamaño, se produce un `IndexOutOfRangeException`.
 
@@ -315,7 +315,7 @@ YouTube usa arrays internamente para almacenar los comentarios de un vídeo. Cua
 
 ---
 
-## ¿Cuándo usar un array?
+## 🗄️ ¿Cuándo usar un array?
 
 <div class="grid grid-cols-2 gap-5 items-start">
 <div>
@@ -343,7 +343,7 @@ YouTube usa arrays internamente para almacenar los comentarios de un vídeo. Cua
 
 ---
 
-## El primer array que ya estás usando: `string[] args`
+## 🗄️ El primer array que ya estás usando: `string[] args`
 
 <div class="grid grid-cols-2 gap-5 items-start">
 <div>
@@ -381,7 +381,7 @@ Entonces `args` contiene `{ "Hola", "Mundo" }` y `args.Length` es `2`.
 
 ---
 
-## El secreto de la velocidad: localidad de referencia
+## ⚡ El secreto de la velocidad: localidad de referencia
 
 ¿Por qué usamos arrays si son tan rígidos? Por el **hardware**.
 
@@ -420,7 +420,7 @@ Netflix precarga las miniaturas de las siguientes 5-10 películas mientras ves l
 
 ---
 
-## Por qué los arrays son rápidos: la jerarquía de memoria
+## 🗄️ Por qué los arrays son rápidos: la jerarquía de memoria
 
 <div class="grid grid-cols-2 gap-5 items-start">
 <div>
@@ -451,7 +451,7 @@ El procesador **carga datos en bloques**: si accedes a datos cercanos, ya están
 
 ---
 
-## Lo que ya sabes (UD02) y lo que vas a aprender (UD03)
+## 🔁 Lo que ya sabes (UD02) y lo que vas a aprender (UD03)
 
 <div class="grid grid-cols-2 gap-5 items-start">
 <div>
@@ -561,7 +561,7 @@ Cuando abres tu lista de reproducción de Spotify, ¿te has fijado en que cada c
 
 ---
 
-## Crear un array: tres formas
+## 🗄️ Crear un array: tres formas
 
 <div class="grid grid-cols-2 gap-5 items-start">
 <div>
@@ -595,7 +595,7 @@ double[] precios = new double[] { 9.99, 19.99, 29.99 };
 
 ---
 
-## Los valores por defecto de cada tipo
+## 🏷️ Los valores por defecto de cada tipo
 
 Cuando creas un array solo con su tamaño, C# lo rellena automáticamente:
 
@@ -629,7 +629,7 @@ Un tipo anulable (`int?`) permite guardar `null` además de números. Lo verás 
 
 ---
 
-## Cuidado con los `null` dentro del array
+## ⚠️ Cuidado con los `null` dentro del array
 
 <div class="grid grid-cols-2 gap-5 items-start">
 <div>
@@ -666,7 +666,7 @@ Netflix usa arrays de perfiles. Si un usuario solo tiene 2 perfiles pero el arra
 
 ---
 
-## `string[] args`: el array que ya usas
+## 🗄️ `string[] args`: el array que ya usas
 
 Con **Top-Level Statements**, **`args` existe sin que tú lo crees**: es un `string[]` con los argumentos que pasas por línea de comandos.
 
@@ -699,7 +699,7 @@ Cuando ejecutas `git commit -m "mensaje"`, Git recibe `commit` y el mensaje como
 
 ---
 
-## `.Length`: el tamaño del array
+## 🗄️ `.Length`: el tamaño del array
 
 La propiedad `.Length` devuelve el número total de elementos. Es la forma fiable de conocer el límite del array.
 
@@ -732,7 +732,7 @@ El último elemento siempre está en `array.Length - 1`. Si accedes a `array[arr
 
 ---
 
-## Recorrer con `for`: modificar o conocer el índice
+## 🗄️ Recorrer con `for`: modificar o conocer el índice
 
 El bucle `for` se usa cuando necesitas **modificar** elementos o conocer el **índice** actual.
 
@@ -765,7 +765,7 @@ YouTube usa un bucle `for` para cargar los 50 primeros comentarios de un vídeo.
 
 ---
 
-## El bucle `for` por dentro
+## 🔁 El bucle `for` por dentro
 
 ```mermaid
 graph LR
@@ -794,7 +794,7 @@ Tres pasos en cada vuelta: **comprobar** la condición, **acceder** al elemento 
 
 ---
 
-## Recorrer con `foreach`: solo lectura
+## 🗄️ Recorrer con `foreach`: solo lectura
 
 El `foreach` se usa cuando solo necesitas **leer** los valores. Es más seguro porque no puedes equivocarte con el índice.
 
@@ -825,7 +825,7 @@ foreach (string dia in diasSemana)
 
 ---
 
-## Recorrer un array con nulos: filtrar antes de usar
+## 💤 Recorrer un array con nulos: filtrar antes de usar
 
 Para arrays de tipos anulables, debes verificar `null` antes de usar cada elemento.
 
@@ -870,7 +870,7 @@ Verificar el `null` **antes** de usar el elemento: en los arrays de tipos anulab
 
 ---
 
-## Recorrer con nulos: `is { } x`
+## 💤 Recorrer con nulos: `is { } x`
 
 El patrón `is { } x` **comprueba y extrae en un paso**: pregunta «¿`x` tiene valor?» y, si lo tiene, lo deja guardado en `x`. Es el atajo del `if (x != null)` manual y funciona con cualquier tipo anulable:
 
@@ -902,7 +902,7 @@ Dentro del `if` ya puedes usar `n` sin comprobar nada más: el compilador sabe q
 
 ---
 
-## Acceso condicional: `x?.Propiedad`
+## 🔀 Acceso condicional: `x?.Propiedad`
 
 Cuando solo quieres **consultar algo puntual** sin montar un bloque, `?.` comprueba la nulidad por ti: si el elemento es `null`, **no accede a la propiedad** y la expresión vale `null`, en vez de lanzar una `NullReferenceException`:
 
@@ -940,7 +940,7 @@ El array puede estar lleno de huecos `null` y el programa sigue en pie.
 
 ---
 
-## Antes de los arrays: cómo se pasa un `int`
+## 🗄️ Antes de los arrays: cómo se pasa un `int`
 
 Los tipos de valor (`int`, `double`, `bool`, `char`) guardan **el dato dentro de la propia variable**. Al llamar a una función, C# hace una **copia literal** de ese dato.
 
@@ -986,7 +986,7 @@ Es como **fotocopiar** un documento y dar la copia a un compañero. Si él escri
 
 ---
 
-## Un array es un tipo de referencia: guarda una dirección
+## 🗄️ Un array es un tipo de referencia: guarda una dirección
 
 Un array es un **tipo de referencia**: la variable **no contiene los elementos**, contiene una **dirección de memoria** (algo así como `0x0040`) que indica **dónde** están guardados.
 
@@ -1036,7 +1036,7 @@ La variable es **una nota con la dirección de tu casa**; el array es **la casa 
 
 ---
 
-## Al llamar a una función se copia la dirección, no los datos
+## 📤 Al llamar a una función se copia la dirección, no los datos
 
 **No se copian los tres elementos** —sería un coste enorme en arrays grandes—: lo que se copia, **por valor**, es **la dirección**.
 
@@ -1074,7 +1074,7 @@ Cuando editas una canción en una playlist, la app modifica la lista directament
 
 ---
 
-## El mal dicho: «los arrays pasan por referencia»
+## 🗄️ El mal dicho: «los arrays pasan por referencia»
 
 De forma popular se dice *«los arrays pasan **por referencia**»*, y es un **malendido**: lo que se pasa es **por valor**, pero el **valor que se copia es la dirección** (una referencia). Se copia *una referencia* al array… no el array, y tampoco la variable.
 
@@ -1112,7 +1112,7 @@ Console.WriteLine(serie[0]);   // 10 — sigue el viejo
 
 ---
 
-## Con `ref`: cuando la función debe reemplazar el array
+## 🗄️ Con `ref`: cuando la función debe reemplazar el array
 
 Si necesitas que la función **reemplace por completo** el array del llamador, el modificador `ref` cambia lo que se pasa: no se copia la dirección, se pasa **una referencia a la propia variable** del llamador.
 
@@ -1151,7 +1151,7 @@ El caso de uso completo —redimensionar un array— está en el apartado de cop
 
 ---
 
-## Con `in`: cuando la función solo lee el array
+## 🗄️ Con `in`: cuando la función solo lee el array
 
 <div class="grid grid-cols-2 gap-5 items-start">
 <div>
@@ -1188,7 +1188,7 @@ Console.WriteLine(SumarElementos(in valores));   // 60
 
 ---
 
-## Los tres caminos: sin modificador, `ref` e `in`
+## ↔️ Los tres caminos: sin modificador, `ref` e `in`
 
 <div class="grid grid-cols-2 gap-5 items-start">
 <div>
@@ -1225,7 +1225,7 @@ graph LR
 
 ---
 
-## Copia superficial y copia profunda
+## 📋 Copia superficial y copia profunda
 
 **Copiar** crea un array nuevo con los mismos elementos; ojo, `int[] b = a` **no copia nada**, solo añade otro nombre. **Clonar** es lo mismo, pidiéndoselo al propio array. Lo que hay que mirar es **qué se copia de verdad**:
 
@@ -1258,7 +1258,7 @@ Se copian los elementos **y** cada objeto al que apuntan: cada array queda con l
 
 ---
 
-## Tu función de copiar
+## 📤 Tu función de copiar
 
 **El destino lo crea quien llama** (a diferencia de `Clonar`, que lo crea la función):
 
@@ -1297,7 +1297,7 @@ El **original queda intacto**: cambiar la copia no lo toca. Esa es la diferencia
 
 ---
 
-## Clonación manual: la copia profunda
+## 📋 Clonación manual: la copia profunda
 
 Para obtener un array **completamente independiente**, debes crear uno nuevo y copiar elemento por elemento.
 
@@ -1339,7 +1339,7 @@ Fíjate en el contrato de las dos funciones: en **copiar**, el destino lo pone q
 
 ---
 
-## Devolver un array desde una función
+## 🗄️ Devolver un array desde una función
 
 Una función que devuelve un array retorna la **referencia**. La variable que recibe el retorno apunta al mismo objeto.
 
@@ -1378,7 +1378,7 @@ Console.WriteLine($"Suma: {total}");  // 60
 
 ---
 
-## `params`: número variable de argumentos
+## 📤 `params`: número variable de argumentos
 
 El modificador **`params`** permite a una función aceptar un número variable de argumentos. Internamente, el compilador los convierte en un **array**.
 
@@ -1415,7 +1415,7 @@ Lo que escribes como argumentos sueltos, el compilador lo empaqueta en un `int[]
 
 ---
 
-## Identidad frente a igualdad: `==` no compara contenido
+## ⚖️ Identidad frente a igualdad: `==` no compara contenido
 
 <div class="grid grid-cols-2 gap-5 items-start">
 <div>
@@ -1462,7 +1462,7 @@ Console.WriteLine(SonIguales(arrayA, arrayB));  // true
 
 ---
 
-## Las dos trampas: `==` y `null` con arrays
+## ⚠️ Las dos trampas: `==` y `null` con arrays
 
 <div class="grid grid-cols-2 gap-4 items-start">
 <div>
@@ -1508,7 +1508,7 @@ int total = numeros?.Length ?? 0;
 
 ---
 
-## La trampa del alias: `b = a` no es una copia
+## ⚠️ La trampa del alias: `b = a` no es una copia
 
 Un error muy común es pensar que al hacer `int[] b = a` has creado una copia. En realidad has creado un **alias**: dos nombres para el mismo array.
 
@@ -1559,7 +1559,7 @@ Imagina que `a` es la dirección de tu piso. Cuando escribes `b = a`, no estás 
 
 ---
 
-## El tamaño no se puede cambiar: redimensionar
+## 🔄 El tamaño no se puede cambiar: redimensionar
 
 El tamaño de un array es **inmutable**. Para «cambiarlo» hay que crear uno nuevo y copiar. Es el **acordeón**: el array no se estira ni se encoge, se **sustituye** por otro de mayor o menor tamaño —y así la memoria que ocupas se acerca a la que de verdad necesitas.
 
@@ -1597,7 +1597,7 @@ graph LR
 
 ---
 
-## Redimensionar con `ref`: el procedimiento
+## 📤 Redimensionar con `ref`: el procedimiento
 
 <div class="grid grid-cols-2 gap-5 items-start">
 <div>
@@ -1645,7 +1645,7 @@ El patrón es siempre el mismo: **crear** el array nuevo, **copiar** lo que quep
 
 ---
 
-## Redimensionar devolviendo el array: la función
+## 🗄️ Redimensionar devolviendo el array: la función
 
 <div class="grid grid-cols-2 gap-5 items-start">
 <div>
@@ -1690,7 +1690,7 @@ La **BCL** trae `Array.Resize(ref array, nuevoTamano)`, que hace exactamente est
 
 ---
 
-## Funciones del sistema: `Array.Copy` y `Clone()`
+## 🗄️ Funciones del sistema: `Array.Copy` y `Clone()`
 
 La **BCL** (las clases que trae .NET de serie) hace el mismo trabajo que tus funciones de la 2.6.1, pero escritas, probadas y optimizadas por Microsoft:
 
@@ -1730,7 +1730,7 @@ Console.WriteLine(clon[0]);      // 99
 
 ---
 
-## `Array.Resize`: el acordeón, hecho función
+## 🗄️ `Array.Resize`: el acordeón, hecho función
 
 <div class="grid grid-cols-2 gap-5 items-start">
 <div>
@@ -1771,7 +1771,7 @@ Conviene conocer las tres: las verás en cualquier proyecto.
 
 ---
 
-## Arrays de tipos compuestos: tuplas y enums
+## 🏷️ Arrays de tipos compuestos: tuplas y enums
 
 Los arrays no solo almacenan `int`, `string` o `bool`. También puedes guardar **tuplas**, **enums** y **structs**.
 
@@ -1821,7 +1821,7 @@ foreach (DiaSemana dia in semana)
 
 ---
 
-## Arrays de structs: el array como tabla
+## 🏷️ Arrays de structs: el array como tabla
 
 Con los structs, el array se convierte en una tabla de verdad: cada posición es un registro con todos sus campos.
 
@@ -1883,7 +1883,7 @@ Los structs son tipos de valor, así que cada elemento del array es una **copia 
 
 ---
 
-## Buenas prácticas del punto 2
+## ✅ Buenas prácticas del punto 2
 
 <div class="grid grid-cols-2 gap-5 items-start">
 <div>
@@ -1950,7 +1950,7 @@ layout: section
 
 ---
 
-## Dos tipos de matrices
+## 📊 Dos tipos de matrices
 
 <div class="grid grid-cols-2 gap-5 items-start">
 <div>
@@ -1976,7 +1976,7 @@ graph LR
 
 ---
 
-## Matriz rectangular: un único bloque contiguo
+## 📊 Matriz rectangular: un único bloque contiguo
 
 Una matriz rectangular (`int[3, 4]`) se almacena como **un único bloque continuo** en memoria, como si fuera un vector largo. Los elementos se guardan **por filas**: primero la fila 0 completa, luego la fila 1, etc.
 
@@ -2009,7 +2009,7 @@ Dirección(A[i,j]) = Base + ((i × Cols + j) × Tamaño)
 
 ---
 
-## Un ejemplo: dónde está cada elemento
+## 📌 Un ejemplo: dónde está cada elemento
 
 Para una `int[3,4]` (4 bytes por `int`) con Base = 1000:
 
@@ -2028,7 +2028,7 @@ Es exactamente igual que en un array unidimensional, pero con un paso extra: mul
 
 ---
 
-## Así queda en la memoria
+## 🧠 Así queda en la memoria
 
 Los elementos se guardan **por filas**, unas detrás de otras:
 
@@ -2042,7 +2042,7 @@ La fila 1 empieza justo donde termina la fila 0 (dirección **1016**): no hay hu
 
 ---
 
-## Matriz escalonada: un array de arrays
+## 🗄️ Matriz escalonada: un array de arrays
 
 Una matriz escalonada (`int[3][]`) es **un array que contiene otros arrays**. Cada fila es un array independiente que se almacena en un sitio diferente de memoria.
 
@@ -2083,7 +2083,7 @@ Un edificio de oficinas: la planta 0 tiene 2 despachos, la planta 1 tiene 4 y la
 
 ---
 
-## Rectangular frente a escalonada
+## 📊 Rectangular frente a escalonada
 
 <div class="grid grid-cols-2 gap-5 items-start">
 <div>
@@ -2110,7 +2110,7 @@ La rectangular es más rápida porque el procesador carga un bloque de memoria y
 
 ---
 
-## Crear una matriz rectangular
+## 📊 Crear una matriz rectangular
 
 La matriz rectangular es la más usada: todas las filas tienen el mismo número de columnas.
 
@@ -2151,7 +2151,7 @@ Console.WriteLine($"Columnas: {notas.GetLength(1)}");
 
 ---
 
-## Crear una matriz escalonada (jagged)
+## 📊 Crear una matriz escalonada (jagged)
 
 Cuando cada fila necesita un tamaño distinto, se usa una matriz escalonada: un array de arrays donde cada fila se crea por separado.
 
@@ -2183,7 +2183,7 @@ Un tablero de Battleship es una matriz rectangular `char[10,10]` donde cada posi
 
 ---
 
-## Recorrer una matriz con `for`: bucles anidados
+## 🔁 Recorrer una matriz con `for`: bucles anidados
 
 <div class="grid grid-cols-2 gap-5 items-start">
 <div>
@@ -2221,7 +2221,7 @@ El bucle **interno** se ejecuta **completo** por cada vuelta del externo: 3 × 4
 
 ---
 
-## El bucle anidado, por dentro
+## 🔁 El bucle anidado, por dentro
 
 ```mermaid
 graph LR
@@ -2249,7 +2249,7 @@ Dos bucles, dos índices y dos dimensiones: `i` recorre las **filas** y `j` las 
 
 ---
 
-## Recorrer una matriz con `foreach`
+## 🔁 Recorrer una matriz con `foreach`
 
 El `foreach` recorre la matriz entera en orden de filas sin que te preocupes de los índices, pero **solo sirve para leer**.
 
@@ -2281,7 +2281,7 @@ Con `foreach` **no puedes modificar** los elementos ni conocer la posición (ín
 
 ---
 
-## En las matrices también hay alias
+## 📊 En las matrices también hay alias
 
 Al igual que los arrays unidimensionales, las matrices son **tipos de referencia**. `matrizB = matrizA` crea un alias, no una copia.
 
@@ -2310,7 +2310,7 @@ Piensa en las matrices como un edificio de apartamentos. `matrizB = matrizA` es 
 
 ---
 
-## `==` con matrices: compara referencias, no contenido
+## 📊 `==` con matrices: compara referencias, no contenido
 
 <div class="grid grid-cols-2 gap-5 items-start">
 <div>
@@ -2347,7 +2347,7 @@ bool SonIguales(int[,] x, int[,] y)
 
 ---
 
-## Pasar y devolver matrices
+## 📊 Pasar y devolver matrices
 
 <div class="grid grid-cols-2 gap-5 items-start">
 <div>
@@ -2386,7 +2386,7 @@ Console.WriteLine($"{nueva.GetLength(0)}x" +
 
 ---
 
-## Copia superficial o copia profunda
+## 📋 Copia superficial o copia profunda
 
 <div class="grid grid-cols-2 gap-5 items-start">
 <div>
@@ -2453,7 +2453,7 @@ int[][] ClonarMatriz(int[][] origen)
 
 ---
 
-## El tamaño de una matriz también es inmutable
+## 📊 El tamaño de una matriz también es inmutable
 
 El tamaño de una matriz es **inmutable**. Para «cambiarlo», debes crear una nueva y copiar.
 
@@ -2489,7 +2489,7 @@ Cuando escalas una imagen en Photoshop, internamente el programa crea una nueva 
 
 ---
 
-## ¿Cómo se aplana una matriz en la memoria?
+## 🧠 ¿Cómo se aplana una matriz en la memoria?
 
 La memoria es **unidimensional** (una línea de casillas), pero la matriz es **bidimensional** (una tabla). C# usa **row-major order** (por filas): primero la fila completa, luego la siguiente.
 
@@ -2522,7 +2522,7 @@ Es como si leyeras un libro: lees la fila de izquierda a derecha y, cuando termi
 
 ---
 
-## Recorrer por filas (rápido) o por columnas (lento)
+## 📊 Recorrer por filas (rápido) o por columnas (lento)
 
 Imagina una matriz de notas de 3 alumnos × 4 exámenes. En memoria (row-major) se almacena así:
 
@@ -2559,7 +2559,7 @@ for (int i = 0; i < 3; i++)
 
 ---
 
-## Por qué la caché lo cambia todo
+## ⚡ Por qué la caché lo cambia todo
 
 La **caché** es una memoria pequeña y muy rápida del procesador. Cuando accedes a una posición, el procesador no carga solo ese valor, sino un **bloque contiguo** completo (típicamente 64 bytes). Si los siguientes accesos están en ese bloque, son **hits**; si están en otro, son **misses**.
 
@@ -2591,7 +2591,7 @@ Netflix procesa millones de calificaciones en una matriz `usuarios × películas
 
 ---
 
-## Matrices de enums y de structs
+## 🏷️ Matrices de enums y de structs
 
 <div class="grid grid-cols-2 gap-5 items-start">
 <div>
@@ -2710,7 +2710,7 @@ layout: section
 
 ---
 
-## La idea: dos búferes en lugar de uno
+## 🌊 La idea: dos búferes en lugar de uno
 
 El **Doble Búfer** es un patrón de diseño que utiliza **dos arrays** (búferes) para evitar el parpadeo. Mientras se muestra un búfer en pantalla, se prepara el siguiente en segundo plano.
 
@@ -2756,7 +2756,7 @@ graph LR
 
 ---
 
-## El mecanismo de intercambio (Swap)
+## 🌊 El mecanismo de intercambio (Swap)
 
 El Swap **no copia datos** — solo intercambia las **referencias** de los dos búferes. Por eso es constante: tiempo **O(1)**, sin importar el tamaño del array.
 
@@ -2801,7 +2801,7 @@ graph LR
 
 ---
 
-## Propagación de estado: calcular el siguiente sin tocar el actual
+## 🌊 Propagación de estado: calcular el siguiente sin tocar el actual
 
 El Doble Búfer se usa para simular la **propagación de estado**: calcular el siguiente estado basándose en el actual, sin modificarlo mientras se calcula.
 
@@ -2837,7 +2837,7 @@ En el juego de la Vida de Conway, cada célula se muere o nace según sus vecina
 
 ---
 
-## ¿Por qué es vital en desarrollo web? El *tearing*
+## 🌊 ¿Por qué es vital en desarrollo web? El *tearing*
 
 Sin Doble Búfer, el navegador dibuja la página directamente en el buffer visible. Si el usuario hace scroll mientras se está dibujando, ve una imagen **a medio pintar** (tearing).
 
@@ -2864,7 +2864,7 @@ En desarrollo web, el navegador gestiona el Doble Búfer automáticamente a trav
 
 ---
 
-## Doble búfer completo: la propagación de una onda
+## 🌊 Doble búfer completo: la propagación de una onda
 
 Dos arrays alternan el papel de pantalla y de trabajo:
 
@@ -2969,7 +2969,7 @@ layout: section
 
 ---
 
-## `string`: un tipo de referencia inmutable
+## 🧵 `string`: un tipo de referencia inmutable
 
 Una **cadena** (`string`) es una secuencia de caracteres. Es un **tipo de referencia** y, lo más importante, es **inmutable**: una vez creada, no puede modificarse.
 
@@ -3009,7 +3009,7 @@ Instagram almacena los captions de las fotos como strings inmutables. Cuando edi
 
 ---
 
-## Pasar un string a una función: los tres caminos
+## ↔️ Pasar un string a una función: los tres caminos
 
 Un `string` es un **tipo de referencia**: al llamar a una función viaja una **copia de la dirección**, no el texto. Igual que con los arrays, hay tres caminos.
 
@@ -3055,7 +3055,7 @@ En los strings **no existe** el caso "escribir en el contenido": son inmutables.
 
 ---
 
-## Los tres caminos, resumidos
+## ↔️ Los tres caminos, resumidos
 
 <div class="grid grid-cols-2 gap-5 items-start">
 <div>
@@ -3086,7 +3086,7 @@ graph LR
 
 ---
 
-## Acceso y recorrido: como un array de caracteres
+## 🗄️ Acceso y recorrido: como un array de caracteres
 
 Las cadenas funcionan como arrays de caracteres: puedes acceder a cada carácter por su índice y recorrerla con bucles.
 
@@ -3135,7 +3135,7 @@ Console.WriteLine(resultado);  // "Hola"
 
 ---
 
-## Los métodos que usarás todos los días
+## 📖 Los métodos que usarás todos los días
 
 Los métodos de `string` son atajos que te ahorran horas de código manual.
 
@@ -3150,7 +3150,7 @@ Los métodos de `string` son atajos que te ahorran horas de código manual.
 
 ---
 
-## Los mismos métodos, en acción
+## 📖 Los mismos métodos, en acción
 
 <div class="grid grid-cols-2 gap-5 items-start">
 <div>
@@ -3187,7 +3187,7 @@ Console.WriteLine($"Posición @: {posicionArroba}");
 
 ---
 
-## Dividir y unir: `Split` y `Join`
+## 🧵 Dividir y unir: `Split` y `Join`
 
 Cuando un texto trae varios datos separados, `Split` los parte en un array; `Join` hace el camino inverso.
 
@@ -3226,7 +3226,7 @@ Spotify usa `.Split()` para separar los artistas de una canción cuando tienen v
 
 ---
 
-## El problema: `+` en un bucle crea una cadena nueva
+## 🧵 El problema: `+` en un bucle crea una cadena nueva
 
 Como `string` es inmutable, cada concatenación con `+` crea una **nueva cadena**. En bucles largos, esto es extremadamente lento.
 
@@ -3261,7 +3261,7 @@ Es como reescribir toda la carta cada vez que añades una palabra... o escribirl
 
 ---
 
-## `StringBuilder`: la solución
+## 🧵 `StringBuilder`: la solución
 
 `StringBuilder` mantiene un **buffer interno** y va añadiendo sin crear una cadena nueva en cada vuelta.
 
@@ -3307,7 +3307,7 @@ Los servidores de email (Gmail, Outlook) usan `StringBuilder` para construir los
 
 ---
 
-## Curiosidad: el pool de cadenas (String Interning)
+## 🧵 Curiosidad: el pool de cadenas (String Interning)
 
 Si creas dos variables con el mismo **literal**, C# hace que apunten a la **misma dirección** de memoria.
 
@@ -3342,7 +3342,7 @@ El *String Interning* es automático para los **literales**. Si creas cadenas co
 
 ---
 
-## Formato de números: `F2` y `N2`
+## 📅 Formato de números: `F2` y `N2`
 
 Los datos guardados en el programa no son presentables tal cual: `6.5` no es un precio de tienda. El **formato** lo convierte en algo legible.
 
@@ -3380,7 +3380,7 @@ Usa `F2` cuando el número es el dato exacto (una nota, un precio) y `N2` cuando
 
 ---
 
-## Moneda y cultura: `C2` y `CultureInfo`
+## 📅 Moneda y cultura: `C2` y `CultureInfo`
 
 La **cultura** decide el símbolo, el separador decimal y el formato de fecha: con `es-ES`, `6.5` se escribe `6,50 €`; con `en-US`, `$6.50`.
 
@@ -3420,7 +3420,7 @@ La práctica del cine imprime cada entrada con `precio.ToString("C2", Configurac
 
 ---
 
-## Fechas con formato
+## 📅 Fechas con formato
 
 Las fechas se formatean igual que los números: `ToString(formato, cultura)`, donde el formato es una plantilla de letras.
 
@@ -3537,7 +3537,7 @@ layout: section
 
 ---
 
-## ¿Qué es una expresión regular?
+## 💡 ¿Qué es una expresión regular?
 
 Una **expresión regular** (regex) es un **patrón de búsqueda** que describe un conjunto de cadenas de texto. Se usa para validar, buscar, extraer y sustituir texto de forma declarativa.
 
@@ -3576,7 +3576,7 @@ Instagram usa expresiones regulares para validar usernames. Cuando escribes un n
 
 ---
 
-## Los metacaracteres esenciales
+## 🔍 Los metacaracteres esenciales
 
 Los metacaracteres son los símbolos especiales que le dan sentido al patrón.
 
@@ -3610,7 +3610,7 @@ Los metacaracteres son los símbolos especiales que le dan sentido al patrón.
 
 ---
 
-## Regex en C#: siempre con `@""`
+## 🔍 Regex en C#: siempre con `@""`
 
 En C# los patrones se escriben como **verbatim strings** (`@"..."`), porque los metacaracteres empiezan por `\`.
 
@@ -3648,7 +3648,7 @@ El `^` ancla el patrón al **inicio** y el `$` al **fin**: sin ellos, "123" tamb
 
 ---
 
-## Validar: `Regex.IsMatch`
+## 🔍 Validar: `Regex.IsMatch`
 
 `IsMatch` responde `true` o `false` a la pregunta "¿este texto cumple el patrón?".
 
@@ -3683,7 +3683,7 @@ Un **patrón** no es más que una cadena de texto con los metacaracteres dentro:
 
 ---
 
-## Buscar: `Match` y `Matches`
+## 🔍 Buscar: `Match` y `Matches`
 
 Cuando el texto cumple el patrón y quieres sacar lo encontrado: `Match` devuelve la **primera** coincidencia y `Matches`, **todas**.
 
@@ -3724,7 +3724,7 @@ foreach (Match m in todas)
 
 ---
 
-## Extraer datos: los grupos de captura
+## 🔍 Extraer datos: los grupos de captura
 
 Los **paréntesis** `()` definen **grupos de captura**: cada paréntesis captura una parte del texto y se accede con `Groups[1]`, `Groups[2]`... (el grupo 0 es la coincidencia completa).
 
@@ -3759,7 +3759,7 @@ El **grupo 0** es la coincidencia entera; los grupos numerados empiezan en el **
 
 ---
 
-## Sustituir: `Regex.Replace`
+## 🔍 Sustituir: `Regex.Replace`
 
 En el segundo argumento de `Replace`, `$1` se sustituye por el contenido del primer grupo de captura, `$2` por el segundo, y así sucesivamente.
 
@@ -3795,7 +3795,7 @@ El patrón `.*?` (con `?` al final) es **no codicioso**: captura lo mínimo. Aqu
 
 ---
 
-## La tabla maestra: patrones que usarás siempre
+## 📊 La tabla maestra: patrones que usarás siempre
 
 Estos son los patrones que se repiten en cualquier validación.
 
@@ -3817,7 +3817,7 @@ Amazon usa regex para validar direcciones de envío: verifica que el código pos
 
 ---
 
-## La codicia: cuidado con `+` y `*`
+## ⚠️ La codicia: cuidado con `+` y `*`
 
 Por defecto, los cuantificadores (`+`, `*`) son **codiciosos**: intentan capturar la mayor cantidad de texto posible.
 
@@ -3928,7 +3928,7 @@ layout: section
 
 ---
 
-## Big O: cómo comparar el rendimiento
+## 📈 Big O: cómo comparar el rendimiento
 
 Antes de ver algoritmos necesitamos una forma de **comparar** cuán rápido es cada uno. La **notación Big O** describe cómo crece el tiempo de ejecución cuando aumentan los datos de entrada.
 
@@ -3963,7 +3963,7 @@ Es como buscar un libro en una biblioteca: si tiene 100 libros tardas poco; si t
 
 ---
 
-## Un algoritmo "estable" mantiene el orden de los iguales
+## 🧮 Un algoritmo "estable" mantiene el orden de los iguales
 
 Un algoritmo es **estable** si mantiene el orden original de los elementos que tienen el mismo valor: si tienes dos películas con rating 5 y la primera aparece antes en la lista, después de ordenar la primera sigue estando antes.
 
@@ -4002,7 +4002,7 @@ La estabilidad importa cuando ordenas por **varios criterios**: primero por apel
 
 ---
 
-## Burbuja (Bubble Sort)
+## 🔄 Burbuja (Bubble Sort)
 
 Compara elementos **adyacentes** y los intercambia si están desordenados. Los mayores "burbujean" hacia el final, como burbujas que suben en el agua.
 
@@ -4048,7 +4048,7 @@ En un casting, los directores ordenan a los actores por altura usando burbuja: c
 
 ---
 
-## Selección (Selection Sort)
+## 🔄 Selección (Selection Sort)
 
 Es como si organizaras un estante de libros: miras todos los libros, encuentras el más pequeño y lo pones en la primera posición. Luego repites con el resto.
 
@@ -4092,7 +4092,7 @@ Un DJ que ordena sus discos por año de publicación: escanea todos los discos, 
 
 ---
 
-## Inserción (Insertion Sort)
+## 🔄 Inserción (Insertion Sort)
 
 Es exactamente como ordenar cartas en la mano: tomas una carta y la **insertas** en su posición correcta entre las que ya tienes ordenadas, desplazando las demás a la derecha.
 
@@ -4137,7 +4137,7 @@ Netflix usa Inserción para ordenar tu "Lista de favoritos" cuando añades una s
 
 ---
 
-## Shell Sort: inserción con brechas
+## 🔄 Shell Sort: inserción con brechas
 
 Una mejora de Inserción: el problema de Inserción es que mueve elementos de uno en uno. Shell Sort dice "¿por qué no saltar varios sitios a la vez?" y va reduciendo el *gap* hasta 1.
 
@@ -4185,7 +4185,7 @@ Los motores de bases de datos usan Shell Sort internamente para ordenar pequeño
 
 ---
 
-## QuickSort: divide y vencerás
+## 🧩 QuickSort: divide y vencerás
 
 El algoritmo de ordenación por **"Divide y Vencerás"** más utilizado: eliges una carta como **pivote**, pones las menores a la izquierda y las mayores a la derecha, y repites con cada subpila.
 
@@ -4237,7 +4237,7 @@ void QuickSort(int[] arr, int bajo, int alto)
 
 ---
 
-## QuickSort: el código
+## 🔄 QuickSort: el código
 
 La parte que hace el trabajo pesado es `Partition`: coloca el pivote en su sitio final.
 
@@ -4276,7 +4276,7 @@ El **caso base no es el fin**: si `bajo < alto` no se cumple, la llamada hace `r
 
 ---
 
-## QuickSort: complejidad
+## 📈 QuickSort: complejidad
 
 <div class="grid grid-cols-2 gap-5 items-start">
 <div>
@@ -4298,7 +4298,7 @@ El **caso base no es el fin**: si `bajo < alto` no se cumple, la llamada hace `r
 
 ---
 
-## Merge Sort: divide y combina
+## 🔄 Merge Sort: divide y combina
 
 Es el "divide y vencerás" en estado puro: cortas el array por la mitad hasta quedarte con trozos de **un solo elemento** y luego **combinas** esos trozos de dos en dos.
 
@@ -4337,7 +4337,7 @@ Es exactamente lo que hace quien reparte dos mazos de cartas ya ordenados: miras
 
 ---
 
-## Merge Sort: el código
+## 🔄 Merge Sort: el código
 
 Lo delicado es el paso de **combinar** (`Merge`): se recorren las dos mitades con dos punteros, siempre se coge el elemento menor y se deja en un array auxiliar.
 
@@ -4381,7 +4381,7 @@ void Merge(int[] arr, int izq, int medio, int der)
 
 ---
 
-## Merge Sort: cuándo elegirlo
+## 🔄 Merge Sort: cuándo elegirlo
 
 <div class="grid grid-cols-2 gap-5 items-start">
 <div>
@@ -4415,7 +4415,7 @@ QuickSort gana en la práctica porque trabaja *in place*; Merge Sort gana en **p
 
 ---
 
-## Búsqueda lineal
+## 🔎 Búsqueda lineal
 
 Es como buscar una palabra en un diccionario **sin** usar el índice: abres la primera página, miras si está, y si no pasas a la siguiente.
 
@@ -4455,7 +4455,7 @@ Cuando buscas un contacto en tu móvil sin usar el buscador, simplemente desliza
 
 ---
 
-## Búsqueda binaria
+## 🔎 Búsqueda binaria
 
 Es como buscar en un diccionario **usando** el índice: siempre descartas la mitad.
 
@@ -4501,7 +4501,7 @@ El buscador de Netflix usa Búsqueda Binaria sobre los títulos ordenados: `O(lo
 
 ---
 
-## Búsqueda binaria recursiva
+## 🔎 Búsqueda binaria recursiva
 
 Es la misma búsqueda, pero **sin `while`**: la función se llama a sí misma con la mitad que todavía puede contener el objetivo.
 
@@ -4543,7 +4543,7 @@ El `return` delante de cada llamada es la clave: el valor **vuelve subiendo** po
 
 ---
 
-## La tabla comparativa de complejidad
+## 📈 La tabla comparativa de complejidad
 
 Todos los algoritmos de la unidad, con su coste y si son estables:
 
@@ -4561,7 +4561,7 @@ Todos los algoritmos de la unidad, con su coste y si son estables:
 
 ---
 
-## ¿Cuándo uso cada algoritmo?
+## 🧮 ¿Cuándo uso cada algoritmo?
 
 <div class="grid grid-cols-2 gap-5 items-start">
 <div>
@@ -4674,7 +4674,7 @@ layout: section
 
 ---
 
-## NuGet: el gestor de paquetes de .NET
+## 📦 NuGet: el gestor de paquetes de .NET
 
 Un "paquete" es código ya escrito, empaquetado y publicado por alguien que tú descargas y referencias en tu proyecto en lugar de reinventarlo.
 
@@ -4705,7 +4705,7 @@ La versión del paquete se fija en el `.csproj`: se usa la versión con la que s
 
 ---
 
-## Los comandos de NuGet
+## 📦 Los comandos de NuGet
 
 Todos se ejecutan **dentro de la carpeta del proyecto** (la que contiene el `.csproj`).
 
@@ -4748,7 +4748,7 @@ Tras añadir un paquete, compila de inmediato (`dotnet build`). Si el paquete no
 
 ---
 
-## Lo que se escribe en el `.csproj`
+## 🛠️ Lo que se escribe en el `.csproj`
 
 ```xml
 <ItemGroup>
@@ -4780,7 +4780,7 @@ Tras añadir un paquete, compila de inmediato (`dotnet build`). Si el paquete no
 
 ---
 
-## Configuración: el fichero `nuget.config`
+## 📦 Configuración: el fichero `nuget.config`
 
 Es un fichero **XML** que le dice a NuGet **de dónde** sacar los paquetes (sus *fuentes*). Es **por usuario** y su ruta cambia según el sistema operativo.
 
@@ -4821,7 +4821,7 @@ Si el fichero ya existe, **no lo reescribas a ciegas**: añade tus líneas dentr
 
 ---
 
-## NuGet en Rider
+## 📦 NuGet en Rider
 
 Instalar un paquete desde **Rider** es lo mismo que por CLI, solo que con ratón: el IDE escribe la misma línea en tu `.csproj`.
 
@@ -4852,7 +4852,7 @@ Rider tiene terminal integrada (`Alt+F12`) con exactamente los comandos de la CL
 
 ---
 
-## ¿Qué es un log y sus niveles?
+## 💡 ¿Qué es un log y sus niveles?
 
 Un **log** (o bitácora) es un **registro cronológico** de lo que hace un programa: fecha y hora, un **nivel** y un mensaje.
 
@@ -4885,7 +4885,7 @@ En **desarrollo** puedes dejar `Debug` o `Trace`; en **producción** se muestra 
 
 ---
 
-## `Microsoft.Extensions.Logging`: el logger oficial
+## 📜 `Microsoft.Extensions.Logging`: el logger oficial
 
 Ofrece una abstracción común (`ILogger`) sobre la que se montan distintos destinos (consola, fichero...). En consola se usa con el paquete `Microsoft.Extensions.Logging.Console`.
 
@@ -4929,7 +4929,7 @@ Los mensajes admiten **marcadores de posición**: `logger.LogInformation("Usuari
 
 ---
 
-## Serilog: logging estructurado
+## 📜 Serilog: logging estructurado
 
 Es el estándar *de facto* en el ecosistema .NET: más flexible y extensible que el oficial, con mensajes enriquecidos, formato coloreado en consola y múltiples **destinos (sinks)**.
 
@@ -4974,7 +4974,7 @@ Serilog es el estándar *de facto* en el ecosistema .NET. Plataformas como **Sta
 
 ---
 
-## Spectre.Console: consolas con estilo
+## 🎛️ Spectre.Console: consolas con estilo
 
 No hace logging: hace que tu consola se vea **bien**. Tablas con bordes, texto con color mediante *markup*, menús interactivos, barras de progreso.
 
@@ -5016,7 +5016,7 @@ Herramientas como `dotnet ef` o el propio instalador de **Rider** usan consolas 
 
 ---
 
-## Las tres librerías, comparadas
+## 📊 Las tres librerías, comparadas
 
 | Aspecto | Microsoft.Extensions.Logging | Serilog | Spectre.Console |
 |---|---|---|---|
@@ -5034,7 +5034,7 @@ Las dos primeras **no compiten**: las dos loguean (y pueden usarse juntas), mien
 
 ---
 
-## Errores comunes al instalar paquetes
+## ⚠️ Errores comunes al instalar paquetes
 
 <div class="grid grid-cols-2 gap-4 items-start">
 <div>
